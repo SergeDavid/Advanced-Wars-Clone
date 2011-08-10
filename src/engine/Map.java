@@ -1,5 +1,6 @@
 package engine;
 
+import java.util.List;
 import java.util.Random;
 
 public class Map {
@@ -13,9 +14,12 @@ public class Map {
 	/**A square/rectangular area that you play on. Diamond shaped if isometric.*/
 	public int[][]map;
 	Tiles tile = new Tiles();
+	public MapFinder finder = new MapFinder();
+	public MapParser parse = new MapParser();
+	public List<String> MapNames;
 	
 	public Map() {
-		//MapSetup(6,6);
+		MapNames = finder.GrabMaps();
 	}
 	
 	public void MapSetup(int width, int height) {

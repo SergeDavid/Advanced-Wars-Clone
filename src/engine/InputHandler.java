@@ -79,7 +79,7 @@ public class InputHandler implements KeyListener,MouseListener,ActionListener,Mo
 	public void actionPerformed(ActionEvent e) {
 		Object s = e.getSource();
 		if (s==Game.gui.Join) {
-			Game.btl = new Battle();
+			Game.btl = new Battle(Game.map.MapNames.get(Game.gui.maps_list.getSelectedIndex()));
 			Game.gui.InGameScreen();
 		}
 		else if (s==Game.gui.Exit) {System.exit(0);}

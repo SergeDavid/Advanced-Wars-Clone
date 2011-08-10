@@ -6,9 +6,13 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Insets;
+
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 	
 public class Gui extends JPanel {
 	private static final long serialVersionUID = 3457450162330022096L;
@@ -27,6 +31,8 @@ public class Gui extends JPanel {
 	public JButton ply_next = new JButton("Next");
 	public JButton ply_prev = new JButton("Prev");
 	public JButton ply_endturn = new JButton("End Turn");
+	JList maps_list = new JList();
+	DefaultListModel maps_model = new DefaultListModel();
 		
 	public Gui(JFrame item) {
 	    item.add(this);
@@ -55,8 +61,12 @@ public class Gui extends JPanel {
 		Options.setBounds(220 + insets.left, 230 + insets.top, 
 				size.width, size.height);
 		size = Exit.getPreferredSize();
-		Exit.setBounds(204 + insets.left, 260 + insets.top, 
+		Exit.setBounds(220 + insets.left, 260 + insets.top, 
 				size.width, size.height);
+		
+		JScrollPane maps_pane = new JScrollPane(maps_list = new JList(maps_model));
+		maps_pane.setBounds(400 + insets.left, 40 + insets.top, 140, 300);
+		add(maps_pane);
 	}
 	/**Creates the InGame screen layout*/
 	public void InGameScreen() {

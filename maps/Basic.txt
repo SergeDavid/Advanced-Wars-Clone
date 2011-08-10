@@ -1,12 +1,12 @@
 # Author Serge-David
 # Map File testing, lets see if we can make this pretty. Map name is it's file name.
 # 1 = Map Info : width(xx) height(xx) players(x)
-# 2 = Extra Info : Creator(String) - Description(String) [A-z 0-9]
+# 2 = Extra Info : Creator(String) Description(String) [A-z 0-9]
 # 3 = Terrain Info (row) : tile(x) (To be xx for 256 types instead of 16)
-# 4 = Building Info : owner(x) x(xx) y(xx) type(xx)
+# 4 = Building Info : owner(x) x(xx) y(xx) type(xx) TODO: Find a way to add neutral buildings without messing with player counts, maybe leaving that byte blank?
 # 5 = Unit info : owner(x) x(xx) y(xx) type(xx)
 1 0f0b2
-2 This is a description of the map.
+2 Serge-David This is a description of the map.
 3 2121131101110012
 3 0000000000000120
 3 2222222222221020

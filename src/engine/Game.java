@@ -38,6 +38,7 @@ public class Game extends JFrame {
 	public static Gui gui;
 	public static LoadImages load;
 	public static InputHandler input;
+	public static Battle btl;
 	
 	//Image handling settings are as follows
 	/**The buffer strategy that holds then transfers the images from off screen to on screen so there are no flickering.*/
@@ -52,7 +53,6 @@ public class Game extends JFrame {
 	/**This handles the different players and also is used to speed logic arrays (contains a list of all characters they own)*/
 	public static List<Player> player = new ArrayList<Player>();
 	public static List<Buildings> builds = new ArrayList<Buildings>();
-	public static Battle btl;
 	
 	/**The mouse X and Y locations, might not need them but who knows?*/
 	public static int mouseX;
@@ -87,7 +87,6 @@ public class Game extends JFrame {
 
 	private void StartupScreen() {
 		// TODO Auto-generated method stub
-		
 	}
 
 	private void GameLoop() {
@@ -136,6 +135,15 @@ public class Game extends JFrame {
 	//TODO: Re-do the building code for use with multiple building classes
 	//TODO: Selecting a working building without a unit on top brings up it's menu.
 	//TODO: Rework the map so that it works better
+	//TODO: Create a map editor
+	//TODO: Move the maps folder outside of the to be constructed jar area
+	//TODO: Remodel dev sprites to protect against copyright problems.
+	//TODO: Actually make some sprites to use.
+	//TODO: Reorganize sprite sheets to support animations on units
+	//TODO: Add more tiles
+	//TODO: Add in capital, factories, and other buildings
+	//TODO: Include buildings offering units health
+	//TODO: Add in more TODO lists.
 	
 	/**Starts a new game when launched.*/
 	public static void main(String args[]) throws Exception {new Game();}

@@ -7,19 +7,15 @@ import java.io.IOException;
 
 public class MapParser {
 	int terrain = 0;//Keeps track of current row
-	public void Units() {
-		
+	public void encode(String mapname) {
+		//TODO: Creates a file if it does not exist (opens a prompt if file exists)
+		//TODO: Add in all of the elements into the file from info,description,terrain,buildings, and units.
+		//TODO: Send any error messages to be handled by the error messaging system.
 	}
-	public void Terrain() {
-		
-	}
-	public void Building() {
-		
-	}
-	
 	public void decode(String mapname) {
+		System.out.println(mapname);
 		try {
-			BufferedReader in = new BufferedReader(new FileReader("maps/"+mapname+".txt"));
+			BufferedReader in = new BufferedReader(new FileReader("maps/"+mapname));
 			String line;
 			while ((line = in.readLine()) != null) {
 				if (!line.startsWith("#")) {
@@ -42,7 +38,6 @@ public class MapParser {
 			}
 		} catch (FileNotFoundException e) {
 			System.out.println("Map not found.");
-			//TODO: Report map not found.
 			return;
 		} catch (IOException e) {
 			System.out.println("Read Line Error in map generation.");
@@ -78,7 +73,6 @@ public class MapParser {
 						Integer.parseInt(info.substring(3,5),16)));
 	}
 	private void ParseUnit(String info) {
-		System.out.println(Integer.parseInt("ff",16));
 		Game.player.get(Integer.parseInt(info.substring(0,1),16)).units.add(
 				new Character(
 						Integer.parseInt(info.substring(0,1),16),
