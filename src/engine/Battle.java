@@ -1,5 +1,7 @@
 package engine;
 
+import java.util.ArrayList;
+
 /**Put the game stuff in here so all I have to do is end/start this to make a game work or not.*/
 public class Battle {
 	int totalplayers = 2;
@@ -14,11 +16,14 @@ public class Battle {
 	//Winning condition settings	
 	
 	public Battle(String mapname) {
-		Game.player.removeAll(null);
+		Game.player = new ArrayList<Player>();
 		//TODO: Base the players off of the map and currently selected.
 		Game.player.add(new Player(true,1,0));
 		Game.player.add(new Player(true,2,0));
-		Game.map.parse.decode(mapname);
+		if (!Game.map.parse.decode(mapname)) {
+			Game.gui.LoginScreen();
+			return;
+		}
 		FixFirstRound();
 	}
 	

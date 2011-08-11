@@ -82,7 +82,6 @@ public class Game extends JFrame {
 		input = new InputHandler();
 		
 		GameLoop();
-		
 	}
 
 	private void StartupScreen() {
@@ -143,6 +142,7 @@ public class Game extends JFrame {
 	//TODO: Add more tiles
 	//TODO: Add in capital, factories, and other buildings
 	//TODO: Include buildings offering units health
+	//TODO: End game setup, someone wins when someone else loses all their units, or loses their capital building.
 	//TODO: Add in more TODO lists.
 	
 	/**Starts a new game when launched.*/

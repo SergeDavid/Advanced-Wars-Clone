@@ -67,17 +67,13 @@ public class Gui extends JPanel {
 		JScrollPane maps_pane = new JScrollPane(maps_list = new JList(maps_model));
 		maps_pane.setBounds(400 + insets.left, 40 + insets.top, 140, 300);
 		add(maps_pane);
+		size = maps_list.getPreferredSize();
+		maps_list.setBounds(insets.left, insets.top, size.width, size.height);
 	}
 	/**Creates the InGame screen layout*/
 	public void InGameScreen() {
 		removeAll();
-		InGameSetup();
 		Game.GameState=Game.Playing;
-	}
-	
-	public void InGameSetup() {
-		//add(new Menu("Pause"));
-		
 		add(ply_next);
 		add(ply_prev);
 		add(ply_endturn);

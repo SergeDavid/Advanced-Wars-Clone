@@ -65,6 +65,8 @@ public class InputHandler implements KeyListener,MouseListener,ActionListener,Mo
 		if (i==cancle) {Game.player.get(Game.btl.currentplayer).cancle();}
 		
 		if (i==start) {Game.MenuButton();}
+		
+		if (i==dev1) {Game.gui.LoginScreen();}
 	}
 	public void keyReleased(KeyEvent arg0) {}
 	public void keyTyped(KeyEvent arg0) {}

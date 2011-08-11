@@ -5,7 +5,7 @@ import java.util.Random;
 
 public class Map {
 	//Base settings
-	public int width = 12;
+	public int width = 12;//Base = 16
 	public int height = 12;
 	public final int minsize = 6;
 	public final int maxsize = 64;
@@ -19,6 +19,7 @@ public class Map {
 	public List<String> MapNames;
 	
 	public Map() {
+		map = new int[height][width];
 		MapNames = finder.GrabMaps();
 	}
 	
@@ -29,7 +30,6 @@ public class Map {
 		this.width=width;
 		this.height=height;
 		map = new int[height][width];
-		System.out.println("Map width and height = " + width + " : " + height);
 	}
 	public void Randomize() {
 		Random rand = new Random();
