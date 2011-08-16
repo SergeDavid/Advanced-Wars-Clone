@@ -46,7 +46,6 @@ public class Character {
 	 */
 	public Character(int owner, int xx,int yy) {
 		this.owner=owner;
-		Game.player.get(owner).totalunits++;
 		oldx = x = xx;
 		oldy = y = yy;
 		name = "Infantry";
@@ -116,7 +115,7 @@ public class Character {
 
 	/**This finds a unit with the x and y coordinates and returns their data to be used, friendlyfire set to true to find allies, hostilefire to attack foes.*/
 	private Character FindTarget(int destx, int desty, boolean hostilefire, boolean friendlyfire) {
-		for (Player ply : Game.player) {
+		for (players.Base ply : Game.player) {
 			if (ply.team!=Game.player.get(owner).team||friendlyfire) {
 				for (Character unit : ply.units) {
 					if (unit.x==destx&&unit.y==desty) {
@@ -135,9 +134,9 @@ public class Character {
 		//Finds the distance in x and y
 		int movex = (destx>x) ? destx-x : x-destx;
 		int movey = (desty>y) ? desty-y : y-desty;
-		//Hack for use since I don't have the pathfinding yet.
+		//Hack for use since I don't have the path finding yet.
 		if (movex+movey>speed) {return false;}
-		for (Player ply : Game.player) {
+		for (players.Base ply : Game.player) {
 			for (Character unit : ply.units) {
 				//HACK: So you can stand still instead of being forced to move.
 				if (unit.x==x&&unit.y==y) {}
@@ -145,15 +144,15 @@ public class Character {
 			}
 		}
 		if (Game.map.Walkable(Game.map.map[desty][destx])) {return true;}
-		System.out.println("Map not walkable!" + Game.map.map[destx][desty]);
+		System.out.println("Tile not walkable!" + Game.map.map[desty][destx]);
 		return false;
 	}
 
 	/**Returns the image location of the sprite sheet where this unit is located.*/
 	public int[] DrawMe() {
 		int[] loc = {type,0};
-		if (acted) {loc[1]++;}//TODO: Change to acted;
-		if (owner%2==1) {loc[1]+=2;}//TODO: Change it to better show owner's colors;
+		if (acted) {loc[1]++;}
+		if (owner%2==1) {loc[1]+=2;}
 		return loc;
 	}
 }

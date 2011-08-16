@@ -1,9 +1,26 @@
 package engine;
-
+//TODO: Setup this class as the controller for buildings.
+//TODO: Think about expanding building types from x to xx for a ton of different kinds.
+/** The different types of buildings list.
+ * 0) Capital (Win game condition, optional, can have more then one for interesting results)
+ * 1) Town (Revenue base)
+ * 2) Barracks (Land unit)
+ * 3) Airport (Air based units)
+ * 4) Docks (Sea units)
+ * 5)
+ * 6)
+ * 7)
+ * 8)
+ * 9)
+ * 10)
+ * 11)
+ * 12)
+ * 13)
+ * 14)
+ * 15)*/
 public class Buildings {
 	int maxhealth = 20;
 	int health = maxhealth;
-	int building;
 	int type;
 	/**The type of building it is with*/
 	int owner;
@@ -11,15 +28,24 @@ public class Buildings {
 	int x;
 	int y;
 	
-	/**Owned building.*/
-	public Buildings(int owner,int xx, int yy) {
+	/**
+	 * 
+	 * @param owner = 0-11 are players, 15 is neutral, 12-14 are unused.
+	 * @param xx = X location
+	 * @param yy = Y location
+	 * @param type = Building type
+	 */
+	public Buildings(int owner,int xx, int yy, int type) {
 		this.owner=owner;
-		team=Game.player.get(owner).team;
-		x=xx;y=yy;
-	}
-	/**Neutral team building.*/
-	public Buildings(int xx, int yy) {
-		x=xx;y=yy;
+		if (owner>11) {
+			this.owner=15;
+			team=0;
+		}
+		else {
+			team=Game.player.get(owner).team;
+		}
+		x=xx;
+		y=yy;
 	}
 
 	public void Capture(int hp, int winner) {
@@ -38,8 +64,9 @@ public class Buildings {
 	
 	public void Action() {
 		switch (type) {
+		
 		//case 0:break;
-		default:Game.player.get(Game.btl.currentplayer).Buyunit(x,y);break;
+		default:Game.btl.Buyunit(x,y);break;
 		}
 	}
 	

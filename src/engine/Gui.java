@@ -1,3 +1,4 @@
+
 package engine;
 
 import java.awt.Color;
@@ -33,6 +34,8 @@ public class Gui extends JPanel {
 	public JButton ply_endturn = new JButton("End Turn");
 	JList maps_list = new JList();
 	DefaultListModel maps_model = new DefaultListModel();
+	
+	public GameMenus gms;
 		
 	public Gui(JFrame item) {
 	    item.add(this);
@@ -107,7 +110,11 @@ public class Gui extends JPanel {
 			DrawUnits(gg);
 			
 			//Draw the selector
-			gg.drawImage(Game.img_tile,Game.selectx*32,Game.selecty*32,Game.selectx*32+32,Game.selecty*32+32,32*7,0,32*8,32,null);
+			gg.drawImage(Game.img_tile,
+					Game.player.get(Game.btl.currentplayer).selectx*32,
+					Game.player.get(Game.btl.currentplayer).selecty*32,
+					Game.player.get(Game.btl.currentplayer).selectx*32+32,
+					Game.player.get(Game.btl.currentplayer).selecty*32+32,32*7,0,32*8,32,null);
 			//TODO: Draw any foreground effects.
 		break;
 		}
@@ -133,7 +140,7 @@ public class Gui extends JPanel {
 	}
 
 	private void DrawUnits(Graphics2D gg) {
-		for (Player ply : Game.player) {
+		for (players.Base ply : Game.player) {
 			for (Character chars : ply.units) {
 				int[] loc = chars.DrawMe();
 				gg.drawImage(Game.img_char,
@@ -149,7 +156,7 @@ public class Gui extends JPanel {
 	 * 3) Unit name, health, image
 	 * */
 	private void DrawUnitInfo(Graphics2D gg) {
-		Player plyer = Game.player.get(Game.btl.currentplayer);
+		players.Base plyer = Game.player.get(Game.btl.currentplayer);
 		if (plyer.unitselected) {
 			Character unit = plyer.units.get(plyer.selectedunit);
 			if (unit.acted) {
@@ -182,18 +189,18 @@ public class Gui extends JPanel {
 		//TODO: Display Terrain Name
 		//TODO: Display Terrain Bonuses
 		//TODO: If building, display building info.
-		int x = Game.selectx;
-		int y = Game.selecty;
-		int xx = Game.map.tile.t.get(Game.map.map[y][x]).x();
-		int yy = Game.map.tile.t.get(Game.map.map[y][x]).y();
+		int x = Game.player.get(Game.btl.currentplayer).selectx;
+		int y = Game.player.get(Game.btl.currentplayer).selecty;
+		int xx = Game.map.tiles.get(Game.map.map[y][x]).x();
+		int yy = Game.map.tiles.get(Game.map.map[y][x]).y();
 		gg.drawImage(Game.img_tile, 520+32, 200, 520+32+32, 232, xx*32, yy*32, xx*32+32, yy*32+32, null);
 	}
 
 	private void DrawTerrain(Graphics2D gg) {
 		for (int y=0; y < Game.map.height; y++) {
 			for (int x=0; x < Game.map.width; x++) {
-				int xx = Game.map.tile.t.get(Game.map.map[y][x]).x();
-				int yy = Game.map.tile.t.get(Game.map.map[y][x]).y();
+				int xx = Game.map.tiles.get(Game.map.map[y][x]).x();
+				int yy = Game.map.tiles.get(Game.map.map[y][x]).y();
 				gg.drawImage(Game.img_tile, x*32, y*32, x*32+32, y*32+32, xx*32, yy*32, xx*32+32, yy*32+32, null);
 			}
 		}

@@ -6,10 +6,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 
 /**This handles all of the mouse, key, and action listeners.*/
-public class InputHandler implements KeyListener,MouseListener,ActionListener,MouseMotionListener {
+public class InputHandler implements KeyListener,MouseListener,ActionListener {
 	//Keyboard shortcuts, might change this method for the different dev ones and any character shortcuts.
 	public int dev1 = KeyEvent.VK_NUMPAD1;
 	public int dev2 = KeyEvent.VK_NUMPAD2;
@@ -44,7 +43,6 @@ public class InputHandler implements KeyListener,MouseListener,ActionListener,Mo
 	public InputHandler() {
 		Game.gui.addKeyListener(this);
 		Game.gui.addMouseListener(this);
-		Game.gui.addMouseMotionListener(this);
 		Game.gui.Join.addActionListener(this);
 		Game.gui.Exit.addActionListener(this);
 		
@@ -54,19 +52,22 @@ public class InputHandler implements KeyListener,MouseListener,ActionListener,Mo
 	public void keyPressed(KeyEvent e) {
 		int i=e.getKeyCode();
 		if (i==exit) {System.exit(0);}
-		
-		if (i==up||i==up2) {Game.selecty--;if (Game.selecty<0) {Game.selecty++;}}
-		if (i==down||i==down2) {Game.selecty++;if (Game.selecty>=Game.map.height) {Game.selecty--;}}
-		if (i==left||i==left2) {Game.selectx--;if (Game.selectx<0) {Game.selectx++;}}
-		if (i==right||i==right2) {Game.selectx++;if (Game.selectx>=Game.map.width) {Game.selectx--;}}
-		
-		//TODO: Refine this to work for the selected unit during a players turn.
-		if (i==select) {Game.player.get(Game.btl.currentplayer).Action();}
-		if (i==cancle) {Game.player.get(Game.btl.currentplayer).cancle();}
+		if (Game.GameState==Game.Playing) {
+			players.Base ply = Game.player.get(Game.btl.currentplayer);
+			if (i==up||i==up2) {ply.selecty--;if (ply.selecty<0) {ply.selecty++;}}
+			if (i==down||i==down2) {ply.selecty++;if (ply.selecty>=Game.map.height) {ply.selecty--;}}
+			if (i==left||i==left2) {ply.selectx--;if (ply.selectx<0) {ply.selectx++;}}
+			if (i==right||i==right2) {ply.selectx++;if (ply.selectx>=Game.map.width) {ply.selectx--;}}
+			if (i==select) {Game.btl.Action();}
+			if (i==cancle) {Game.btl.Cancle();}
+		}
 		
 		if (i==start) {Game.MenuButton();}
 		
 		if (i==dev1) {Game.gui.LoginScreen();}
+		if (i==dev2) {Game.gui.gms = new GameMenus("Pause");}
+		if (i==dev3) {Game.gui.remove(Game.gui.gms);}
+		if (i==dev4) {Game.gui.gms = new GameMenus("YesNo");}
 	}
 	public void keyReleased(KeyEvent arg0) {}
 	public void keyTyped(KeyEvent arg0) {}
@@ -87,12 +88,5 @@ public class InputHandler implements KeyListener,MouseListener,ActionListener,Mo
 		else if (s==Game.gui.Exit) {System.exit(0);}
 		else if (s==Game.gui.ply_endturn) {Game.btl.EndTurn();}
 		Game.gui.requestFocusInWindow();
-	}
-
-	@Override public void mouseDragged(MouseEvent arg0) {}
-
-	@Override public void mouseMoved(MouseEvent e) {
-		Game.mouseX=e.getX();
-		Game.mouseY=e.getY();
 	}
 }

@@ -51,15 +51,9 @@ public class Game extends JFrame {
 	public static Boolean readytopaint;
 	
 	/**This handles the different players and also is used to speed logic arrays (contains a list of all characters they own)*/
-	public static List<Player> player = new ArrayList<Player>();
+	public static List<players.Base> player = new ArrayList<players.Base>();
 	public static List<Buildings> builds = new ArrayList<Buildings>();
 	
-	/**The mouse X and Y locations, might not need them but who knows?*/
-	public static int mouseX;
-	public static int mouseY;
-	public static int selectx = 1;
-	public static int selecty = 1;
-
 	public Game() {super (name);
 	
 		//Default Settings of the JFrame
@@ -136,7 +130,6 @@ public class Game extends JFrame {
 	//TODO: Rework the map so that it works better
 	//TODO: Create a map editor
 	//TODO: Move the maps folder outside of the to be constructed jar area
-	//TODO: Remodel dev sprites to protect against copyright problems.
 	//TODO: Actually make some sprites to use.
 	//TODO: Reorganize sprite sheets to support animations on units
 	//TODO: Add more tiles

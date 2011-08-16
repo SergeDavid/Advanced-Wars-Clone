@@ -1,5 +1,6 @@
 package engine;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -13,12 +14,13 @@ public class Map {
 	
 	/**A square/rectangular area that you play on. Diamond shaped if isometric.*/
 	public int[][]map;
-	Tiles tile = new Tiles();
+	public List<terrain.Base> tiles = new ArrayList<terrain.Base>();
 	public MapFinder finder = new MapFinder();
 	public MapParser parse = new MapParser();
 	public List<String> MapNames;
 	
 	public Map() {
+		LoadTiles();
 		map = new int[height][width];
 		MapNames = finder.GrabMaps();
 	}
@@ -42,8 +44,16 @@ public class Map {
 		}
 	}
 	
-	public boolean Walkable(int i) {if (tile.t.get(i).walk()) {return true;}return false;}
-	public boolean Swimable(int i) {if (tile.t.get(i).swim()) {return true;}return false;}
-	public boolean FlyAble(int i) {if (tile.t.get(i).fly()) {return true;}return false;}
+	public boolean Walkable(int i) {if (tiles.get(i).walk()) {return true;}return false;}
+	public boolean Swimable(int i) {if (tiles.get(i).swim()) {return true;}return false;}
+	public boolean FlyAble(int i) {if (tiles.get(i).fly()) {return true;}return false;}
 	
+	/**Loads all of the tiles that are used in the map into an array list.*/
+	private void LoadTiles() {
+		tiles.add(new terrain.Dirt());
+		tiles.add(new terrain.Grass());
+		tiles.add(new terrain.Road());
+		tiles.add(new terrain.Water());
+		tiles.add(new terrain.Water());
+	}
 }
