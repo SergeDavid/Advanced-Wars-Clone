@@ -88,21 +88,22 @@ public class MapParser {
 	}
 	/**Creates a building by owner at x,y and type
 	 * f = Owner (0-11 are players, 15 is neutral, 12-14 are unused)
-	 * ff = */
+	 * ff = x location
+	 * ff = y location
+	 * ff = type*/
 	private void ParseBuilding(String info) {
-		//TODO: Add in building type
-		Game.builds.add(
-				new Buildings(
-						Integer.parseInt(info.substring(0,1),16),
-						Integer.parseInt(info.substring(1,3),16), 
-						Integer.parseInt(info.substring(3,5),16),
-						Integer.parseInt(info.substring(5,7),16)));
+		Game.CreateCity(
+				Integer.parseInt(info.substring(0,1),16),
+				Integer.parseInt(info.substring(1,3),16),
+				Integer.parseInt(info.substring(3,5),16),
+				Integer.parseInt(info.substring(5,7),16));
 	}
 	private void ParseUnit(String info) {
-		Game.player.get(Integer.parseInt(info.substring(0,1),16)).units.add(
-				new Character(
-						Integer.parseInt(info.substring(0,1),16),
-						Integer.parseInt(info.substring(1,3),16), 
-						Integer.parseInt(info.substring(3,5),16)));
+		Game.CreateUnit(
+				Integer.parseInt(info.substring(5,7),16), 
+				Integer.parseInt(info.substring(0,1),16), 
+				Integer.parseInt(info.substring(1,3),16), 
+				Integer.parseInt(info.substring(3,5),16), 
+				true);
 	}
 }

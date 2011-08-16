@@ -13,17 +13,16 @@ public class Base {
 	int health = maxhealth;
 	
 	//owner's ID and team #
-	int owner;
-	int team = 0;
+	public int owner;
+	public int team = 0;
 	
 	//Location
-	int x;
-	int y;
+	public int x;
+	public int y;
 	
 	public Base(int owner,int team,int xx, int yy) {
 		//15 = Neutral, 12~14 are unused. (12 max players)
-		if (owner>11) {this.owner=15;}
-		else {this.owner=owner;}
+		this.owner=owner;
 		this.team=team;
 		x=xx;
 		y=yy;

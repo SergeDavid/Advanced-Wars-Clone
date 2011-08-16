@@ -1,15 +1,8 @@
 package players;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import engine.Character;
+import engine.Game;
 
 public class Base {
-	
-	//TODO: Move to Game? D:
-	public List<Character> units = new ArrayList<Character>();
-	
 	//Basic Info
 	public String name;
 	public String desc;
@@ -84,6 +77,33 @@ public class Base {
 	public void MyPower1() {}
 	/**The second ability, I might have these point to something like Game.powers.QuickFix();*/
 	public void MyPower2() {}
+	
+	public void Cancle() {
+		if (unitselected) {
+			Game.units.get(selectedunit).cancle();
+			unitselected=false;
+		}
+	}
+	
+	public boolean FindUnit() {
+		for (int i=0; i<Game.units.size(); i++) {
+			if (Game.units.get(i).x==selectx&&Game.units.get(i).y==selecty) {
+				selectedunit=i;
+				unitselected=true;
+				return true;
+			}
+		}
+		return false;
+	}
+	public boolean FindCity() {//Finds a city to use for menu pickings.
+		for (buildings.Base bld : Game.builds) {
+			if (bld.x==selectx&&bld.y==selecty&&bld.owner==Game.btl.currentplayer) {
+				Game.btl.Buyunit(bld.x, bld.y);
+				return true;
+			}
+		}
+		return false;
+	}
 	
 	/**Returns the image location of the sprite sheet where this unit is located.*/
 	public int[] DrawMe() {

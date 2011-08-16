@@ -123,14 +123,14 @@ public class Gui extends JPanel {
 
 	private void DrawSidebar(Graphics2D gg) {
 		int offset = 514;
-		gg.drawString("Funds = " + Game.player.get(Game.btl.currentplayer).money,offset,128);
+		gg.drawString("Funds = " + Game.player.get(Game.btl.currentplayer).money,offset+4,128);
 		
-		DrawUnitInfo(gg);
+		DrawUnitInfo(gg, offset);
 		DrawTerrainInfo(gg);
 	}
 
 	private void DrawBuildings(Graphics2D gg) {
-		for (Buildings bld : Game.builds) {
+		for (buildings.Base bld : Game.builds) {
 			int[] loc = bld.DrawMe();
 			gg.drawImage(Game.img_char,
 					bld.x*32,bld.y*32,bld.x*32+32,bld.y*32+32,
@@ -138,50 +138,48 @@ public class Gui extends JPanel {
 					loc[0]*32+32,loc[1]*32+32,null);
 		}
 	}
-
 	private void DrawUnits(Graphics2D gg) {
-		for (players.Base ply : Game.player) {
-			for (Character chars : ply.units) {
-				int[] loc = chars.DrawMe();
-				gg.drawImage(Game.img_char,
-						chars.x*32,chars.y*32,chars.x*32+32,chars.y*32+32,
-						loc[0]*32,loc[1]*32,loc[0]*32+32,loc[1]*32+32,null);
-			}
+		for (units.Base chars : Game.units) {
+			int[] loc = chars.DrawMe();
+			gg.drawImage(Game.img_char,
+				chars.x*32,chars.y*32,chars.x*32+32,chars.y*32+32,
+				loc[0]*32,loc[1]*32,loc[0]*32+32,loc[1]*32+32,null);
 		}
 	}
 
 	/**This draws the following things when applicable.
-	 * 1) Moveable locations
+	 * 1) Move-able locations
 	 * 2) Attackable locations
 	 * 3) Unit name, health, image
 	 * */
-	private void DrawUnitInfo(Graphics2D gg) {
+	private void DrawUnitInfo(Graphics2D gg, int offset) {
 		players.Base plyer = Game.player.get(Game.btl.currentplayer);
 		if (plyer.unitselected) {
-			Character unit = plyer.units.get(plyer.selectedunit);
+			units.Base unit = Game.units.get(plyer.selectedunit);
 			if (unit.acted) {
-				gg.drawString("Finished.",470,46);
+				gg.drawString("Finished.",offset,64);
 			}
 			else if (unit.moved&&!unit.acted) {int i=0;
-				gg.drawString("Attacking.",470,46);
-				for (int y = unit.y-1; y <= unit.y + 1; y++) {
+				gg.drawString("Attacking.",offset,64);
+				for (int y = unit.y-1; y <= unit.y + 1; y++) {//TODO: Do something with this.
 					for (int x = unit.x-1; x <= unit.x + 1; x++) {
 						if (unit.atkrange[i]) {gg.drawImage(Game.img_tile,x*32,y*32,x*32+32,y*32+32,32*6,0,32*7,32,null);}
 						i++;
 			}	}	}
 			else if (!unit.moved) {int i=0;
-				gg.drawString("Moving",470,46);
-				for (int y = unit.y - 2; y <= unit.y + 2; y++) {
+				gg.drawString("Moving",offset,64);
+				for (int y = unit.y - 2; y <= unit.y + 2; y++) {//TODO: Do something with this.
 					for (int x = unit.x - 2; x <= unit.x + 2; x++) {
 						if (unit.movrange[i]) {gg.drawImage(Game.img_tile,x*32,y*32,x*32+32,y*32+32,32*6,0,32*7,32,null);}
 						i++;
 			}	}	}
+			
 			//UNIT SELECTION STUFFIES!
 			int[] loc = unit.DrawMe();
 			gg.drawImage(Game.img_char,
-					420,16,420+32,16+32,
+					offset,8,offset+32,8+32,
 					32*loc[0]*32,loc[1]*32,loc[0]*32+32,loc[1]*32+32,null);
-			gg.drawString(unit.name + " = " + unit.health + " HP!",470,34);
+			gg.drawString(unit.nick + " = " + unit.health + " HP!",offset,52);
 		}
 	}
 	private void DrawTerrainInfo(Graphics2D gg) {

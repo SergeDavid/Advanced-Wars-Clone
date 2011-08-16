@@ -1,7 +1,6 @@
 package engine;
 
 import java.awt.Image;
-import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JFrame;
@@ -26,12 +25,6 @@ public class Game extends JFrame {
 	public static final int TheMenu = 1;
 	/**This enables things with controlling pieces and logic that happen during gameplay to work.*/
 	public static final int Playing = 2;
-	/**Which menu is to be displayed*/
-	public static int GameMenu;
-	public static final int MainMenu = 0;
-	public static final int Options = 1;
-	public static final int Credit = 2;
-	public static final int Pause = 3;
 		
 	//Setup the quick access to all of the other class files.
 	public static Map map;
@@ -41,8 +34,6 @@ public class Game extends JFrame {
 	public static Battle btl;
 	
 	//Image handling settings are as follows
-	/**The buffer strategy that holds then transfers the images from off screen to on screen so there are no flickering.*/
-	static BufferStrategy strategy;
 	public int fps;
 	public int fpscount;
 	public static Image[] img_menu = new Image[5];
@@ -52,7 +43,8 @@ public class Game extends JFrame {
 	
 	/**This handles the different players and also is used to speed logic arrays (contains a list of all characters they own)*/
 	public static List<players.Base> player = new ArrayList<players.Base>();
-	public static List<Buildings> builds = new ArrayList<Buildings>();
+	public static List<buildings.Base> builds = new ArrayList<buildings.Base>();
+	public static List<units.Base> units = new ArrayList<units.Base>();
 	
 	public Game() {super (name);
 	
@@ -70,16 +62,11 @@ public class Game extends JFrame {
 		gui.requestFocusInWindow();
 		
 		//load images, initialize the map, and adds the input settings.
-		StartupScreen();
 		load = new LoadImages();
 		map = new Map();
 		input = new InputHandler();
 		
 		GameLoop();
-	}
-
-	private void StartupScreen() {
-		// TODO Auto-generated method stub
 	}
 
 	private void GameLoop() {
@@ -118,25 +105,43 @@ public class Game extends JFrame {
 		}
 	}
 	
-	public static void MenuButton() {
-		if (GameState==Playing) {
-		
+	//TODO: Might move these three to their own class, might not.
+	public static void CreateCommander(int which,int team, int money, boolean npc) {
+		switch (which) {
+			case 0:Game.player.add(new players.Andy(npc,team,money));break;
+			default:Game.player.add(new players.Base(npc,team,money));break;
 		}
 	}
-	//TODO: Create in game menu's
-	//TODO: Combine units into a single list for less looping
-	//TODO: Re-do the building code for use with multiple building classes
+	public static void CreateCity(int owner, int xx, int yy, int type) {//15 = Neutral, 12~14 are unused. (12 max players)
+		int team = 0;
+		if (owner>11) {owner=15;}
+		else {team = Game.player.get(owner).team;}
+		switch (type) {
+			case 0:Game.builds.add(new buildings.Capital(owner, team, xx, yy));break;
+			case 1:Game.builds.add(new buildings.Town(owner, team, xx, yy));break;
+			case 2:Game.builds.add(new buildings.Barracks(owner, team, xx, yy));break;
+			case 3:Game.builds.add(new buildings.Shipyard(owner, team, xx, yy));break;
+			case 4:Game.builds.add(new buildings.Airport(owner, team, xx, yy));break;
+			default:Game.builds.add(new buildings.Town(owner, team, xx, yy));break;
+		}		
+	}
+	public static void CreateUnit(int type, int owner, int xx, int yy, boolean active) {
+		switch (type) {
+			case 0:Game.units.add(new units.Infantry(owner, xx, yy, active));break;
+			case 1:Game.units.add(new units.Mechanic(owner, xx, yy, active));break;
+			case 2:Game.units.add(new units.SmallTank(owner, xx, yy, active));break;
+			default:Game.units.add(new units.Base(owner, xx, yy, active));break;
+		}
+		
+	}
 	//TODO: Selecting a working building without a unit on top brings up it's menu.
 	//TODO: Rework the map so that it works better
 	//TODO: Create a map editor
-	//TODO: Move the maps folder outside of the to be constructed jar area
 	//TODO: Actually make some sprites to use.
 	//TODO: Reorganize sprite sheets to support animations on units
 	//TODO: Add more tiles
-	//TODO: Add in capital, factories, and other buildings
-	//TODO: Include buildings offering units health
-	//TODO: End game setup, someone wins when someone else loses all their units, or loses their capital building.
-	//TODO: Add in more TODO lists.
+	//TODO: When units are on a building, they gain health at the beginning of their turn (if enough money)
+	//TODO: End game setup, someone wins when someone else loses all their units (and can't make more), or loses their capital building.
 	
 	/**Starts a new game when launched.*/
 	public static void main(String args[]) throws Exception {new Game();}

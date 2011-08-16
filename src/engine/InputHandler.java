@@ -59,10 +59,10 @@ public class InputHandler implements KeyListener,MouseListener,ActionListener {
 			if (i==left||i==left2) {ply.selectx--;if (ply.selectx<0) {ply.selectx++;}}
 			if (i==right||i==right2) {ply.selectx++;if (ply.selectx>=Game.map.width) {ply.selectx--;}}
 			if (i==select) {Game.btl.Action();}
-			if (i==cancle) {Game.btl.Cancle();}
+			if (i==cancle) {Game.player.get(Game.btl.currentplayer).Cancle();}
 		}
 		
-		if (i==start) {Game.MenuButton();}
+		//if (i==start) {Game.MenuButton();}
 		
 		if (i==dev1) {Game.gui.LoginScreen();}
 		if (i==dev2) {Game.gui.gms = new GameMenus("Pause");}
