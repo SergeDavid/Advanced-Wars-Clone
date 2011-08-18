@@ -6,7 +6,7 @@ public class Town extends Base {
 		super(owner, team, xx, yy);
 		name="Town";
 		desc="Money Fodder.";
-		img = 0;
+		img = 1;
 	}
 
 }

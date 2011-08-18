@@ -16,15 +16,13 @@ public class MapFinder {
 		File folder = new File(path);
 		File[] filelist = folder.listFiles();
 		List<String> maps = new ArrayList<String>();
-		
-		System.out.println("Time to find some maps!");
+
 		for (int i = 0; i < filelist.length; i++) {
 			if (filelist[i].isFile()) {
 				name = filelist[i].getName();
 				if (name.endsWith(".txt") || name.endsWith(".TXT")) {
-					System.out.println(name);
 					Game.gui.maps_model.addElement(name.substring(0, name.length()-4));
-					maps.add(name+"");
+					maps.add(name);
 				}
 			}
 		}

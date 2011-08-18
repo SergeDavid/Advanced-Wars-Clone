@@ -43,18 +43,16 @@ public class MapParser {
 					}
 				}
 			}
-			if (Info&&Blds) {
-				return true;
-			}
+			if (Info&&Blds) {return true;}
 			else {
 				System.out.println("Return to login...");
 				return false;
 			}
 		} catch (FileNotFoundException e) {
-			System.out.println("Map not found.");
+			Game.error.ShowError("Map not found.");
 			return false;
 		} catch (IOException e) {
-			System.out.println("Read Line Error in map generation.");
+			Game.error.ShowError("Read Line error in Map Generation.");
 			return false;
 		}
 	}
@@ -65,7 +63,7 @@ public class MapParser {
 	 * x = Total players*/
 	private void ParseInfo(String info) {
 		if (info.length()>5||info.length()<5) {
-			System.out.println("Map Info is corrupt.");
+			Game.error.ShowError("Map info is corrupt.");
 			return;
 		}
 		Game.map.MapSetup(Integer.parseInt(info.substring(0,2),16)+1,Integer.parseInt(info.substring(2,4),16)+1);
@@ -75,7 +73,7 @@ public class MapParser {
 	 * x = Terrain (to be split into xx, maybe xx:x)*/
 	private void ParseTerrain(String info) {
 		if (info.length()>Game.map.width||info.length()<Game.map.width) {
-			System.out.println("Terrain at row " + terrain + " is corrupt.");
+			Game.error.ShowError("Terrain at row " + terrain + " is corrupt.");
 		}
 		if (terrain>=Game.map.height) {return;}
 		//TODO: Split the terrain info into 2 bytes (ff) instead of (f)

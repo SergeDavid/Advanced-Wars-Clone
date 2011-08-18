@@ -72,6 +72,7 @@ public class Gui extends JPanel {
 		add(maps_pane);
 		size = maps_list.getPreferredSize();
 		maps_list.setBounds(insets.left, insets.top, size.width, size.height);
+		if (Game.error.showing) {add(Game.error);}
 	}
 	/**Creates the InGame screen layout*/
 	public void InGameScreen() {
@@ -87,6 +88,7 @@ public class Gui extends JPanel {
 		ply_prev.setBounds(514 + insets.left, 316 + insets.top, size.width, size.height);
 		size = ply_endturn.getPreferredSize();
 		ply_endturn.setBounds(521 + insets.left, 350 + insets.top, 110, size.height);
+		if (Game.error.showing) {add(Game.error);}
 	}
 	
 	public void paintComponent(Graphics g) {
@@ -132,7 +134,7 @@ public class Gui extends JPanel {
 	private void DrawBuildings(Graphics2D gg) {
 		for (buildings.Base bld : Game.builds) {
 			int[] loc = bld.DrawMe();
-			gg.drawImage(Game.img_char,
+			gg.drawImage(Game.img_city,
 					bld.x*32,bld.y*32,bld.x*32+32,bld.y*32+32,
 					loc[0]*32,loc[1]*32,
 					loc[0]*32+32,loc[1]*32+32,null);

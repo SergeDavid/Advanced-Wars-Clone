@@ -25,10 +25,13 @@ public class Game extends JFrame {
 	public static final int TheMenu = 1;
 	/**This enables things with controlling pieces and logic that happen during gameplay to work.*/
 	public static final int Playing = 2;
+	/**The built in map editor.*/
+	public static final int Editor = 3;
 		
 	//Setup the quick access to all of the other class files.
 	public static Map map;
 	public static Gui gui;
+	public static ErrorHandler error = new ErrorHandler();
 	public static LoadImages load;
 	public static InputHandler input;
 	public static Battle btl;
@@ -39,6 +42,7 @@ public class Game extends JFrame {
 	public static Image[] img_menu = new Image[5];
 	public static Image img_tile;
 	public static Image img_char;
+	public static Image img_city;
 	public static Boolean readytopaint;
 	
 	/**This handles the different players and also is used to speed logic arrays (contains a list of all characters they own)*/
@@ -123,7 +127,7 @@ public class Game extends JFrame {
 			case 3:Game.builds.add(new buildings.Shipyard(owner, team, xx, yy));break;
 			case 4:Game.builds.add(new buildings.Airport(owner, team, xx, yy));break;
 			default:Game.builds.add(new buildings.Town(owner, team, xx, yy));break;
-		}		
+		}
 	}
 	public static void CreateUnit(int type, int owner, int xx, int yy, boolean active) {
 		switch (type) {

@@ -51,7 +51,7 @@ public class Base {
 	}
 	
 	public int[] DrawMe() {
-		int[] loc = {img+1,team+1};
+		int[] loc = {img,team};
 		return loc;
 	}
 }

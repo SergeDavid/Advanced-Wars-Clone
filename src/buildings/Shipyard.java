@@ -6,7 +6,7 @@ public class Shipyard extends Base {
 		super(owner, team, xx, yy);
 		name="Capital";
 		desc="Creates water units.";
-		img = 0;
+		img = 3;
 	}
 
 }

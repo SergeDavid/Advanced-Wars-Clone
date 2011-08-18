@@ -67,7 +67,8 @@ public class InputHandler implements KeyListener,MouseListener,ActionListener {
 		if (i==dev1) {Game.gui.LoginScreen();}
 		if (i==dev2) {Game.gui.gms = new GameMenus("Pause");}
 		if (i==dev3) {Game.gui.remove(Game.gui.gms);}
-		if (i==dev4) {Game.gui.gms = new GameMenus("YesNo");}
+		if (i==dev4) {Game.error.ShowError("Herp derp le worpdte gerpa nerpa derp her her wor her!");}
+		if (i==dev5) {Game.error.HideError();}
 	}
 	public void keyReleased(KeyEvent arg0) {}
 	public void keyTyped(KeyEvent arg0) {}
