@@ -101,7 +101,7 @@ public class Gui extends JPanel {
 		case Game.TheMenu:
 		break;
 		case Game.Playing:
-			//TODO: Dealth with who is currently playing better.
+			//TODO: Deal with who is currently playing better.
 			if (Game.btl.currentplayer==0) {gg.setColor(new Color(60,0,0));}
 			else {gg.setColor(new Color(0,0,60));}
 			gg.fillRect(0, 0, width, height);
@@ -116,7 +116,7 @@ public class Gui extends JPanel {
 					Game.player.get(Game.btl.currentplayer).selectx*32,
 					Game.player.get(Game.btl.currentplayer).selecty*32,
 					Game.player.get(Game.btl.currentplayer).selectx*32+32,
-					Game.player.get(Game.btl.currentplayer).selecty*32+32,32*7,0,32*8,32,null);
+					Game.player.get(Game.btl.currentplayer).selecty*32+32,32*7,32,32*8,64,null);
 			//TODO: Draw any foreground effects.
 		break;
 		}
@@ -161,21 +161,22 @@ public class Gui extends JPanel {
 			if (unit.acted) {
 				gg.drawString("Finished.",offset,64);
 			}
-			else if (unit.moved&&!unit.acted) {int i=0;
+			else if (unit.moved&&!unit.acted) {
 				gg.drawString("Attacking.",offset,64);
-				for (int y = unit.y-1; y <= unit.y + 1; y++) {//TODO: Do something with this.
-					for (int x = unit.x-1; x <= unit.x + 1; x++) {
-						if (unit.atkrange[i]) {gg.drawImage(Game.img_tile,x*32,y*32,x*32+32,y*32+32,32*6,0,32*7,32,null);}
-						i++;
-			}	}	}
-			else if (!unit.moved) {int i=0;
+				for (int y = unit.y - unit.MaxAtkRange; y <= unit.y + unit.MaxAtkRange; y++) {
+					for (int x = unit.x - unit.MaxAtkRange; x <= unit.x + unit.MaxAtkRange; x++) {
+						if (unit.inrange(x,y)) {gg.drawImage(Game.img_tile,x*32,y*32,x*32+32,y*32+32,32*7,0,32*8,32,null);}
+					}
+				}
+			}
+			else if (!unit.moved) {
 				gg.drawString("Moving",offset,64);
-				for (int y = unit.y - 2; y <= unit.y + 2; y++) {//TODO: Do something with this.
-					for (int x = unit.x - 2; x <= unit.x + 2; x++) {
-						if (unit.movrange[i]) {gg.drawImage(Game.img_tile,x*32,y*32,x*32+32,y*32+32,32*6,0,32*7,32,null);}
-						i++;
-			}	}	}
-			
+				for (int y = unit.y - unit.speed; y <= unit.y + unit.speed; y++) {
+					for (int x = unit.x - unit.speed; x <= unit.x + unit.speed; x++) {
+						if (unit.moveable(x,y)) {gg.drawImage(Game.img_tile,x*32,y*32,x*32+32,y*32+32,32*6,0,32*7,32,null);}
+					}
+				}
+			}
 			//UNIT SELECTION STUFFIES!
 			int[] loc = unit.DrawMe();
 			gg.drawImage(Game.img_char,

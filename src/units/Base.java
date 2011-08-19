@@ -20,24 +20,24 @@ public class Base {
 	public boolean acted;
 	
 	//Location
+	/**This is the movement type of the unit.
+	 * 0 = Infantry
+	 * 1 = Vehicle
+	 * 2 = Ship
+	 * 3 = Aircraft*/
+	int MovType = 0;
 	public int x;
 	public int y;
 	public int oldx;
 	public int oldy;
 	public int speed = 2;
 	
-	//Ranges TODO: Change this to something better. (Move = A* path-finding, Attack = anything better)
-	public boolean[] atkrange = {false,true,false,true,false,true,false,true,false};
-	public boolean[] movrange = {
-			false,false,true,false,false,
-			false,true,true,true,false,
-			true,true,false,true,true,
-			false,true,true,true,false,
-			false,false,true,false,false};
-	
 	//Battle Settings
+	public int Fog = 5;//Fog of war setting.
 	public double attack = 100;//Base damage done to others
 	public double defense = 60;//Base armor for taking damage
+	public int MaxAtkRange = 1;//How many squares away from the unit can it attack. (1 being default, 0 being none)
+	public int MinAtkRange = 1;//This is used for ranged units such as artillery.
 	
 	/** I need to add what kind of unit is being constructed or split it into extended classes.
 	 * 
@@ -46,12 +46,12 @@ public class Base {
 	 * @param yy = The Y location of the unit.
 	 */
 	public Base(int owner, int xx, int yy, boolean active) {
-		this.owner=owner;
+		this.owner = owner;
 		oldx = x = xx;//Old locations are used when someone changes their minds on moving a unit.
 		oldy = y = yy;
 		if (!active) {
-			acted=true;
-			moved=true;	
+			acted = true;
+			moved = true;	
 		}
 	}
 	
@@ -65,9 +65,9 @@ public class Base {
 		}
 	}
 	/**Returns true if the x,y location is a place your unit can walk on.*/
-	private boolean moveable(int destx, int desty) {
-		//TODO: Either put path finding here, or use this as a tool for path finding.
+	public boolean moveable(int destx, int desty) {//TODO: Either put path finding here, or use this as a tool for path finding.
 		if (destx<0||desty<0) {return false;}
+		if (destx>=Game.map.width||desty>=Game.map.height) {return false;}
 		int movex = (destx>x) ? destx-x : x-destx;//Finds the total distance traveled.
 		int movey = (desty>y) ? desty-y : y-desty;
 		if (movex+movey>speed) {return false;}//Hack for use since I don't have the path finding yet.
@@ -75,15 +75,22 @@ public class Base {
 			if (unit.x==x&&unit.y==y) {}//HACK: So you can stand still instead of being forced to move.
 			else if (unit.x==destx&&unit.y==desty) {return false;}
 		}
-		if (Game.map.Walkable(Game.map.map[desty][destx])) {return true;}
+		switch (MovType) {//This is used to find out if the unit can move to said tile or not.
+			case 0: if (Game.map.Walkable(Game.map.map[desty][destx])) {return true;} break;
+			case 1: if (Game.map.Driveable(Game.map.map[desty][destx])) {return true;} break;
+			case 2: if (Game.map.Swimable(Game.map.map[desty][destx])) {return true;} break;
+			case 3: if (Game.map.Flyable(Game.map.map[desty][destx])) {return true;} break;
+			default: if (Game.map.Flyable(Game.map.map[desty][destx])) {return true;} break;
+		}
 		return false;
 	}
+	
 	public void attack(int destx, int desty) {
 		Random rand = new Random();
 		if (acted) {return;}
 		units.Base target = FindTarget(destx, desty, true, false);
 		if (target!=null) {
-			if (!inrange(target)) {acted=true;return;}
+			if (!inrange(target.x, target.y)) {acted=true;return;}
 			double damage = (attack-target.defense)+(rand.nextInt(20)-10)/10;
 			if (damage<1) {damage=1;}
 			target.health-=damage;
@@ -97,6 +104,7 @@ public class Base {
 			  System.out.println("Enemy unit now has " + target.health + " hp left!");
 			}
 		}
+		/**Capturing stuff*/
 		if (destx==x&&desty==y) {
 			buildings.Base bld = FindBuilding();
 			if (bld!=null) {
@@ -115,12 +123,13 @@ public class Base {
 		return null;
 	}
 	/**Finds out if the character is in an attackable location by sweeping through the atkrange list.*/
-	private boolean inrange(units.Base target) {//TODO: Unhacks with a sweep through attackable locations and units.
-		if (target.x==x+1 && target.y==y) {return true;}
-		if (target.x==x-1 && target.y==y) {return true;}
-		if (target.x==x && target.y==y+1) {return true;}
-		if (target.x==x && target.y==y-1) {return true;}
-		return false;
+	public boolean inrange(int xx, int yy) {
+		//TODO: Add in calculations for type (line / sphere / cone), it is currently only sphere
+		xx = (xx>x) ? xx-x : x-xx;//Finds the total distance.
+		yy = (yy>y) ? yy-y : y-yy;
+		if (xx+yy>MaxAtkRange) {return false;}
+		if (xx+yy<MinAtkRange) {return false;}
+		return true;
 	}
 	/**This finds a unit with the x and y coordinates and returns their data to be used, friendly-fire set to true to find allies, hostile-fire to attack foes.*/
 	private units.Base FindTarget(int destx, int desty, boolean hostilefire, boolean friendlyfire) {
@@ -144,14 +153,10 @@ public class Base {
 
 	/**Undoes what the unit has done so far.*/
 	public void cancle() {
-		if (moved&&!acted) {//If you moved, but haven't acted yet.
+		if (moved&&!acted) {
 			moved=false;
 			x=oldx;
 			y=oldy;
-		}
-		else if (!moved) {//Can't remember exactly how this is different from the above.
-			move(oldx,oldy);
-			moved=false;
 		}
 	}
 }

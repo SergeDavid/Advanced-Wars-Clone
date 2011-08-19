@@ -45,8 +45,9 @@ public class Map {
 	}
 	
 	public boolean Walkable(int i) {if (tiles.get(i).walk()) {return true;}return false;}
+	public boolean Driveable(int i) {if (tiles.get(i).drive()) {return true;}return false;}
 	public boolean Swimable(int i) {if (tiles.get(i).swim()) {return true;}return false;}
-	public boolean FlyAble(int i) {if (tiles.get(i).fly()) {return true;}return false;}
+	public boolean Flyable(int i) {if (tiles.get(i).fly()) {return true;}return false;}
 	
 	/**Loads all of the tiles that are used in the map into an array list.*/
 	private void LoadTiles() {

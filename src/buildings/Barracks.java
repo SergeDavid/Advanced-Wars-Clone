@@ -6,7 +6,7 @@ public class Barracks extends Base {
 		super(owner, team, xx, yy);
 		name="Capital";
 		desc="Creates ground units.";
-		img = 0;
+		img = 4;
 	}
 
 	public void OpenMenu() {}

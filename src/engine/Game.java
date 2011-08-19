@@ -138,14 +138,20 @@ public class Game extends JFrame {
 		}
 		
 	}
-	//TODO: Selecting a working building without a unit on top brings up it's menu.
+	//TODO: Selecting a working building without a unit on top brings up it's menu. (close to working now)
+	//TODO: Find out how to display units, buildings, and the map before entering a battle / in a menu
+	//TODO: More battle settings
+	//TODO: Fog of war
+	//TODO: A star path finding, I finally understand how to do it after thinking for a few minutes. :D
+	//TODO: Force buildings owned by none existing players / teams to turn neutral.
 	//TODO: Rework the map so that it works better
 	//TODO: Create a map editor
-	//TODO: Actually make some sprites to use.
 	//TODO: Reorganize sprite sheets to support animations on units
 	//TODO: Add more tiles
 	//TODO: When units are on a building, they gain health at the beginning of their turn (if enough money)
 	//TODO: End game setup, someone wins when someone else loses all their units (and can't make more), or loses their capital building.
+	//MAYBE: Set it up so tiles and cities are based on the same item and combine them into the map array (change it from integer to object).
+	//That should set it up so that finding cities a unit is on easier as well as make the map file itself easier..
 	
 	/**Starts a new game when launched.*/
 	public static void main(String args[]) throws Exception {new Game();}
