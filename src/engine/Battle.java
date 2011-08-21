@@ -54,7 +54,7 @@ public class Battle {
 		if (ply.unitselected) {
 			if (currentplayer==Game.units.get(ply.selectedunit).owner) {
 				if (Game.units.get(ply.selectedunit).moved&&!Game.units.get(ply.selectedunit).acted) {
-					Game.units.get(ply.selectedunit).attack(ply.selectx,ply.selecty);
+					Game.units.get(ply.selectedunit).action(ply.selectx,ply.selecty);
 					ply.unitselected=false;
 				}
 				else if (!Game.units.get(ply.selectedunit).moved) {

@@ -36,6 +36,7 @@ public class Gui extends JPanel {
 	DefaultListModel maps_model = new DefaultListModel();
 	
 	public GameMenus gms;
+	public Pathfinding star = new Pathfinding();
 		
 	public Gui(JFrame item) {
 	    item.add(this);
@@ -110,6 +111,7 @@ public class Gui extends JPanel {
 			DrawSidebar(gg);
 			DrawBuildings(gg);
 			DrawUnits(gg);
+			PathingTest(gg);
 			
 			//Draw the selector
 			gg.drawImage(Game.img_tile,
@@ -171,11 +173,12 @@ public class Gui extends JPanel {
 			}
 			else if (!unit.moved) {
 				gg.drawString("Moving",offset,64);
-				for (int y = unit.y - unit.speed; y <= unit.y + unit.speed; y++) {
-					for (int x = unit.x - unit.speed; x <= unit.x + unit.speed; x++) {
+				for (int y = (int) (unit.y - unit.speed); y <= unit.y + unit.speed; y++) {
+					for (int x = (int) (unit.x - unit.speed); x <= unit.x + unit.speed; x++) {
 						if (unit.moveable(x,y)) {gg.drawImage(Game.img_tile,x*32,y*32,x*32+32,y*32+32,32*6,0,32*7,32,null);}
 					}
 				}
+				
 			}
 			//UNIT SELECTION STUFFIES!
 			int[] loc = unit.DrawMe();
@@ -195,6 +198,8 @@ public class Gui extends JPanel {
 		int xx = Game.map.tiles.get(Game.map.map[y][x]).x();
 		int yy = Game.map.tiles.get(Game.map.map[y][x]).y();
 		gg.drawImage(Game.img_tile, 520+32, 200, 520+32+32, 232, xx*32, yy*32, xx*32+32, yy*32+32, null);
+		gg.drawString(x + " and " + y, 520+32, 190);
+		
 	}
 
 	private void DrawTerrain(Graphics2D gg) {
@@ -209,5 +214,17 @@ public class Gui extends JPanel {
 	
 	
 	
-
+	private void PathingTest(Graphics2D gg) {
+		if (!star.finished) {return;}
+		for (int y=0; y < Game.map.height; y++) {
+			for (int x=0; x < Game.map.width; x++) {
+				if (star.map[x][y]>0) {
+					gg.drawImage(Game.img_tile,x*32,y*32,x*32+32,y*32+32,32*7,0,32*8,32,null);
+				}
+			}
+		}
+		for (Pathfinding.PathNode node : star.closedlist) {
+			gg.drawString(node.cost + "", node.loc.x*32 + 10, node.loc.y*32 + 18);
+		}
+	}
 }

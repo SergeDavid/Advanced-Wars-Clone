@@ -69,6 +69,8 @@ public class InputHandler implements KeyListener,MouseListener,ActionListener {
 		if (i==dev3) {Game.gui.remove(Game.gui.gms);}
 		if (i==dev4) {Game.error.ShowError("Herp derp le worpdte gerpa nerpa derp her her wor her!");}
 		if (i==dev5) {Game.error.HideError();}
+		if (i==dev6) {Game.gui.star.FindPath(Game.units.get(0));}
+		if (i==dev9) {Game.gui.star.finished=false;}
 	}
 	public void keyReleased(KeyEvent arg0) {}
 	public void keyTyped(KeyEvent arg0) {}

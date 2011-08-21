@@ -11,7 +11,6 @@ public class Base {
 	public int owner;
 	int img;
 	
-
 	//life settings
 	boolean dead;
 	int maxhp = 100;
@@ -30,7 +29,7 @@ public class Base {
 	public int y;
 	public int oldx;
 	public int oldy;
-	public int speed = 2;
+	public double speed = 2;
 	
 	//Battle Settings
 	public int Fog = 5;//Fog of war setting.
@@ -84,27 +83,55 @@ public class Base {
 		}
 		return false;
 	}
+	/**This is currently being used by the path finding, the other is so I can have a pretty visual for actually moving it.*/
+	public boolean moveable2(int destx, int desty) {//TODO: Either put path finding here, or use this as a tool for path finding.
+		if (destx<0||desty<0) {return false;}
+		if (destx>=Game.map.width||desty>=Game.map.height) {return false;}
+		for (units.Base unit : Game.units) {
+			if (unit.x==destx&&unit.y==desty) {return false;}
+		}
+		switch (MovType) {//This is used to find out if the unit can move to said tile or not.
+			case 0: if (Game.map.Walkable(Game.map.map[desty][destx])) {return true;} break;
+			case 1: if (Game.map.Driveable(Game.map.map[desty][destx])) {return true;} break;
+			case 2: if (Game.map.Swimable(Game.map.map[desty][destx])) {return true;} break;
+			case 3: if (Game.map.Flyable(Game.map.map[desty][destx])) {return true;} break;
+			default: if (Game.map.Flyable(Game.map.map[desty][destx])) {return true;} break;
+		}
+		return false;
+	}
 	
-	public void attack(int destx, int desty) {
-		Random rand = new Random();
+	public void action(int destx, int desty) {
 		if (acted) {return;}
-		units.Base target = FindTarget(destx, desty, true, false);
-		if (target!=null) {
-			if (!inrange(target.x, target.y)) {acted=true;return;}
-			double damage = (attack-target.defense)+(rand.nextInt(20)-10)/10;
-			if (damage<1) {damage=1;}
-			target.health-=damage;
-			if (target.health<=0) {
-				Game.units.remove(target);
-				Game.player.get(owner).kills++;
-				Game.player.get(target.owner).loses++;
-				System.out.println("Enemy unit has been destroyed!");
-			}
-			else {
-			  System.out.println("Enemy unit now has " + target.health + " hp left!");
-			}
+		
+		if (!attack(destx,desty)) {
+			capture(destx,desty);
 		}
 		/**Capturing stuff*/
+		acted=true;
+	}
+	private boolean attack(int destx,int desty) {
+		Random rand = new Random();
+		units.Base target = FindTarget(destx, desty, true, false);
+		if (target!=null) {
+			if (inrange(target.x, target.y)) {
+				double damage = (attack-target.defense)+(rand.nextInt(20)-10)/10;
+				if (damage<1) {damage=1;}
+				target.health-=damage;
+				if (target.health<=0) {
+					Game.units.remove(target);
+					Game.player.get(owner).kills++;
+					Game.player.get(target.owner).loses++;
+					System.out.println("Enemy unit has been destroyed!");
+				}
+				else {
+				  System.out.println("Enemy unit now has " + target.health + " hp left!");
+				}
+				return true;
+			}
+		}
+		return false;
+	}
+	private void capture(int destx,int desty) {
 		if (destx==x&&desty==y) {
 			buildings.Base bld = FindBuilding();
 			if (bld!=null) {
@@ -113,7 +140,6 @@ public class Base {
 				}
 			}
 		}
-		acted=true;
 	}
 	
 	private buildings.Base FindBuilding() {

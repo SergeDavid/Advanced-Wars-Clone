@@ -93,6 +93,7 @@ public class Game extends JFrame {
 				lastCPSTime = System.currentTimeMillis();
 				fpscount = fps;
 				fps = 0;
+				error.ErrorTicker();
 				setTitle(name + " v" + build + "." + version + " : FPS " + fpscount);
 			}
 			else fps++;

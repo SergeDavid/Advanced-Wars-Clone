@@ -53,8 +53,9 @@ public class Map {
 	private void LoadTiles() {
 		tiles.add(new terrain.Dirt());
 		tiles.add(new terrain.Grass());
-		tiles.add(new terrain.Road());
+		tiles.add(new terrain.Mountain());
 		tiles.add(new terrain.Water());
-		tiles.add(new terrain.Water());
+		tiles.add(new terrain.City());
+		tiles.add(new terrain.Forest());
 	}
 }

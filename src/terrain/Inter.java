@@ -7,7 +7,7 @@ public interface Inter {
 	boolean drive();
 	boolean swim();
 	boolean fly();
-	int speed();
+	double speed();
 	int defense();
 	int x();
 	int y();

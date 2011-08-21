@@ -83,6 +83,9 @@ public class MapParser {
 			Game.map.map[terrain][i]=Integer.parseInt(using,16);
 		}
 		terrain++;
+		//TODO: Check out the idea of setting buildings so each line of building data is owner, xx,yy,type*# so it is shorter. D:
+		//Or try owner,type*# in a row and every time a building is found in the map, it creates one from the list. (smaller file)
+		//TODO: See about making the map an array of objects, and 
 	}
 	/**Creates a building by owner at x,y and type
 	 * f = Owner (0-11 are players, 15 is neutral, 12-14 are unused)
