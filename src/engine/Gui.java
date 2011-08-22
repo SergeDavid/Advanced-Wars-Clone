@@ -7,6 +7,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.Point;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -21,6 +22,9 @@ public class Gui extends JPanel {
 	/**The width and height of the content box.*/
 	public int width = 640;
 	public int height = 400;
+	
+	//The settings for the frame stuff or something
+	public int frame = 0; //counts up to 24 (resets to zero)
 
 	//Main Menu
 	public JButton Join = new JButton("New Game");
@@ -34,9 +38,7 @@ public class Gui extends JPanel {
 	public JButton ply_endturn = new JButton("End Turn");
 	JList maps_list = new JList();
 	DefaultListModel maps_model = new DefaultListModel();
-	
 	public GameMenus gms;
-	public Pathfinding star = new Pathfinding();
 		
 	public Gui(JFrame item) {
 	    item.add(this);
@@ -111,18 +113,33 @@ public class Gui extends JPanel {
 			DrawSidebar(gg);
 			DrawBuildings(gg);
 			DrawUnits(gg);
-			PathingTest(gg);
-			
-			//Draw the selector
-			gg.drawImage(Game.img_tile,
-					Game.player.get(Game.btl.currentplayer).selectx*32,
-					Game.player.get(Game.btl.currentplayer).selecty*32,
-					Game.player.get(Game.btl.currentplayer).selectx*32+32,
-					Game.player.get(Game.btl.currentplayer).selecty*32+32,32*7,32,32*8,64,null);
+			DrawSelector(gg);
 			//TODO: Draw any foreground effects.
 		break;
 		}
 		g.drawImage(buffimage, 0, 0, this);
+	}
+
+	private void DrawSelector(Graphics2D gg) {
+		int x = Game.player.get(Game.btl.currentplayer).selectx;
+		int y = Game.player.get(Game.btl.currentplayer).selecty;
+		int off = (frame>5) ? frame/2+2 : 6-frame/2+2;
+		gg.drawImage(Game.img_tile,
+				x*32-off,   y*32-off,
+				x*32+10-off,   y*32+10-off,
+				32*7, 32, 32*7+10, 32+10,null);
+		gg.drawImage(Game.img_tile,
+				x*32+22+off,   y*32-off,
+				x*32+32+off,   y*32+10-off,
+				32*7+22, 32, 32*7+32, 32+10,null);
+		gg.drawImage(Game.img_tile,
+				x*32-off,  y*32+22+off,
+				x*32+10-off,   y*32+32+off,
+				32*7, 32+22, 32*7+10, 32+32,null);
+		gg.drawImage(Game.img_tile,
+				x*32+22+off,  y*32+22+off,
+				x*32+32+off,   y*32+32+off,
+				32*7+22, 32+22, 32*7+32, 32+32,null);
 	}
 
 	private void DrawSidebar(Graphics2D gg) {
@@ -173,9 +190,19 @@ public class Gui extends JPanel {
 			}
 			else if (!unit.moved) {
 				gg.drawString("Moving",offset,64);
-				for (int y = (int) (unit.y - unit.speed); y <= unit.y + unit.speed; y++) {
-					for (int x = (int) (unit.x - unit.speed); x <= unit.x + unit.speed; x++) {
-						if (unit.moveable(x,y)) {gg.drawImage(Game.img_tile,x*32,y*32,x*32+32,y*32+32,32*6,0,32*7,32,null);}
+				for (Point p : unit.map) {
+					gg.drawImage(Game.img_tile,p.x*32,p.y*32,p.x*32+32,p.y*32+32,32*6,0,32*7,32,null);
+				}
+				if (Game.pathing.ShowCost) {
+					for (Pathfinding.PathNode node : Game.pathing.closedlist) {
+						gg.drawString(node.cost + "",node.loc.x*32+5,node.loc.y*32+19);
+					}
+				}
+				if (Game.pathing.ShowHits) {
+					for (int y = 0; y < Game.map.height; y++) {
+						for (int x = 0; x < Game.map.width; x++) {
+							gg.drawString(Game.pathing.maphits[y][x] + "",x*32 + 5,y*32 + 19);
+						}
 					}
 				}
 				
@@ -189,14 +216,10 @@ public class Gui extends JPanel {
 		}
 	}
 	private void DrawTerrainInfo(Graphics2D gg) {
-		//TODO: Align this up with the Menu bar
-		//TODO: Display Terrain Name
-		//TODO: Display Terrain Bonuses
-		//TODO: If building, display building info.
 		int x = Game.player.get(Game.btl.currentplayer).selectx;
 		int y = Game.player.get(Game.btl.currentplayer).selecty;
-		int xx = Game.map.tiles.get(Game.map.map[y][x]).x();
-		int yy = Game.map.tiles.get(Game.map.map[y][x]).y();
+		int xx = Game.map.map[y][x].x();
+		int yy = Game.map.map[y][x].y();
 		gg.drawImage(Game.img_tile, 520+32, 200, 520+32+32, 232, xx*32, yy*32, xx*32+32, yy*32+32, null);
 		gg.drawString(x + " and " + y, 520+32, 190);
 		
@@ -205,26 +228,10 @@ public class Gui extends JPanel {
 	private void DrawTerrain(Graphics2D gg) {
 		for (int y=0; y < Game.map.height; y++) {
 			for (int x=0; x < Game.map.width; x++) {
-				int xx = Game.map.tiles.get(Game.map.map[y][x]).x();
-				int yy = Game.map.tiles.get(Game.map.map[y][x]).y();
+				int xx = Game.map.map[y][x].x();
+				int yy = Game.map.map[y][x].y();
 				gg.drawImage(Game.img_tile, x*32, y*32, x*32+32, y*32+32, xx*32, yy*32, xx*32+32, yy*32+32, null);
 			}
-		}
-	}
-	
-	
-	
-	private void PathingTest(Graphics2D gg) {
-		if (!star.finished) {return;}
-		for (int y=0; y < Game.map.height; y++) {
-			for (int x=0; x < Game.map.width; x++) {
-				if (star.map[x][y]>0) {
-					gg.drawImage(Game.img_tile,x*32,y*32,x*32+32,y*32+32,32*7,0,32*8,32,null);
-				}
-			}
-		}
-		for (Pathfinding.PathNode node : star.closedlist) {
-			gg.drawString(node.cost + "", node.loc.x*32 + 10, node.loc.y*32 + 18);
 		}
 	}
 }

@@ -8,6 +8,7 @@ public class Infantry extends Base {
 		nick = "Inf";
 		desc = "Weakest units here.";
 		img = 0;
+		speed = 2;
 	}
 
 }

@@ -32,6 +32,7 @@ public class Game extends JFrame {
 	public static Map map;
 	public static Gui gui;
 	public static ErrorHandler error = new ErrorHandler();
+	public static Pathfinding pathing = new Pathfinding();
 	public static LoadImages load;
 	public static InputHandler input;
 	public static Battle btl;
@@ -101,6 +102,8 @@ public class Game extends JFrame {
 			if (System.currentTimeMillis() - lastCPSTime2 > 100) {
 				lastCPSTime2 = System.currentTimeMillis();
 				logics = 0;
+				Game.gui.frame++;
+				if (Game.gui.frame>=12) {Game.gui.frame=0;}
 			}
 			else logics++;
 			

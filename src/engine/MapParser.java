@@ -80,7 +80,7 @@ public class MapParser {
 		int total = info.length();
 		for (int i=0;i<total&&i<Game.map.width;i++) {
 			String using = info.substring(i,i+1);
-			Game.map.map[terrain][i]=Integer.parseInt(using,16);
+			Game.map.map[terrain][i]=Game.map.tiles.get(Integer.parseInt(using,16));
 		}
 		terrain++;
 		//TODO: Check out the idea of setting buildings so each line of building data is owner, xx,yy,type*# so it is shorter. D:

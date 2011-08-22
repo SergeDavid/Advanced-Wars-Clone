@@ -7,10 +7,13 @@ import java.util.Vector;
 public class Pathfinding {
 	private Vector<PathNode> openlist = new Vector<PathNode>();
 	Vector<PathNode> closedlist = new Vector<PathNode>();
-	units.Base unit;
-	PathNode current;
-	public int[][] map;
-	public boolean finished;
+	private units.Base unit;
+	private PathNode current;
+	private Vector<Point> map = new Vector<Point>();
+	public int[][]maphits;
+	public boolean SomethingChanged;
+	public boolean ShowCost;
+	public boolean ShowHits;
 	
 	public Pathfinding() {
 		//TODO: Change it so units call FindPath when they are going to move.
@@ -19,33 +22,36 @@ public class Pathfinding {
 		//I don't want to construct an exact same thing twice in a row if I can't help it.
 	}
 	
-	public void FindPath(units.Base unit) {
-		finished=false;
-		map = new int[Game.map.width][Game.map.height];
+	public Vector<Point> FindPath(units.Base unit) {
+		long start = System.currentTimeMillis();
+		
+		maphits = new int[Game.map.height][Game.map.width];
 		openlist = new Vector<PathNode>();
 		closedlist = new Vector<PathNode>();
+		map = new Vector<Point>();
+		
 		this.unit = unit;
 		openlist.add(new PathNode(unit.x, unit.y, 0));
 		current = openlist.get(0);
-		for (int i = 0; i<100; i++) { // Max number of passes currently is 100.
-			if (openlist.isEmpty()) {
-				break;
-			}
-			current=LowestCostOpen();
-			map[current.loc.x][current.loc.y]++;
+
+		while (true) {
+			if (openlist.isEmpty()) {break;}
 			FindNodes();
+			
 			closedlist.add(current);
 			openlist.remove(current);
-			if (i>=99) {
-				System.out.println("We reached 100!!!");
-			}
 			
+			maphits[current.loc.y][current.loc.x]++;
+			map.add(new Point(current.loc.x,current.loc.y));
+			
+			current=LowestCostOpen();
 		}
-		finished=true;
-		
+		System.out.println("Pathing Took : " + (System.currentTimeMillis() - start));
+		return map;
 	}
 	
 	private PathNode LowestCostOpen() {
+		if (openlist.isEmpty()) {return null;}
 		PathNode lowest = openlist.get(0);
 		for (PathNode node : openlist) {
 			if (node.cost>lowest.cost) {
@@ -56,17 +62,17 @@ public class Pathfinding {
 	}
 	
 	private void FindNodes() {
-		if (current.loc.x-1>=0&&unit.moveable2(current.loc.x-1, current.loc.y)) {
+		if (current.loc.x-1>=0&&unit.PathCheck(current.loc.x-1, current.loc.y)) {
 			AddNode(current.loc.x-1,current.loc.y);
 		}
-		if (current.loc.y-1>=0&&unit.moveable2(current.loc.x, current.loc.y-1)) {
+		if (current.loc.y-1>=0&&unit.PathCheck(current.loc.x, current.loc.y-1)) {
 			AddNode(current.loc.x,current.loc.y-1);
 		}
-		if (current.loc.x+1<Game.map.width&&unit.moveable2(current.loc.x+1, current.loc.y)) {
+		if (current.loc.x+1<Game.map.width&&unit.PathCheck(current.loc.x+1, current.loc.y)) {
 			AddNode(current.loc.x+1,current.loc.y);
 		}
 		if (current.loc.y+1<Game.map.height) {
-			if (unit.moveable2(current.loc.x, current.loc.y+1)) {
+			if (unit.PathCheck(current.loc.x, current.loc.y+1)) {
 				AddNode(current.loc.x,current.loc.y+1);
 			}
 		}
@@ -86,7 +92,7 @@ public class Pathfinding {
 	private boolean InOpen(int x, int y) {
 		for (PathNode node : openlist) {
 			if (node.loc.x == x && node.loc.y == y) {
-				SwitchParent(node,false);
+				SwitchParent(node);
 				return true;
 			}
 		}
@@ -96,28 +102,24 @@ public class Pathfinding {
 	private boolean InClosed(int x, int y) {
 		for (PathNode node : closedlist) {
 			if (node.loc.x == x && node.loc.y == y) {
-				SwitchParent(node,true);
+				SwitchParent(node);
 				return true;
 			}
 		}
 		return false;
 	}
 	
-	private void SwitchParent(PathNode node, boolean readd) {
-		double cost = Game.map.tiles.get(Game.map.map[node.loc.y][node.loc.x]).speed() + current.cost;
+	private void SwitchParent(PathNode node) {
+		double cost = Game.map.map[node.loc.y][node.loc.x].speed() + current.cost;
 		if (cost<node.cost) {
-			node.cost = cost;
-			if (readd) {
-				openlist.add(node);
-				closedlist.remove(node);
-			}
+			node.cost = Math.round(cost*100.0) / 100.0;
 		}
 	}
 	
 	private double FindCost(int x, int y, PathNode parent) {
-		double cost = Game.map.tiles.get(Game.map.map[y][x]).speed();
+		double cost = Game.map.map[parent.loc.y][parent.loc.x].speed();
 		if (parent!=null) {cost+=parent.cost;}
-		return cost;
+		return Math.round(cost*100.0) / 100.0;
 	}
 		
 	public class PathNode {

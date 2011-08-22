@@ -88,6 +88,7 @@ public class Base {
 	public boolean FindUnit() {
 		for (int i=0; i<Game.units.size(); i++) {
 			if (Game.units.get(i).x==selectx&&Game.units.get(i).y==selecty) {
+				if (!Game.units.get(i).moved) {Game.units.get(i).Pathing();}
 				selectedunit=i;
 				unitselected=true;
 				return true;

@@ -1,6 +1,8 @@
 package units;
 
+import java.awt.Point;
 import java.util.Random;
+import java.util.Vector;
 
 import engine.Game;
 
@@ -17,6 +19,7 @@ public class Base {
 	public int health = maxhp;
 	public boolean moved;
 	public boolean acted;
+	public Vector<Point> map = new Vector<Point>();//TEST
 	
 	//Location
 	/**This is the movement type of the unit.
@@ -55,7 +58,6 @@ public class Base {
 	}
 	
 	public void move(int destx, int desty) {
-		//TODO: Add in path finding.
 		if (moved) {return;}
 		if (moveable(destx,desty)) {
 			oldx=x;oldy=y;
@@ -67,35 +69,29 @@ public class Base {
 	public boolean moveable(int destx, int desty) {//TODO: Either put path finding here, or use this as a tool for path finding.
 		if (destx<0||desty<0) {return false;}
 		if (destx>=Game.map.width||desty>=Game.map.height) {return false;}
-		int movex = (destx>x) ? destx-x : x-destx;//Finds the total distance traveled.
-		int movey = (desty>y) ? desty-y : y-desty;
-		if (movex+movey>speed) {return false;}//Hack for use since I don't have the path finding yet.
-		for (units.Base unit : Game.units) {
-			if (unit.x==x&&unit.y==y) {}//HACK: So you can stand still instead of being forced to move.
-			else if (unit.x==destx&&unit.y==desty) {return false;}
-		}
-		switch (MovType) {//This is used to find out if the unit can move to said tile or not.
-			case 0: if (Game.map.Walkable(Game.map.map[desty][destx])) {return true;} break;
-			case 1: if (Game.map.Driveable(Game.map.map[desty][destx])) {return true;} break;
-			case 2: if (Game.map.Swimable(Game.map.map[desty][destx])) {return true;} break;
-			case 3: if (Game.map.Flyable(Game.map.map[desty][destx])) {return true;} break;
-			default: if (Game.map.Flyable(Game.map.map[desty][destx])) {return true;} break;
+		if (Pathed(destx,desty)) {return true;}
+		return false;
+	}
+	private boolean Pathed(int destx, int desty) {
+		for (Point p : map) {
+			if (p.x == destx && p.y == desty) {return true;}
 		}
 		return false;
 	}
+
 	/**This is currently being used by the path finding, the other is so I can have a pretty visual for actually moving it.*/
-	public boolean moveable2(int destx, int desty) {//TODO: Either put path finding here, or use this as a tool for path finding.
+	public boolean PathCheck(int destx, int desty) {//TODO: Either put path finding here, or use this as a tool for path finding.
 		if (destx<0||desty<0) {return false;}
 		if (destx>=Game.map.width||desty>=Game.map.height) {return false;}
 		for (units.Base unit : Game.units) {
 			if (unit.x==destx&&unit.y==desty) {return false;}
 		}
 		switch (MovType) {//This is used to find out if the unit can move to said tile or not.
-			case 0: if (Game.map.Walkable(Game.map.map[desty][destx])) {return true;} break;
-			case 1: if (Game.map.Driveable(Game.map.map[desty][destx])) {return true;} break;
-			case 2: if (Game.map.Swimable(Game.map.map[desty][destx])) {return true;} break;
-			case 3: if (Game.map.Flyable(Game.map.map[desty][destx])) {return true;} break;
-			default: if (Game.map.Flyable(Game.map.map[desty][destx])) {return true;} break;
+			case 0: if (Game.map.map[desty][destx].walk()) {return true;} break;
+			case 1: if (Game.map.map[desty][destx].drive()) {return true;} break;
+			case 2: if (Game.map.map[desty][destx].swim()) {return true;} break;
+			case 3: if (Game.map.map[desty][destx].fly()) {return true;} break;
+			default: if (Game.map.map[desty][destx].fly()) {return true;} break;
 		}
 		return false;
 	}
@@ -185,4 +181,6 @@ public class Base {
 			y=oldy;
 		}
 	}
+
+	public void Pathing() {map = Game.pathing.FindPath(this);}
 }

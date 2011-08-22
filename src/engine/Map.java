@@ -2,7 +2,6 @@ package engine;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class Map {
 	//Base settings
@@ -13,7 +12,7 @@ public class Map {
 	public String auther;
 	
 	/**A square/rectangular area that you play on. Diamond shaped if isometric.*/
-	public int[][]map;
+	public terrain.Base[][] map;
 	public List<terrain.Base> tiles = new ArrayList<terrain.Base>();
 	public MapFinder finder = new MapFinder();
 	public MapParser parse = new MapParser();
@@ -21,7 +20,7 @@ public class Map {
 	
 	public Map() {
 		LoadTiles();
-		map = new int[height][width];
+		map = new terrain.Base[height][width];
 		MapNames = finder.GrabMaps();
 	}
 	
@@ -31,17 +30,7 @@ public class Map {
 		if (height<minsize) {height=minsize;}if (height>maxsize) {height=maxsize;}
 		this.width=width;
 		this.height=height;
-		map = new int[height][width];
-	}
-	public void Randomize() {
-		Random rand = new Random();
-		for (int y=0; y<height; y++) {
-			for (int x=0; x<width; x++) {
-				if (rand.nextInt(6)==0) {map[y][x]=1;}
-				else if (rand.nextInt(10)==0) {map[y][x]=2;}
-				else if (rand.nextInt(16)==0) {map[y][x]=3;}
-			}
-		}
+		map = new terrain.Base[height][width];
 	}
 	
 	public boolean Walkable(int i) {if (tiles.get(i).walk()) {return true;}return false;}
@@ -51,6 +40,7 @@ public class Map {
 	
 	/**Loads all of the tiles that are used in the map into an array list.*/
 	private void LoadTiles() {
+		//TODO: Maybe change this into a setter where you send it an int, and it returns the object and remove the arraylist all together.
 		tiles.add(new terrain.Dirt());
 		tiles.add(new terrain.Grass());
 		tiles.add(new terrain.Mountain());
