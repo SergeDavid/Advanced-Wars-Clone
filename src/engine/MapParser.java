@@ -1,9 +1,11 @@
 package engine;
 
+import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Vector;
 
 public class MapParser {
 	int terrain = 0;//Keeps track of current row
@@ -11,39 +13,51 @@ public class MapParser {
 	boolean Desc;//Was the description collected completely?
 	boolean Terr;//Was all the terrain there?
 	boolean Blds;//Was there any buildings? (at least capitals)
+	
+	//Handles building construction after the decoding loop is finished.
+	String CityString;
+	Vector<Point> CityPoint;
+	
 	public void encode(String mapname) {
 		//TODO: Creates a file if it does not exist (opens a prompt if file exists)
 		//TODO: Add in all of the elements into the file from info,description,terrain,buildings, and units.
 		//TODO: Send any error messages to be handled by the error messaging system.
 	} 
 	public boolean decode(String mapname) {
-		//TODO: Better setup of them being true or not.
 		Info=Desc=Terr=Blds=false;//Sets all of them to false
 		terrain = 0;
+		CityString = "";
+		CityPoint = new Vector<Point>();
 		try {
 			BufferedReader in = new BufferedReader(new FileReader("maps/"+mapname));
 			String line;
 			while ((line = in.readLine()) != null) {
 				if (!line.startsWith("#")) {
 					if (line.startsWith("1")) {
-						ParseInfo(line.substring(2));Info=true;Blds=true;
+						ParseInfo(line.substring(2));Info=true;
 					}
-					if (line.startsWith("2")) {
-						//TODO: Use this for the map selection menu
+					else if (line.startsWith("2")) {//Splits the creators name / map description from the first included space.
+						ParseDesc(line.substring(2).split(" ",2));
 						Desc=true;
 					}
-					if (line.startsWith("3")) {
+					else if (line.startsWith("3")) {//Adds line to the string handling build data to be used in the next loop.
+						CityString += line.substring(2);
+					}
+					else if (line.startsWith("4")) {
 						ParseTerrain(line.substring(2));Terr=true;
 					}
-					if (line.startsWith("4")) {
-						ParseBuilding(line.substring(2));
-					}
-					if (line.startsWith("5")) {
+					else if (line.startsWith("5")) {
 						ParseUnit(line.substring(2));
 					}
 				}
 			}
-			if (Info&&Blds) {return true;}
+			for (Point p : CityPoint) {
+				if (CityString.length()>=3) {
+					ParseBuilding(CityString.substring(0,3), p.x, p.y);
+					CityString = CityString.substring(3);
+				}
+			}
+			if (Info) {return true;}
 			else {
 				System.out.println("Return to login...");
 				return false;
@@ -67,6 +81,13 @@ public class MapParser {
 			return;
 		}
 		Game.map.MapSetup(Integer.parseInt(info.substring(0,2),16)+1,Integer.parseInt(info.substring(2,4),16)+1);
+		Game.btl.MaxUsers(Integer.parseInt(info.substring(4,5),16));
+	}
+	private void ParseDesc(String[] info) {
+		Game.map.auther = info[0];
+		if (info.length>1) {
+			Game.map.desc = info[1];
+		}
 	}
 	/**This is for decoding the terrain, it currently goes with 1 line = 1 row
 	 * 2 = Byte
@@ -76,28 +97,25 @@ public class MapParser {
 			Game.error.ShowError("Terrain at row " + terrain + " is corrupt.");
 		}
 		if (terrain>=Game.map.height) {return;}
-		//TODO: Split the terrain info into 2 bytes (ff) instead of (f)
 		int total = info.length();
 		for (int i=0;i<total&&i<Game.map.width;i++) {
 			String using = info.substring(i,i+1);
 			Game.map.map[terrain][i]=Game.map.tiles.get(Integer.parseInt(using,16));
+			if (Game.map.map[terrain][i].building()) {CityPoint.add(new Point(i, terrain));}
 		}
 		terrain++;
-		//TODO: Check out the idea of setting buildings so each line of building data is owner, xx,yy,type*# so it is shorter. D:
-		//Or try owner,type*# in a row and every time a building is found in the map, it creates one from the list. (smaller file)
-		//TODO: See about making the map an array of objects, and 
 	}
-	/**Creates a building by owner at x,y and type
+	/**Creates a building by owner at x/y and type
 	 * f = Owner (0-11 are players, 15 is neutral, 12-14 are unused)
-	 * ff = x location
-	 * ff = y location
-	 * ff = type*/
-	private void ParseBuilding(String info) {
+	 * ff = type
+	 * x location (x)
+	 * y location (y)*/
+	private void ParseBuilding(String info, int x, int y) {
 		Game.CreateCity(
 				Integer.parseInt(info.substring(0,1),16),
-				Integer.parseInt(info.substring(1,3),16),
-				Integer.parseInt(info.substring(3,5),16),
-				Integer.parseInt(info.substring(5,7),16));
+				x,
+				y,
+				Integer.parseInt(info.substring(1,3),16));
 	}
 	private void ParseUnit(String info) {
 		Game.CreateUnit(

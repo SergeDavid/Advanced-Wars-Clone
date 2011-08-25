@@ -6,7 +6,6 @@ import java.util.ArrayList;
 public class Battle {
 	int totalplayers = 2;
 	public int currentplayer = 0;
-	final int maxplayers = 2;
 	
 	//Game settings
 	boolean FogOfWar;
@@ -15,11 +14,13 @@ public class Battle {
 	
 	//Winning condition settings	
 	
-	public Battle(String mapname) {
+	public Battle() {
+		//Moved this to NewGame() so I can reference things in this class before I finish adding a new game.
+	}
+	
+	public void NewGame(String mapname) {
 		Game.player = new ArrayList<players.Base>();
-		//TODO: Base the players off of the map and currently selected.
-		Game.CreateCommander(0,1,startingmoney,false);
-		Game.CreateCommander(0,2,startingmoney,false);
+		Game.builds = new ArrayList<buildings.Base>();
 		if (!Game.map.parse.decode(mapname)) {
 			Game.gui.LoginScreen();
 			return;
@@ -74,11 +75,27 @@ public class Battle {
 		}
 	}	
 	/**This will be redone when I set up the unit buying menu.*/
-	public void Buyunit(int x, int y) {
+	public void Buyunit(int type, int x, int y) {
 		//TODO: Compare money to the prices of each unit.
 		if (Game.player.get(currentplayer).money>=20) {
-			Game.CreateUnit(0, currentplayer, x, y, false);
+			Game.CreateUnit(type, currentplayer, x, y, false);
 			Game.player.get(currentplayer).money-=20;
+		}
+	}
+
+	public void MaxUsers(int max) {
+		//Setup for max players
+		if (max<2) {totalplayers = 2;}
+		else if (max>12) {totalplayers = 12;}
+		else {totalplayers = max;}
+		//HACK: Change when I add more images to support more players.
+		if (max>4) {totalplayers = 4;
+			Game.error.ShowError("The game currently supports only 4 players, not " + max + ".");
+		}
+		//Adds players, current hacked version.
+		for (int i = 0;i<totalplayers;i++) {
+			//TODO: Load commander info from the different gui settings somewhere.
+			Game.CreateCommander(0,i+1,startingmoney,false);
 		}
 	}
 }

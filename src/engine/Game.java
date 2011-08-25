@@ -31,11 +31,11 @@ public class Game extends JFrame {
 	//Setup the quick access to all of the other class files.
 	public static Map map;
 	public static Gui gui;
-	public static ErrorHandler error = new ErrorHandler();
-	public static Pathfinding pathing = new Pathfinding();
 	public static LoadImages load;
 	public static InputHandler input;
-	public static Battle btl;
+	public static Battle btl = new Battle();
+	public static ErrorHandler error = new ErrorHandler();
+	public static Pathfinding pathing = new Pathfinding();
 	
 	//Image handling settings are as follows
 	public int fps;
@@ -52,14 +52,12 @@ public class Game extends JFrame {
 	public static List<units.Base> units = new ArrayList<units.Base>();
 	
 	public Game() {super (name);
-	
 		//Default Settings of the JFrame
 		setBounds(0,0,width,height);
 		setSize(width,height);
 	    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    setUndecorated(false);
 		setResizable(false);
-		setVisible(true);
 				
 		//Creates all the gui elements and sets them up
 		gui = new Gui(this);
@@ -71,6 +69,7 @@ public class Game extends JFrame {
 		map = new Map();
 		input = new InputHandler();
 		
+		setVisible(true);//This has been moved down here so that when everything is done, it is shown.
 		GameLoop();
 	}
 
@@ -90,7 +89,7 @@ public class Game extends JFrame {
 			last = System.nanoTime();
 			
 			//FPS settings
-			if (System.currentTimeMillis() - lastCPSTime > 1000) {
+			if (System.currentTimeMillis() - lastCPSTime > 1000) {//20 Sleep = 50 FPS 30 Sleep = 33 FPS
 				lastCPSTime = System.currentTimeMillis();
 				fpscount = fps;
 				fps = 0;
@@ -109,7 +108,7 @@ public class Game extends JFrame {
 			
 			//Paints the scene then sleeps for a bit.
 			gui.repaint();
-			try { Thread.sleep(30);} catch (Exception e) {};
+			try { Thread.sleep(20);} catch (Exception e) {};
 		}
 	}
 	
@@ -120,9 +119,12 @@ public class Game extends JFrame {
 			default:Game.player.add(new players.Base(npc,team,money));break;
 		}
 	}
-	public static void CreateCity(int owner, int xx, int yy, int type) {//15 = Neutral, 12~14 are unused. (12 max players)
+	public static void CreateCity(int owner, int xx, int yy, int type) {//15 = Neutral, 12, 13, 14 are unused. (12 max players)
 		int team = 0;
-		if (owner>11) {owner=15;}
+		if (owner>btl.totalplayers) {
+			owner=15;
+			if (type == 0) {type = 1;}
+		}
 		else {team = Game.player.get(owner).team;}
 		switch (type) {
 			case 0:Game.builds.add(new buildings.Capital(owner, team, xx, yy));break;
@@ -142,20 +144,16 @@ public class Game extends JFrame {
 		}
 		
 	}
-	//TODO: Selecting a working building without a unit on top brings up it's menu. (close to working now)
 	//TODO: Find out how to display units, buildings, and the map before entering a battle / in a menu
+		//Load all the units/building/Commanders into an array (Sort by some property they have [Order=1])
+		//Compare unit cost/attack/defense with current commander's cost bonus and atk/def bonus
 	//TODO: More battle settings
 	//TODO: Fog of war
-	//TODO: A star path finding, I finally understand how to do it after thinking for a few minutes. :D
 	//TODO: Force buildings owned by none existing players / teams to turn neutral.
-	//TODO: Rework the map so that it works better
 	//TODO: Create a map editor
 	//TODO: Reorganize sprite sheets to support animations on units
-	//TODO: Add more tiles
 	//TODO: When units are on a building, they gain health at the beginning of their turn (if enough money)
 	//TODO: End game setup, someone wins when someone else loses all their units (and can't make more), or loses their capital building.
-	//MAYBE: Set it up so tiles and cities are based on the same item and combine them into the map array (change it from integer to object).
-	//That should set it up so that finding cities a unit is on easier as well as make the map file itself easier..
 	
 	/**Starts a new game when launched.*/
 	public static void main(String args[]) throws Exception {new Game();}

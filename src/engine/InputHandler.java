@@ -47,6 +47,9 @@ public class InputHandler implements KeyListener,MouseListener,ActionListener {
 		Game.gui.Exit.addActionListener(this);
 		
 		Game.gui.ply_endturn.addActionListener(this);
+		
+		Game.gui.gms.Quit.addActionListener(this);
+		Game.gui.gms.Buy.addActionListener(this);
 	}
 	
 	public void keyPressed(KeyEvent e) {
@@ -65,7 +68,7 @@ public class InputHandler implements KeyListener,MouseListener,ActionListener {
 		//if (i==start) {Game.MenuButton();}
 		
 		if (i==dev1) {Game.gui.LoginScreen();}
-		if (i==dev2) {Game.gui.gms = new GameMenus("Pause");}
+		if (i==dev2) {Game.gui.gms.OpenMenu("Pause");}
 		if (i==dev3) {Game.gui.remove(Game.gui.gms);}
 		if (i==dev4) {Game.error.ShowError("Herp derp le worpdte gerpa nerpa derp her her wor her!");}
 		if (i==dev5) {Game.pathing.ShowCost=!Game.pathing.ShowCost;}
@@ -84,11 +87,17 @@ public class InputHandler implements KeyListener,MouseListener,ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		Object s = e.getSource();
 		if (s==Game.gui.Join) {
-			Game.btl = new Battle(Game.map.MapNames.get(Game.gui.maps_list.getSelectedIndex()));
+			//TODO: Change this from creating a new battle, to a method inside battle.
+			Game.btl.NewGame(Game.map.MapNames.get(Game.gui.maps_list.getSelectedIndex()));
 			Game.gui.InGameScreen();
 		}
 		else if (s==Game.gui.Exit) {System.exit(0);}
 		else if (s==Game.gui.ply_endturn) {Game.btl.EndTurn();}
+		else if (s==Game.gui.gms.Quit) {Game.gui.gms.CloseMenu();}
+		else if (s==Game.gui.gms.Buy) {
+			Game.btl.Buyunit(Game.gui.gms.Units.getSelectedIndex(), Game.gui.gms.x, Game.gui.gms.y);
+			Game.gui.gms.CloseMenu();
+		}
 		Game.gui.requestFocusInWindow();
 	}
 }

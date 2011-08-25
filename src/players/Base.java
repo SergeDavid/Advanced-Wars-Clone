@@ -99,7 +99,8 @@ public class Base {
 	public boolean FindCity() {//Finds a city to use for menu pickings.
 		for (buildings.Base bld : Game.builds) {
 			if (bld.x==selectx&&bld.y==selecty&&bld.owner==Game.btl.currentplayer) {
-				Game.btl.Buyunit(bld.x, bld.y);
+				bld.OpenMenu();
+				//Game.btl.Buyunit(bld.x, bld.y);
 				return true;
 			}
 		}

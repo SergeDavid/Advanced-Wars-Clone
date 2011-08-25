@@ -8,5 +8,5 @@ public class Forest extends Base implements Inter {
 	public double speed() {return 1.1;}
 	public int defense() {return 0;};
 	public int x() {return 0;};
-	public int y() {return 0;}
+	public int y() {return 1;}
 }

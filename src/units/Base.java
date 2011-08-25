@@ -19,7 +19,10 @@ public class Base {
 	public int health = maxhp;
 	public boolean moved;
 	public boolean acted;
+	
+	//Pathing Stuff
 	public Vector<Point> map = new Vector<Point>();//TEST
+	public long LastPathed;
 	
 	//Location
 	/**This is the movement type of the unit.
@@ -66,7 +69,7 @@ public class Base {
 		}
 	}
 	/**Returns true if the x,y location is a place your unit can walk on.*/
-	public boolean moveable(int destx, int desty) {//TODO: Either put path finding here, or use this as a tool for path finding.
+	public boolean moveable(int destx, int desty) {
 		if (destx<0||desty<0) {return false;}
 		if (destx>=Game.map.width||desty>=Game.map.height) {return false;}
 		if (Pathed(destx,desty)) {return true;}
@@ -80,7 +83,7 @@ public class Base {
 	}
 
 	/**This is currently being used by the path finding, the other is so I can have a pretty visual for actually moving it.*/
-	public boolean PathCheck(int destx, int desty) {//TODO: Either put path finding here, or use this as a tool for path finding.
+	public boolean PathCheck(int destx, int desty) {
 		if (destx<0||desty<0) {return false;}
 		if (destx>=Game.map.width||desty>=Game.map.height) {return false;}
 		for (units.Base unit : Game.units) {
@@ -167,9 +170,8 @@ public class Base {
 	 * Type = Left / Right (image)
 	 * Team = Up / Down (color)*/
 	public int[] DrawMe() {
-		int[] loc = {img,0};
+		int[] loc = {img,owner*2};
 		if (acted) {loc[1]++;}
-		if (owner%2==1) {loc[1]+=2;}
 		return loc;
 	}
 
@@ -182,5 +184,9 @@ public class Base {
 		}
 	}
 
-	public void Pathing() {map = Game.pathing.FindPath(this);}
+	public void Pathing() {
+		if (LastPathed<Game.pathing.LastChanged) {
+			map = Game.pathing.FindPath(this);	
+		}
+	}
 }

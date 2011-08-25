@@ -10,6 +10,7 @@ public class Map {
 	public final int minsize = 6;
 	public final int maxsize = 64;
 	public String auther;
+	public String desc;
 	
 	/**A square/rectangular area that you play on. Diamond shaped if isometric.*/
 	public terrain.Base[][] map;
@@ -42,7 +43,7 @@ public class Map {
 	private void LoadTiles() {
 		//TODO: Maybe change this into a setter where you send it an int, and it returns the object and remove the arraylist all together.
 		tiles.add(new terrain.Dirt());
-		tiles.add(new terrain.Grass());
+		tiles.add(new terrain.Forest());
 		tiles.add(new terrain.Mountain());
 		tiles.add(new terrain.Water());
 		tiles.add(new terrain.City());

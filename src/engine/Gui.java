@@ -23,8 +23,8 @@ public class Gui extends JPanel {
 	public int width = 640;
 	public int height = 400;
 	
-	//The settings for the frame stuff or something
-	public int frame = 0; //counts up to 24 (resets to zero)
+	/**The base frame to keep animations in sync (1 frame = 100ms) Remember to reset this to zero when it hits 12.*/
+	public int frame = 0; //counts up to 12 (resets to zero)
 
 	//Main Menu
 	public JButton Join = new JButton("New Game");
@@ -38,7 +38,7 @@ public class Gui extends JPanel {
 	public JButton ply_endturn = new JButton("End Turn");
 	JList maps_list = new JList();
 	DefaultListModel maps_model = new DefaultListModel();
-	public GameMenus gms;
+	public GameMenus gms = new GameMenus();
 		
 	public Gui(JFrame item) {
 	    item.add(this);
@@ -105,58 +105,51 @@ public class Gui extends JPanel {
 		break;
 		case Game.Playing:
 			//TODO: Deal with who is currently playing better.
-			if (Game.btl.currentplayer==0) {gg.setColor(new Color(60,0,0));}
-			else {gg.setColor(new Color(0,0,60));}
+			switch (Game.btl.currentplayer) {
+			case 0:gg.setColor(new Color(60,0,0));break;
+			case 1:gg.setColor(new Color(0,0,60));break;
+			case 2:gg.setColor(new Color(0,60,0));break;
+			case 3:gg.setColor(new Color(60,60,0));break;
+			default:gg.setColor(new Color(60,60,60));break;
+			}
 			gg.fillRect(0, 0, width, height);
 			gg.setColor(new Color(255,255,255));
+			
 			DrawTerrain(gg);
-			DrawSidebar(gg);
+			DrawSidebar(gg);//Includes movement and attack ranges.
 			DrawBuildings(gg);
 			DrawUnits(gg);
 			DrawSelector(gg);
-			//TODO: Draw any foreground effects.
 		break;
 		}
 		g.drawImage(buffimage, 0, 0, this);
 	}
 
+	/**This draws 4 different images (each corner) of the selector and moves them in/out in connection with the current frame*/
 	private void DrawSelector(Graphics2D gg) {
 		int x = Game.player.get(Game.btl.currentplayer).selectx;
 		int y = Game.player.get(Game.btl.currentplayer).selecty;
 		int off = (frame>5) ? frame/2+2 : 6-frame/2+2;
 		gg.drawImage(Game.img_tile,
-				x*32-off,   y*32-off,
-				x*32+10-off,   y*32+10-off,
+				x*32-off,   y*32-off,   x*32+10-off,   y*32+10-off,
 				32*7, 32, 32*7+10, 32+10,null);
 		gg.drawImage(Game.img_tile,
-				x*32+22+off,   y*32-off,
-				x*32+32+off,   y*32+10-off,
+				x*32+22+off,   y*32-off,   x*32+32+off,   y*32+10-off,
 				32*7+22, 32, 32*7+32, 32+10,null);
 		gg.drawImage(Game.img_tile,
-				x*32-off,  y*32+22+off,
-				x*32+10-off,   y*32+32+off,
+				x*32-off,  y*32+22+off,   x*32+10-off,   y*32+32+off,
 				32*7, 32+22, 32*7+10, 32+32,null);
 		gg.drawImage(Game.img_tile,
-				x*32+22+off,  y*32+22+off,
-				x*32+32+off,   y*32+32+off,
+				x*32+22+off,  y*32+22+off,   x*32+32+off,   y*32+32+off,
 				32*7+22, 32+22, 32*7+32, 32+32,null);
 	}
-
-	private void DrawSidebar(Graphics2D gg) {
-		int offset = 514;
-		gg.drawString("Funds = " + Game.player.get(Game.btl.currentplayer).money,offset+4,128);
-		
-		DrawUnitInfo(gg, offset);
-		DrawTerrainInfo(gg);
-	}
-
+	/**this draws each building on the screen.*/
 	private void DrawBuildings(Graphics2D gg) {
 		for (buildings.Base bld : Game.builds) {
 			int[] loc = bld.DrawMe();
 			gg.drawImage(Game.img_city,
-					bld.x*32,bld.y*32,bld.x*32+32,bld.y*32+32,
-					loc[0]*32,loc[1]*32,
-					loc[0]*32+32,loc[1]*32+32,null);
+					bld.x*32, bld.y*32, bld.x*32+32, bld.y*32+32,
+					loc[0]*32, loc[1]*32, loc[0]*32+32, loc[1]*32+32, null);
 		}
 	}
 	private void DrawUnits(Graphics2D gg) {
@@ -166,6 +159,15 @@ public class Gui extends JPanel {
 				chars.x*32,chars.y*32,chars.x*32+32,chars.y*32+32,
 				loc[0]*32,loc[1]*32,loc[0]*32+32,loc[1]*32+32,null);
 		}
+	}
+	
+	/***/
+	private void DrawSidebar(Graphics2D gg) {
+		int offset = 514;
+		gg.drawString("Funds = " + Game.player.get(Game.btl.currentplayer).money,offset+4,128);
+		
+		DrawUnitInfo(gg, offset);
+		DrawTerrainInfo(gg);
 	}
 
 	/**This draws the following things when applicable.
@@ -211,7 +213,7 @@ public class Gui extends JPanel {
 			int[] loc = unit.DrawMe();
 			gg.drawImage(Game.img_char,
 					offset,8,offset+32,8+32,
-					32*loc[0]*32,loc[1]*32,loc[0]*32+32,loc[1]*32+32,null);
+					loc[0]*32,loc[1]*32,loc[0]*32+32,loc[1]*32+32,null);
 			gg.drawString(unit.nick + " = " + unit.health + " HP!",offset,52);
 		}
 	}

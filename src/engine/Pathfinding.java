@@ -5,21 +5,28 @@ import java.util.Vector;
 
 //Future place of the A-star path finding algorithm
 public class Pathfinding {
+	//The lists used for finding things.
 	private Vector<PathNode> openlist = new Vector<PathNode>();
 	Vector<PathNode> closedlist = new Vector<PathNode>();
+	
+	//Used for tracking the currently selected node and a shortcut to the currently selected unit.
 	private units.Base unit;
 	private PathNode current;
+	
+	//Output information
 	private Vector<Point> map = new Vector<Point>();
 	public int[][]maphits;
-	public boolean SomethingChanged;
+	
+	//Development Settings
 	public boolean ShowCost;
 	public boolean ShowHits;
 	
+	//When a unit is created, destroyed, or moved. This is updated.
+	public long LastChanged;
+	
 	public Pathfinding() {
-		//TODO: Change it so units call FindPath when they are going to move.
-		//TODO: Do a list on completion and use that for validating valid locations to move as well as drawing the movable locations
-		//TODO: Add in some settings so that any time a unit moves (actually changes locations) / dies / created the unit's path has to be constructed again.
-		//I don't want to construct an exact same thing twice in a row if I can't help it.
+		LastChanged++;
+		//No presetup required currently.
 	}
 	
 	public Vector<Point> FindPath(units.Base unit) {
@@ -47,6 +54,7 @@ public class Pathfinding {
 			current=LowestCostOpen();
 		}
 		System.out.println("Pathing Took : " + (System.currentTimeMillis() - start));
+		LastChanged = unit.LastPathed = System.currentTimeMillis();
 		return map;
 	}
 	

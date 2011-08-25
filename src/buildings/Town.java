@@ -8,5 +8,4 @@ public class Town extends Base {
 		desc="Money Fodder.";
 		img = 1;
 	}
-
 }

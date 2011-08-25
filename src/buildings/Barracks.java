@@ -1,5 +1,7 @@
 package buildings;
 
+import engine.Game;
+
 public class Barracks extends Base {
 
 	public Barracks(int owner, int team, int xx, int yy) {
@@ -9,5 +11,7 @@ public class Barracks extends Base {
 		img = 4;
 	}
 
-	public void OpenMenu() {}
+	public void OpenMenu() {
+		Game.gui.gms.OpenMenu("Barrack", x, y);
+	}
 }
