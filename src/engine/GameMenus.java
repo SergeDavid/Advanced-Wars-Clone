@@ -10,6 +10,10 @@ import javax.swing.JPanel;
 
 public class GameMenus extends JPanel {
 	private static final long serialVersionUID = -7953759133984304287L;
+	//TODO: Redesign the menu's to be set around and handled better.
+	//TODO: Include unit picture/description/statistics when a unit is selected
+	//TODO: When loading units into the lists, grab only units that are connected to that menu.
+	//TODO: Hook the menu up to the keyboard.
 	
 	DefaultListModel UnitModel = new DefaultListModel();
 	JList Units = new JList(UnitModel);
@@ -58,17 +62,12 @@ public class GameMenus extends JPanel {
 	/**Special setup for unit creation menu's*/
 	public void OpenMenu(String Type, int xx, int yy) {
 		Insets insets = Game.gui.getInsets();
+		setBounds(320 + insets.left, 60 + insets.top, 180, 256);
 		x = xx;
 		y = yy;
-		if (Type.equals("Barrack")) {
-			setBounds(320 + insets.left, 60 + insets.top, 120, 256);
-			CityMenuGround();}
-		else if (Type.equals("Seaport")) {
-			setBounds(320 + insets.left, 60 + insets.top, 120, 256);
-		CityMenuGround();}
-		else if (Type.equals("Airport")) {
-			setBounds(320 + insets.left, 60 + insets.top, 120, 256);
-			CityMenuGround();}
+		if (Type.equals("Barrack")) {CityMenuGround();}
+		else if (Type.equals("Seaport")) {CityMenuGround();}
+		else if (Type.equals("Airport")) {CityMenuGround();}
 		Game.gui.add(this);
 	}
 	public void CloseMenu() {
@@ -97,12 +96,12 @@ public class GameMenus extends JPanel {
 	public void CityMenuGround() {
 		Insets insets = getInsets();
 		UnitModel.removeAllElements();
-		for (int i = 0; i < 5; i++) {
-			UnitModel.addElement("Unit #" + i);
+		for (int i = 0; i < Game.displayU.size(); i++) {
+			UnitModel.addElement(Game.displayU.get(i).name + " = $" + (Game.displayU.get(i).cost * Game.player.get(Game.btl.currentplayer).CostBonus));
 		}
 		Buy.setBounds(10+insets.left, 30*6+10+insets.top, 100, 24);
 		Quit.setBounds(10+insets.left, 30*7+10+insets.top, 100, 24);
-		Units.setBounds(10+insets.left, 10+insets.top, 100, 32*6);
+		Units.setBounds(10+insets.left, 10+insets.top, 160, 32*5+16);
 		add(Quit);
 		add(Buy);
 		add(Units);

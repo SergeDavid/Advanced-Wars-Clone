@@ -17,11 +17,9 @@ public class Pathfinding {
 	private Vector<Point> map = new Vector<Point>();
 	public int[][]maphits;
 	
-	//Development Settings
+	//View Tile Cost/Hits and when the last time something was updated.
 	public boolean ShowCost;
 	public boolean ShowHits;
-	
-	//When a unit is created, destroyed, or moved. This is updated.
 	public long LastChanged;
 	
 	public Pathfinding() {

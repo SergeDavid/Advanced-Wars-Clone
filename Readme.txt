@@ -10,7 +10,8 @@ My aims with this project is to improve my coding and game development skills wi
    1) Creating small map files which are created better then my previous attempts.
    2) Handle Game-States and Gui elements in a way that makes sense and is easy to use.
    3) Enter into the scary world of AI.
-   4) A lot more.
+   4) Improve class independence (Several of my classes tend to leak around)
+   5) A lot more.
    
 I'll add to this read-me and the rest more later, cya all and thank you for any support / encouragement you give me.
 I don't only make games because I love them and love making them, but because I love people enjoying them and I hope someday I'll finish one that people play.

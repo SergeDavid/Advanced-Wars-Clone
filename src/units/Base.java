@@ -10,8 +10,10 @@ public class Base {
 	public String name = "Missing No.";
 	public String nick = "MsNo";
 	public String desc = "Unknown description present.";
+	public int building;//Which building it can be bought from. TODO: Might turn into an array so I can have multiple buildings / other things can buy them.
 	public int owner;
 	int img;
+	public int cost = 100;
 	
 	//life settings
 	boolean dead;
@@ -26,10 +28,7 @@ public class Base {
 	
 	//Location
 	/**This is the movement type of the unit.
-	 * 0 = Infantry
-	 * 1 = Vehicle
-	 * 2 = Ship
-	 * 3 = Aircraft*/
+	 * 0 = Infantry, 1 = Vehicle, 2 = Ship, 3 = Aircraft*/
 	int MovType = 0;
 	public int x;
 	public int y;
@@ -38,11 +37,21 @@ public class Base {
 	public double speed = 2;
 	
 	//Battle Settings
-	public int Fog = 5;//Fog of war setting.
+	public double mainatk = 1.0;//Percentage bonus for main weapon.
 	public double attack = 100;//Base damage done to others
 	public double defense = 60;//Base armor for taking damage
+	
 	public int MaxAtkRange = 1;//How many squares away from the unit can it attack. (1 being default, 0 being none)
 	public int MinAtkRange = 1;//This is used for ranged units such as artillery.
+	
+	public int Fog = 5;//Fog of war setting.
+	public int Fuel = 100;//Total fuel left TODO: Add fuel and refueling at cities
+	public int FuelUse = 1;//How much fuel is used each tile the unit moves.
+	public int Ammo = 10;//Ammo used for the main weapon (uses alternate when it is gone)
+	
+	//TODO: Add armor types ()
+	//TODO: Add Ammo for main attack (targets units with armor type of listed elements)
+	//TODO: Add a list/array of armor types the main weapon fires at
 	
 	/** I need to add what kind of unit is being constructed or split it into extended classes.
 	 * 
@@ -57,6 +66,7 @@ public class Base {
 		if (!active) {
 			acted = true;
 			moved = true;	
+			Game.pathing.LastChanged++;
 		}
 	}
 	
@@ -66,15 +76,17 @@ public class Base {
 			oldx=x;oldy=y;
 			x=destx;y=desty;
 			moved=true;
+			Game.pathing.LastChanged++;
 		}
 	}
-	/**Returns true if the x,y location is a place your unit can walk on.*/
-	public boolean moveable(int destx, int desty) {
+	/**This checks to see if the destination is in the map, and then calls the path-finder and returns true if the location is movable.*/
+	private boolean moveable(int destx, int desty) {
 		if (destx<0||desty<0) {return false;}
 		if (destx>=Game.map.width||desty>=Game.map.height) {return false;}
 		if (Pathed(destx,desty)) {return true;}
 		return false;
 	}
+	/**If the location is in the movable locations list, the unit will move there.*/
 	private boolean Pathed(int destx, int desty) {
 		for (Point p : map) {
 			if (p.x == destx && p.y == desty) {return true;}
@@ -100,12 +112,10 @@ public class Base {
 	}
 	
 	public void action(int destx, int desty) {
-		if (acted) {return;}
-		
-		if (!attack(destx,desty)) {
+		if (acted) {return;}//TODO: Switch this area to a menu with wait, attack (any unit in range after moving), capture(if map[y][x]==city)
+		if (!attack(destx,desty)) {//If there was no unit to attack, the unit checks to see if there is a building there.
 			capture(destx,desty);
 		}
-		/**Capturing stuff*/
 		acted=true;
 	}
 	private boolean attack(int destx,int desty) {
@@ -113,6 +123,7 @@ public class Base {
 		units.Base target = FindTarget(destx, desty, true, false);
 		if (target!=null) {
 			if (inrange(target.x, target.y)) {
+				//TODO: Add in terrain bonuses and commander bonuses as well as main weapon and armor bonuses.
 				double damage = (attack-target.defense)+(rand.nextInt(20)-10)/10;
 				if (damage<1) {damage=1;}
 				target.health-=damage;
@@ -166,9 +177,11 @@ public class Base {
 		return null;
 	}
 	
-	/**Returns the image location of the sprite sheet where this unit is located.
+	/**
+	 * Returns the image location of the sprite sheet where this unit is located.
 	 * Type = Left / Right (image)
-	 * Team = Up / Down (color)*/
+	 * Team = Up / Down (color)
+	 * */
 	public int[] DrawMe() {
 		int[] loc = {img,owner*2};
 		if (acted) {loc[1]++;}

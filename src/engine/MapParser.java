@@ -9,10 +9,6 @@ import java.util.Vector;
 
 public class MapParser {
 	int terrain = 0;//Keeps track of current row
-	boolean Info;//Was the info collected completely?
-	boolean Desc;//Was the description collected completely?
-	boolean Terr;//Was all the terrain there?
-	boolean Blds;//Was there any buildings? (at least capitals)
 	
 	//Handles building construction after the decoding loop is finished.
 	String CityString;
@@ -24,7 +20,6 @@ public class MapParser {
 		//TODO: Send any error messages to be handled by the error messaging system.
 	} 
 	public boolean decode(String mapname) {
-		Info=Desc=Terr=Blds=false;//Sets all of them to false
 		terrain = 0;
 		CityString = "";
 		CityPoint = new Vector<Point>();
@@ -32,24 +27,24 @@ public class MapParser {
 			BufferedReader in = new BufferedReader(new FileReader("maps/"+mapname));
 			String line;
 			while ((line = in.readLine()) != null) {
-				if (!line.startsWith("#")) {
-					if (line.startsWith("1")) {
-						ParseInfo(line.substring(2));Info=true;
-					}
-					else if (line.startsWith("2")) {//Splits the creators name / map description from the first included space.
-						ParseDesc(line.substring(2).split(" ",2));
-						Desc=true;
-					}
-					else if (line.startsWith("3")) {//Adds line to the string handling build data to be used in the next loop.
-						CityString += line.substring(2);
-					}
-					else if (line.startsWith("4")) {
-						ParseTerrain(line.substring(2));Terr=true;
-					}
-					else if (line.startsWith("5")) {
-						ParseUnit(line.substring(2));
-					}
+				if (line.startsWith("1")) {
+					ParseInfo(line.substring(2));
 				}
+				else if (line.startsWith("2")) {//Splits the creators name / map description from the first included space.
+					ParseDesc(line.substring(2).split(" ",2));
+				}
+				else if (line.startsWith("3")) {//Adds line to the string handling build data to be used in the next loop.
+					CityString += line.substring(2);
+				}
+				else if (line.startsWith("4")) {
+					ParseTerrain(line.substring(2));
+				}
+				else if (line.startsWith("5")) {
+					ParseUnit(line.substring(2));
+				}
+			}
+			if (terrain<Game.map.width) {
+				Game.error.ShowError("Terrain is corrupt, short " + (Game.map.height-terrain) + " rows.");
 			}
 			for (Point p : CityPoint) {
 				if (CityString.length()>=3) {
@@ -57,11 +52,7 @@ public class MapParser {
 					CityString = CityString.substring(3);
 				}
 			}
-			if (Info) {return true;}
-			else {
-				System.out.println("Return to login...");
-				return false;
-			}
+			return true;
 		} catch (FileNotFoundException e) {
 			Game.error.ShowError("Map not found.");
 			return false;
@@ -93,8 +84,11 @@ public class MapParser {
 	 * 2 = Byte
 	 * x = Terrain (to be split into xx, maybe xx:x)*/
 	private void ParseTerrain(String info) {
-		if (info.length()>Game.map.width||info.length()<Game.map.width) {
-			Game.error.ShowError("Terrain at row " + terrain + " is corrupt.");
+		if (info.length()>Game.map.width) {
+			Game.error.ShowError("Terrain at row " + terrain + " is corrupt. (Too Long)");
+		}
+		else if (info.length()<Game.map.width) {
+			Game.error.ShowError("Terrain at row " + terrain + " is corrupt. (Too Short)");
 		}
 		if (terrain>=Game.map.height) {return;}
 		int total = info.length();
@@ -111,14 +105,14 @@ public class MapParser {
 	 * x location (x)
 	 * y location (y)*/
 	private void ParseBuilding(String info, int x, int y) {
-		Game.CreateCity(
+		Game.list.CreateCity(
 				Integer.parseInt(info.substring(0,1),16),
 				x,
 				y,
 				Integer.parseInt(info.substring(1,3),16));
 	}
 	private void ParseUnit(String info) {
-		Game.CreateUnit(
+		Game.list.CreateUnit(
 				Integer.parseInt(info.substring(5,7),16), 
 				Integer.parseInt(info.substring(0,1),16), 
 				Integer.parseInt(info.substring(1,3),16), 

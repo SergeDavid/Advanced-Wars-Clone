@@ -36,6 +36,8 @@ public class Game extends JFrame {
 	public static Battle btl = new Battle();
 	public static ErrorHandler error = new ErrorHandler();
 	public static Pathfinding pathing = new Pathfinding();
+	public static ListData list;
+	public static ViewPoint view = new ViewPoint();
 	
 	//Image handling settings are as follows
 	public int fps;
@@ -46,10 +48,14 @@ public class Game extends JFrame {
 	public static Image img_city;
 	public static Boolean readytopaint;
 	
-	/**This handles the different players and also is used to speed logic arrays (contains a list of all characters they own)*/
+	//This handles the different players and also is used to speed logic arrays (contains a list of all characters they own)
 	public static List<players.Base> player = new ArrayList<players.Base>();
 	public static List<buildings.Base> builds = new ArrayList<buildings.Base>();
 	public static List<units.Base> units = new ArrayList<units.Base>();
+	//These are the lists that will hold commander, building, and unit data to use in the menu's
+	public static List<players.Base> displayC = new ArrayList<players.Base>();
+	public static List<buildings.Base> displayB = new ArrayList<buildings.Base>();
+	public static List<units.Base> displayU = new ArrayList<units.Base>();
 	
 	public Game() {super (name);
 		//Default Settings of the JFrame
@@ -68,6 +74,7 @@ public class Game extends JFrame {
 		load = new LoadImages();
 		map = new Map();
 		input = new InputHandler();
+		list = new ListData();
 		
 		setVisible(true);//This has been moved down here so that when everything is done, it is shown.
 		GameLoop();
@@ -102,6 +109,7 @@ public class Game extends JFrame {
 				lastCPSTime2 = System.currentTimeMillis();
 				logics = 0;
 				Game.gui.frame++;
+				if (GameState==Playing) {view.MoveView();}
 				if (Game.gui.frame>=12) {Game.gui.frame=0;}
 			}
 			else logics++;
@@ -112,44 +120,11 @@ public class Game extends JFrame {
 		}
 	}
 	
-	//TODO: Might move these three to their own class, might not.
-	public static void CreateCommander(int which,int team, int money, boolean npc) {
-		switch (which) {
-			case 0:Game.player.add(new players.Andy(npc,team,money));break;
-			default:Game.player.add(new players.Base(npc,team,money));break;
-		}
-	}
-	public static void CreateCity(int owner, int xx, int yy, int type) {//15 = Neutral, 12, 13, 14 are unused. (12 max players)
-		int team = 0;
-		if (owner>btl.totalplayers) {
-			owner=15;
-			if (type == 0) {type = 1;}
-		}
-		else {team = Game.player.get(owner).team;}
-		switch (type) {
-			case 0:Game.builds.add(new buildings.Capital(owner, team, xx, yy));break;
-			case 1:Game.builds.add(new buildings.Town(owner, team, xx, yy));break;
-			case 2:Game.builds.add(new buildings.Barracks(owner, team, xx, yy));break;
-			case 3:Game.builds.add(new buildings.Shipyard(owner, team, xx, yy));break;
-			case 4:Game.builds.add(new buildings.Airport(owner, team, xx, yy));break;
-			default:Game.builds.add(new buildings.Town(owner, team, xx, yy));break;
-		}
-	}
-	public static void CreateUnit(int type, int owner, int xx, int yy, boolean active) {
-		switch (type) {
-			case 0:Game.units.add(new units.Infantry(owner, xx, yy, active));break;
-			case 1:Game.units.add(new units.Mechanic(owner, xx, yy, active));break;
-			case 2:Game.units.add(new units.SmallTank(owner, xx, yy, active));break;
-			default:Game.units.add(new units.Base(owner, xx, yy, active));break;
-		}
-		
-	}
 	//TODO: Find out how to display units, buildings, and the map before entering a battle / in a menu
 		//Load all the units/building/Commanders into an array (Sort by some property they have [Order=1])
 		//Compare unit cost/attack/defense with current commander's cost bonus and atk/def bonus
 	//TODO: More battle settings
 	//TODO: Fog of war
-	//TODO: Force buildings owned by none existing players / teams to turn neutral.
 	//TODO: Create a map editor
 	//TODO: Reorganize sprite sheets to support animations on units
 	//TODO: When units are on a building, they gain health at the beginning of their turn (if enough money)

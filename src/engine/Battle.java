@@ -37,6 +37,7 @@ public class Battle {
 		if (currentplayer>=totalplayers) {currentplayer=0;}
 		ply = Game.player.get(currentplayer);
 		ply.money+=buildingmoney*Buildingcount(currentplayer);
+		Game.pathing.LastChanged++;
 	}
 	
 	/**Grabs the number of buildings a player owns.*/
@@ -69,17 +70,17 @@ public class Battle {
 			if (!ply.FindUnit()) {//Improved version
 				ply.unitselected=false;
 				if (ply.FindCity()) {
-					//Derp Herp Worp? D:
+					//Not sure what to do with this yet.
 				}
 			}
 		}
 	}	
 	/**This will be redone when I set up the unit buying menu.*/
 	public void Buyunit(int type, int x, int y) {
-		//TODO: Compare money to the prices of each unit.
-		if (Game.player.get(currentplayer).money>=20) {
-			Game.CreateUnit(type, currentplayer, x, y, false);
-			Game.player.get(currentplayer).money-=20;
+		double cost = Game.displayU.get(type).cost*Game.player.get(currentplayer).CostBonus;
+		if (Game.player.get(currentplayer).money>=cost) {
+			Game.list.CreateUnit(type, currentplayer, x, y, false);
+			Game.player.get(currentplayer).money-=cost;
 		}
 	}
 
@@ -92,10 +93,10 @@ public class Battle {
 		if (max>4) {totalplayers = 4;
 			Game.error.ShowError("The game currently supports only 4 players, not " + max + ".");
 		}
-		//Adds players, current hacked version.
+		//Adds players, current hacked version. TODO: Unhack this
 		for (int i = 0;i<totalplayers;i++) {
 			//TODO: Load commander info from the different gui settings somewhere.
-			Game.CreateCommander(0,i+1,startingmoney,false);
+			Game.list.CreateCommander(0,i+1,startingmoney,false);
 		}
 	}
 }

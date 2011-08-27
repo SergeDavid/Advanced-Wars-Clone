@@ -9,6 +9,12 @@ public class Base {
 	public int team;
 	public int money;
 	
+	//Modifiers (unit cost/damage/defense)
+	/**Percentage offset for how much a unit costs to build with 1.0 = 100% (0.5 = half / 2.0 = double)*/
+	public double CostBonus = 1.0;
+	public double[] ArmorBonus = {1,1,1,1,1};//Current set at 5 just because.
+	public double[] WeaponBonus = {1,1,1,1,1};//TODO: Weapon and Armor Bonus
+	
 	//Control Info (npc / skip)
 	/**If true the computer will control said units instead of the player.*/
 	public boolean npc;
@@ -34,8 +40,8 @@ public class Base {
 	//Location of players images to be used in game (Might do a sprite sheet done in rows, but right now I'm planning on a grid)
 	int imgx;
 	int imgy;
-	public int selectx;
-	public int selecty;
+	public int selectx = 2;
+	public int selecty = 2;
 	
 	/**
 	 * @param ai = If true, this character is not controlled by the player.

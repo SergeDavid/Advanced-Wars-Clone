@@ -32,6 +32,12 @@ public class Map {
 		this.width=width;
 		this.height=height;
 		map = new terrain.Base[height][width];
+		//TODO: Current way of keeping the map clean, I should find a way of doing this with a smaller startup cost.
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+				map[y][x] = new terrain.Dirt();
+			}
+		}
 	}
 	
 	public boolean Walkable(int i) {if (tiles.get(i).walk()) {return true;}return false;}

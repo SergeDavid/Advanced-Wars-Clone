@@ -1,14 +1,14 @@
 package players;
 
-public class Andy extends Base {
+public class Colin extends Base {
 	
-	public Andy(boolean ai, int color, int bling) {
+	public Colin(boolean ai, int color, int bling) {
 		super(ai, color, bling);
-		name="Andy";
-		desc="A young man who smells of cheese.";
+		name="Colin";
+		desc="Cheap units, weak units.";
 		level1=50;
 		level2=100;
-		CostBonus=1.0;
+		CostBonus=0.8;
 	}
 	public void MyPower1() {
 		System.out.println(money + " : " + name + "'s power sucks it! D:");

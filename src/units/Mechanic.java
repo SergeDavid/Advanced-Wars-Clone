@@ -9,6 +9,7 @@ public class Mechanic extends Base {
 		desc = "Slow infantry with some anti vehicle stuff.";
 		img = 1;
 		speed = 6;
+		cost = 200;
 	}
 
 }
