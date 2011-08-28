@@ -96,6 +96,7 @@ public class GameMenus extends JPanel {
 	public void CityMenuGround() {
 		Insets insets = getInsets();
 		UnitModel.removeAllElements();
+		//TODO: Add only units with the building integer that matches it's respective building. (air units = airbase, ground units = barracks)
 		for (int i = 0; i < Game.displayU.size(); i++) {
 			UnitModel.addElement(Game.displayU.get(i).name + " = $" + (Game.displayU.get(i).cost * Game.player.get(Game.btl.currentplayer).CostBonus));
 		}

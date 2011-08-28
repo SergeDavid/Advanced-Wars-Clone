@@ -8,7 +8,7 @@ public class Mechanic extends Base {
 		nick = "Mech";
 		desc = "Slow infantry with some anti vehicle stuff.";
 		img = 1;
-		speed = 6;
+		speed = 3;
 		cost = 200;
 	}
 

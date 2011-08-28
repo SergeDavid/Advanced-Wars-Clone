@@ -104,18 +104,18 @@ public class Game extends JFrame {
 				setTitle(name + " v" + build + "." + version + " : FPS " + fpscount);
 			}
 			else fps++;
-			//Current Logic location
-			if (System.currentTimeMillis() - lastCPSTime2 > 100) {
+			//Current Logic and frames per second location (capped at 20 I guess?)
+			if (System.currentTimeMillis() - lastCPSTime2 > 50) {
 				lastCPSTime2 = System.currentTimeMillis();
 				logics = 0;
-				Game.gui.frame++;
-				if (GameState==Playing) {view.MoveView();}
+				if (GameState==Playing) {view.MoveView();}//This controls the view-point on the map
+				Game.gui.frame++;//This is controlling the current frame of animation.
 				if (Game.gui.frame>=12) {Game.gui.frame=0;}
+				gui.repaint();
 			}
 			else logics++;
 			
 			//Paints the scene then sleeps for a bit.
-			gui.repaint();
 			try { Thread.sleep(20);} catch (Exception e) {};
 		}
 	}

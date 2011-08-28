@@ -7,7 +7,10 @@ public class SmallTank extends Base {
 		name = "Small Tank";
 		nick = "STnk";
 		desc = "A small tank.";
-		img = 0;
+		MovType = MovMob;
+		speed = 6;
+		defense = 80;
+		img = 2;
 	}
 
 }

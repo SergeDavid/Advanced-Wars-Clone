@@ -27,9 +27,6 @@ public class Base {
 	public long LastPathed;
 	
 	//Location
-	/**This is the movement type of the unit.
-	 * 0 = Infantry, 1 = Vehicle, 2 = Ship, 3 = Aircraft*/
-	int MovType = 0;
 	public int x;
 	public int y;
 	public int oldx;
@@ -53,6 +50,15 @@ public class Base {
 	//TODO: Add Ammo for main attack (targets units with armor type of listed elements)
 	//TODO: Add a list/array of armor types the main weapon fires at
 	
+	//Move Types
+	/**This is the movement type of the unit.
+	 * 0 = Infantry, 1 = Vehicle, 2 = Ship, 3 = Aircraft*/
+	int MovType = 0;
+	final int MovInf = 0;
+	final int MovMob = 1;
+	final int MovShp = 2;
+	final int MovFly = 3;
+	
 	/** I need to add what kind of unit is being constructed or split it into extended classes.
 	 * 
 	 * @param owner = What player owns this unit.
@@ -66,7 +72,7 @@ public class Base {
 		if (!active) {
 			acted = true;
 			moved = true;	
-			Game.pathing.LastChanged++;
+			Game.pathing.LastChanged = System.currentTimeMillis();
 		}
 	}
 	
@@ -76,7 +82,8 @@ public class Base {
 			oldx=x;oldy=y;
 			x=destx;y=desty;
 			moved=true;
-			Game.pathing.LastChanged++;
+			//Path finding stuff
+			Game.pathing.LastChanged = System.currentTimeMillis();
 		}
 	}
 	/**This checks to see if the destination is in the map, and then calls the path-finder and returns true if the location is movable.*/
@@ -113,18 +120,21 @@ public class Base {
 	
 	public void action(int destx, int desty) {
 		if (acted) {return;}//TODO: Switch this area to a menu with wait, attack (any unit in range after moving), capture(if map[y][x]==city)
-		if (!attack(destx,desty)) {//If there was no unit to attack, the unit checks to see if there is a building there.
+		if (!attack(destx,desty,true)) {//If there was no unit to attack, the unit checks to see if there is a building there.
 			capture(destx,desty);
 		}
 		acted=true;
 	}
-	private boolean attack(int destx,int desty) {
+
+	private boolean attack(int destx, int desty, boolean returnfire) {
 		Random rand = new Random();
 		units.Base target = FindTarget(destx, desty, true, false);
 		if (target!=null) {
 			if (inrange(target.x, target.y)) {
-				//TODO: Add in terrain bonuses and commander bonuses as well as main weapon and armor bonuses.
-				double damage = (attack-target.defense)+(rand.nextInt(20)-10)/10;
+				//TODO: Add in commander bonuses as well as main weapon and armor bonuses. And also Terrain defense bonus
+				double damage = (attack)-
+						(target.defense*Game.map.map[target.y][target.x].defense())+
+						(rand.nextInt(20)-10)/10;
 				if (damage<1) {damage=1;}
 				target.health-=damage;
 				if (target.health<=0) {
@@ -132,10 +142,12 @@ public class Base {
 					Game.player.get(owner).kills++;
 					Game.player.get(target.owner).loses++;
 					System.out.println("Enemy unit has been destroyed!");
+					Game.pathing.LastChanged = System.currentTimeMillis();
 				}
 				else {
 				  System.out.println("Enemy unit now has " + target.health + " hp left!");
 				}
+				if (returnfire) {target.attack(x,y,false);}//return fire?
 				return true;
 			}
 		}
@@ -158,7 +170,7 @@ public class Base {
 		}
 		return null;
 	}
-	/**Finds out if the character is in an attackable location by sweeping through the atkrange list.*/
+
 	public boolean inrange(int xx, int yy) {
 		//TODO: Add in calculations for type (line / sphere / cone), it is currently only sphere
 		xx = (xx>x) ? xx-x : x-xx;//Finds the total distance.

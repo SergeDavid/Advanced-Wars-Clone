@@ -52,7 +52,7 @@ public class Pathfinding {
 			current=LowestCostOpen();
 		}
 		System.out.println("Pathing Took : " + (System.currentTimeMillis() - start));
-		LastChanged = unit.LastPathed = System.currentTimeMillis();
+		unit.LastPathed = System.currentTimeMillis();
 		return map;
 	}
 	

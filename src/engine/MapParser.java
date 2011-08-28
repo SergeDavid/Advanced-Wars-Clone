@@ -43,7 +43,7 @@ public class MapParser {
 					ParseUnit(line.substring(2));
 				}
 			}
-			if (terrain<Game.map.width) {
+			if (terrain<Game.map.height) {
 				Game.error.ShowError("Terrain is corrupt, short " + (Game.map.height-terrain) + " rows.");
 			}
 			for (Point p : CityPoint) {
@@ -105,18 +105,17 @@ public class MapParser {
 	 * x location (x)
 	 * y location (y)*/
 	private void ParseBuilding(String info, int x, int y) {
-		Game.list.CreateCity(
+		Game.builds.add(Game.list.CreateCity(
 				Integer.parseInt(info.substring(0,1),16),
-				x,
-				y,
-				Integer.parseInt(info.substring(1,3),16));
+				x, y,
+				Integer.parseInt(info.substring(1,3),16)));
 	}
 	private void ParseUnit(String info) {
-		Game.list.CreateUnit(
+		Game.units.add(Game.list.CreateUnit(
 				Integer.parseInt(info.substring(5,7),16), 
 				Integer.parseInt(info.substring(0,1),16), 
 				Integer.parseInt(info.substring(1,3),16), 
 				Integer.parseInt(info.substring(3,5),16), 
-				true);
+				true));
 	}
 }

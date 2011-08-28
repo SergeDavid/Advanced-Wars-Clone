@@ -26,12 +26,8 @@ public class Base {
 		this.team=team;
 		x=xx;
 		y=yy;
-		img=SetImage();
+		img=0;
 	}
-	
-	protected int SetImage() {return 0;}
-	protected String setName() {return "Name";}
-	protected String setDesc() {return "Descriptive Words.";}
 
 	public void OpenMenu() {}
 	

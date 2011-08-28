@@ -52,7 +52,6 @@ public class Gui extends JPanel {
 	/**Creates the Login screen layout*/
 	public void LoginScreen() {
 		Game.GameState=Game.TheMenu;
-		
 		removeAll();
 		
 		add(Join);
@@ -94,14 +93,18 @@ public class Gui extends JPanel {
 		if (Game.error.showing) {add(Game.error);}
 	}
 	
+	//TODO: See about making different layers for easier control.
+	//TODO: See about optimizing the layers so that I can skip some to make this part faster.
 	public void paintComponent(Graphics g) {
+		//Creates the buffer image and graphic settings.
 		Image buffimage = createImage(width, height);
 		Graphics2D gg = (Graphics2D) buffimage.getGraphics();
-		gg.setColor(new Color(0,0,60));
-		gg.fillRect(0, 0, width, height);
-		gg.setColor(new Color(255,255,255));
+		
 		switch (Game.GameState) {
 		case Game.TheMenu:
+			gg.setColor(new Color(0,0,60));
+			gg.fillRect(0, 0, width, height);
+			gg.setColor(new Color(255,255,255));
 		break;
 		case Game.Playing:
 			//TODO: Deal with who is currently playing better.

@@ -11,6 +11,7 @@ public class Battle {
 	boolean FogOfWar;
 	int startingmoney = 100;//How much you start with each round.
 	int buildingmoney = 50;//How much each building provides.
+	int day = 1;
 	
 	//Winning condition settings	
 	
@@ -21,6 +22,9 @@ public class Battle {
 	public void NewGame(String mapname) {
 		Game.player = new ArrayList<players.Base>();
 		Game.builds = new ArrayList<buildings.Base>();
+		Game.units = new ArrayList<units.Base>();
+		Game.view.Loc.x = 0;
+		Game.view.Loc.y = 0;
 		if (!Game.map.parse.decode(mapname)) {
 			Game.gui.LoginScreen();
 			return;
@@ -34,9 +38,11 @@ public class Battle {
 			unit.moved=false;
 		}
 		currentplayer++;
-		if (currentplayer>=totalplayers) {currentplayer=0;}
+		if (currentplayer>=totalplayers) {currentplayer=0;day++;}
 		ply = Game.player.get(currentplayer);
-		ply.money+=buildingmoney*Buildingcount(currentplayer);
+		if (day!=1) {
+			ply.money+=buildingmoney*Buildingcount(currentplayer);
+		}
 		Game.pathing.LastChanged++;
 	}
 	
@@ -79,7 +85,7 @@ public class Battle {
 	public void Buyunit(int type, int x, int y) {
 		double cost = Game.displayU.get(type).cost*Game.player.get(currentplayer).CostBonus;
 		if (Game.player.get(currentplayer).money>=cost) {
-			Game.list.CreateUnit(type, currentplayer, x, y, false);
+			Game.units.add(Game.list.CreateUnit(type, currentplayer, x, y, false));
 			Game.player.get(currentplayer).money-=cost;
 		}
 	}
@@ -96,7 +102,7 @@ public class Battle {
 		//Adds players, current hacked version. TODO: Unhack this
 		for (int i = 0;i<totalplayers;i++) {
 			//TODO: Load commander info from the different gui settings somewhere.
-			Game.list.CreateCommander(0,i+1,startingmoney,false);
+			Game.player.add(Game.list.CreateCommander(0,i+1,startingmoney,false));
 		}
 	}
 }
