@@ -40,16 +40,28 @@ public class InputHandler implements KeyListener,MouseListener,ActionListener {
 	public int main = MouseEvent.BUTTON1;
 	public int alt = MouseEvent.BUTTON1;
 	
+	public boolean MenuHack;
+	
 	public InputHandler() {
 		Game.gui.addKeyListener(this);
 		Game.gui.addMouseListener(this);
 		Game.gui.Join.addActionListener(this);
 		Game.gui.Exit.addActionListener(this);
-		
-		Game.gui.ply_endturn.addActionListener(this);
-		
+
+		//Main Pause Menu
+		Game.gui.gms.Resume.addActionListener(this);
+		Game.gui.gms.Save.addActionListener(this);
+		Game.gui.gms.Options.addActionListener(this);
+		Game.gui.gms.EndTurn.addActionListener(this);
 		Game.gui.gms.Quit.addActionListener(this);
+		//Unit Menu Options
 		Game.gui.gms.Buy.addActionListener(this);
+		Game.gui.gms.Wait.addActionListener(this);
+		Game.gui.gms.Attack.addActionListener(this);
+		Game.gui.gms.Capture.addActionListener(this);
+		//Yes/No
+		Game.gui.gms.Yes.addActionListener(this);
+		Game.gui.gms.No.addActionListener(this);
 	}
 	
 	public void keyPressed(KeyEvent e) {
@@ -63,6 +75,10 @@ public class InputHandler implements KeyListener,MouseListener,ActionListener {
 			if (i==right||i==right2) {ply.selectx++;if (ply.selectx>=Game.map.width) {ply.selectx--;}}
 			if (i==select) {Game.btl.Action();}
 			if (i==cancle) {Game.player.get(Game.btl.currentplayer).Cancle();}
+			if (i==start) {
+				if (MenuHack) {Game.gui.gms.CloseMenu();}
+				else {Game.gui.gms.OpenMenu("Pause");}
+			}
 		}
 		
 		//if (i==start) {Game.MenuButton();}
@@ -92,8 +108,9 @@ public class InputHandler implements KeyListener,MouseListener,ActionListener {
 			Game.gui.InGameScreen();
 		}
 		else if (s==Game.gui.Exit) {System.exit(0);}
-		else if (s==Game.gui.ply_endturn) {Game.btl.EndTurn();}
-		else if (s==Game.gui.gms.Quit) {Game.gui.gms.CloseMenu();}
+		else if (s==Game.gui.gms.Quit) {Game.gui.gms.CloseMenu();Game.gui.LoginScreen();}
+		else if (s==Game.gui.gms.EndTurn) {Game.gui.gms.CloseMenu();Game.btl.EndTurn();}
+		else if (s==Game.gui.gms.Resume) {Game.gui.gms.CloseMenu();}
 		else if (s==Game.gui.gms.Buy) {
 			Game.btl.Buyunit(Game.gui.gms.Units.getSelectedIndex(), Game.gui.gms.x, Game.gui.gms.y);
 			Game.gui.gms.CloseMenu();

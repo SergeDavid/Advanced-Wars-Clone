@@ -30,12 +30,7 @@ public class Gui extends JPanel {
 	public JButton Join = new JButton("New Game");
 	public JButton Options = new JButton("Options");
 	public JButton Exit = new JButton("Exit");
-	
-	/**Plan on updating this for better character selection.*/
-	public JButton[] charselect = new JButton[10];
-	public JButton ply_next = new JButton("Next");
-	public JButton ply_prev = new JButton("Prev");
-	public JButton ply_endturn = new JButton("End Turn");
+
 	JList maps_list = new JList();
 	DefaultListModel maps_model = new DefaultListModel();
 	public GameMenus gms = new GameMenus();
@@ -80,16 +75,6 @@ public class Gui extends JPanel {
 	public void InGameScreen() {
 		removeAll();
 		Game.GameState=Game.Playing;
-		add(ply_next);
-		add(ply_prev);
-		add(ply_endturn);
-		Insets insets = getInsets();
-		Dimension size = ply_next.getPreferredSize();
-		ply_next.setBounds(578 + insets.left, 316 + insets.top, size.width, size.height);
-		size = ply_prev.getPreferredSize();
-		ply_prev.setBounds(514 + insets.left, 316 + insets.top, size.width, size.height);
-		size = ply_endturn.getPreferredSize();
-		ply_endturn.setBounds(521 + insets.left, 350 + insets.top, 110, size.height);
 		if (Game.error.showing) {add(Game.error);}
 	}
 	
@@ -107,14 +92,13 @@ public class Gui extends JPanel {
 			gg.setColor(new Color(255,255,255));
 		break;
 		case Game.Playing:
-			//TODO: Deal with who is currently playing better.
 			gg.drawImage(Game.img_menu[0], 0, 0, width, height, 32, 0, 64, 256, null);
-			
 			DrawTerrain(gg);
-			DrawSidebar(gg);//Includes movement and attack ranges.
+			DrawRanges(gg);
 			DrawBuildings(gg);
 			DrawUnits(gg);
 			DrawSelector(gg);
+			if (Game.input.MenuHack) {DrawSidebar(gg);}
 		break;
 		}
 		g.drawImage(buffimage, 0, 0, this);
@@ -203,15 +187,10 @@ public class Gui extends JPanel {
 	 * 2) Attackable locations
 	 * 3) Unit name, health, image
 	 * */
-	private void DrawUnitInfo(Graphics2D gg, int offset) {
-		players.Base plyer = Game.player.get(Game.btl.currentplayer);
-		if (plyer.unitselected) {
-			units.Base unit = Game.units.get(plyer.selectedunit);
-			if (unit.acted) {
-				gg.drawString("Finished.",offset,64);
-			}
-			else if (unit.moved&&!unit.acted) {
-				gg.drawString("Attacking.",offset,64);
+	private void DrawRanges(Graphics2D gg) {
+		if (Game.player.get(Game.btl.currentplayer).unitselected) {
+			units.Base unit = Game.units.get(Game.player.get(Game.btl.currentplayer).selectedunit);
+			if (unit.moved&&!unit.acted) {
 				for (int y = unit.y - unit.MaxAtkRange; y <= unit.y + unit.MaxAtkRange; y++) {
 					for (int x = unit.x - unit.MaxAtkRange; x <= unit.x + unit.MaxAtkRange; x++) {
 						if (Game.view.Viewable(x,y)) {
@@ -226,7 +205,6 @@ public class Gui extends JPanel {
 				}
 			}
 			else if (!unit.moved) {
-				gg.drawString("Moving",offset,64);
 				for (Point p : unit.map) {
 					if (Game.view.Viewable(p.x,p.y)) {
 						gg.drawImage(Game.img_tile,
@@ -251,7 +229,21 @@ public class Gui extends JPanel {
 						}
 					}
 				}
-				
+			}
+		}
+	}
+	private void DrawUnitInfo(Graphics2D gg, int offset) {
+		players.Base plyer = Game.player.get(Game.btl.currentplayer);
+		if (plyer.unitselected) {
+			units.Base unit = Game.units.get(plyer.selectedunit);
+			if (unit.acted) {
+				gg.drawString("Finished.",offset,64);
+			}
+			else if (unit.moved&&!unit.acted) {
+				gg.drawString("Attacking.",offset,64);
+			}
+			else if (!unit.moved) {
+				gg.drawString("Moving",offset,64);
 			}
 			//UNIT SELECTION STUFFIES!
 			int[] loc = unit.DrawMe();

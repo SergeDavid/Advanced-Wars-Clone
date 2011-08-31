@@ -2,7 +2,6 @@ package engine;
 
 import java.awt.Color;
 import java.awt.Insets;
-
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JList;
@@ -14,16 +13,17 @@ public class GameMenus extends JPanel {
 	//TODO: Include unit picture/description/statistics when a unit is selected
 	//TODO: When loading units into the lists, grab only units that are connected to that menu.
 	//TODO: Hook the menu up to the keyboard.
-	
 	DefaultListModel UnitModel = new DefaultListModel();
 	JList Units = new JList(UnitModel);
 	JButton Buy = new JButton("Buy");
 	int x;
 	int y;
+	
 	//StartMenu
 	JButton Help = new JButton("Help");
 	JButton Save = new JButton("Save");
 	JButton Options = new JButton("Options");
+	JButton EndTurn = new JButton("EndTurn");
 	JButton Resume = new JButton("Resume");
 	JButton Quit = new JButton("Quit");
 	
@@ -36,11 +36,6 @@ public class GameMenus extends JPanel {
 	JButton Attack = new JButton("Attack");
 	JButton Capture = new JButton("Capture");
 	
-	//unused
-	JButton Quit1 = new JButton("Quit");
-	JButton Quit2= new JButton("Quit");
-	JButton Quit3 = new JButton("Quit");
-	
 	public GameMenus() {
 		setBackground(new Color(80,80,80));
 	}
@@ -50,17 +45,19 @@ public class GameMenus extends JPanel {
 	 * @param Type = The type of menu to open
 	 */
 	public void OpenMenu(String Type) {
+		removeAll();
 		Insets insets = Game.gui.getInsets();
 		if (Type.equals("Pause")) {
-			setBounds(320 + insets.left, 60 + insets.top, 120, 140);
 			PauseMenu();}
 		else if (Type.equals("YesNo")) {
 			setBounds(320 + insets.left, 60 + insets.top, 120, 140);
 			YesNoMenu();}
 		Game.gui.add(this);
+		Game.input.MenuHack=true;
 	}
 	/**Special setup for unit creation menu's*/
 	public void OpenMenu(String Type, int xx, int yy) {
+		removeAll();
 		Insets insets = Game.gui.getInsets();
 		setBounds(320 + insets.left, 60 + insets.top, 180, 256);
 		x = xx;
@@ -69,9 +66,11 @@ public class GameMenus extends JPanel {
 		else if (Type.equals("Seaport")) {CityMenuGround();}
 		else if (Type.equals("Airport")) {CityMenuGround();}
 		Game.gui.add(this);
+		Game.input.MenuHack=true;
 	}
 	public void CloseMenu() {
 		Game.gui.remove(this);
+		Game.input.MenuHack=false;
 	}
 	
 	private void YesNoMenu() {
@@ -83,15 +82,22 @@ public class GameMenus extends JPanel {
 	}
 	private void PauseMenu() {
 		Insets insets = getInsets();
+		
 		Resume.setBounds(10+insets.left, 10+insets.top, 100, 24);
+		Resume.setMnemonic('R');
 		Save.setBounds(10+insets.left, 30*1+10+insets.top, 100, 24);
 		Options.setBounds(10+insets.left, 30*2+10+insets.top, 100, 24);
-		Quit.setBounds(10+insets.left, 30*3+10+insets.top, 100, 24);
+		EndTurn.setBounds(10+insets.left, 30*3+10+insets.top, 100, 24);
+		Quit.setBounds(10+insets.left, 30*4+10+insets.top, 100, 24);
 		
 		add(Resume);
 		add(Save);
 		add(Options);
+		add(EndTurn);
 		add(Quit);
+		
+		insets = Game.gui.getInsets();
+		setBounds(320 + insets.left, 60 + insets.top, 120, 30*5+20);
 	}
 	public void CityMenuGround() {
 		Insets insets = getInsets();
@@ -100,10 +106,11 @@ public class GameMenus extends JPanel {
 		for (int i = 0; i < Game.displayU.size(); i++) {
 			UnitModel.addElement(Game.displayU.get(i).name + " = $" + (Game.displayU.get(i).cost * Game.player.get(Game.btl.currentplayer).CostBonus));
 		}
+		Units.setSelectedIndex(0);
 		Buy.setBounds(10+insets.left, 30*6+10+insets.top, 100, 24);
-		Quit.setBounds(10+insets.left, 30*7+10+insets.top, 100, 24);
+		Resume.setBounds(10+insets.left, 30*7+10+insets.top, 100, 24);
 		Units.setBounds(10+insets.left, 10+insets.top, 160, 32*5+16);
-		add(Quit);
+		add(Resume);
 		add(Buy);
 		add(Units);
 	}

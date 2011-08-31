@@ -3,6 +3,9 @@ package engine;
 public class Editor {
 	int Type;
 	int Player;
+	int Tile;
+	int Unit;
+	int Building;
 	
 	
 	public void ExtendMap(int direction) {
@@ -10,5 +13,11 @@ public class Editor {
 	}
 	public void ContractMap(int direction) {
 		
+	}
+	
+	
+	public void NextTile() {
+	}
+	public void LastTile() {
 	}
 }

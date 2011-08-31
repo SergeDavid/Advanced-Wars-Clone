@@ -11,10 +11,10 @@ import java.awt.Point;
  */
 public class ViewPoint {
 	Point Loc = new Point(0,0);//Location of the viewpoint
-	final int expanded = 1;//This is the max distance from the edge of the map that the viewpoint can go.
+	final int expanded = 3;//This is the max distance from the edge of the map that the viewpoint can go.
 	final int speed = 1;
 	
-	final int width = 16;//How wide / tall the viewpoint is (how far from the x/y should the )
+	final int width = 18;//How wide / tall the viewpoint is (how far from the x/y should the )
 	final int height = 12;//3x4 D:
 	
 	/**
