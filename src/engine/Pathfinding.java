@@ -7,7 +7,7 @@ import java.util.Vector;
 public class Pathfinding {
 	//The lists used for finding things.
 	private Vector<PathNode> openlist = new Vector<PathNode>();
-	Vector<PathNode> closedlist = new Vector<PathNode>();
+	public Vector<PathNode> closedlist = new Vector<PathNode>();
 	
 	//Used for tracking the currently selected node and a shortcut to the currently selected unit.
 	private units.Base unit;
@@ -129,8 +129,8 @@ public class Pathfinding {
 	}
 		
 	public class PathNode {
-		double cost;
-		Point loc;
+		public double cost;
+		public Point loc;
 		
 		PathNode(int x, int y, double cost) {
 			loc = new Point(x,y);

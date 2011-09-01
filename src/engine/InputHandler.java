@@ -46,22 +46,8 @@ public class InputHandler implements KeyListener,MouseListener,ActionListener {
 		Game.gui.addKeyListener(this);
 		Game.gui.addMouseListener(this);
 		Game.gui.Join.addActionListener(this);
+		Game.gui.Load.addActionListener(this);
 		Game.gui.Exit.addActionListener(this);
-
-		//Main Pause Menu
-		Game.gui.gms.Resume.addActionListener(this);
-		Game.gui.gms.Save.addActionListener(this);
-		Game.gui.gms.Options.addActionListener(this);
-		Game.gui.gms.EndTurn.addActionListener(this);
-		Game.gui.gms.Quit.addActionListener(this);
-		//Unit Menu Options
-		Game.gui.gms.Buy.addActionListener(this);
-		Game.gui.gms.Wait.addActionListener(this);
-		Game.gui.gms.Attack.addActionListener(this);
-		Game.gui.gms.Capture.addActionListener(this);
-		//Yes/No
-		Game.gui.gms.Yes.addActionListener(this);
-		Game.gui.gms.No.addActionListener(this);
 	}
 	
 	public void keyPressed(KeyEvent e) {
@@ -81,8 +67,6 @@ public class InputHandler implements KeyListener,MouseListener,ActionListener {
 			}
 		}
 		
-		//if (i==start) {Game.MenuButton();}
-		
 		if (i==dev1) {Game.gui.LoginScreen();}
 		if (i==dev2) {Game.gui.gms.OpenMenu("Pause");}
 		if (i==dev3) {Game.gui.remove(Game.gui.gms);}
@@ -101,20 +85,15 @@ public class InputHandler implements KeyListener,MouseListener,ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		Game.gui.requestFocusInWindow();
 		Object s = e.getSource();
-		if (s==Game.gui.Join) {
-			//TODO: Change this from creating a new battle, to a method inside battle.
+		if (s==Game.gui.Join) {//TODO: Change this from creating a new battle, to a method inside battle.
 			Game.btl.NewGame(Game.map.MapNames.get(Game.gui.maps_list.getSelectedIndex()));
 			Game.gui.InGameScreen();
 		}
-		else if (s==Game.gui.Exit) {System.exit(0);}
-		else if (s==Game.gui.gms.Quit) {Game.gui.gms.CloseMenu();Game.gui.LoginScreen();}
-		else if (s==Game.gui.gms.EndTurn) {Game.gui.gms.CloseMenu();Game.btl.EndTurn();}
-		else if (s==Game.gui.gms.Resume) {Game.gui.gms.CloseMenu();}
-		else if (s==Game.gui.gms.Buy) {
-			Game.btl.Buyunit(Game.gui.gms.Units.getSelectedIndex(), Game.gui.gms.x, Game.gui.gms.y);
-			Game.gui.gms.CloseMenu();
+		else if (s==Game.gui.Load) {
+			Game.save.LoadGame();
 		}
-		Game.gui.requestFocusInWindow();
+		else if (s==Game.gui.Exit) {System.exit(0);}
 	}
 }

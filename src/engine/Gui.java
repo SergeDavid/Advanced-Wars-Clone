@@ -8,10 +8,8 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Point;
-
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -28,6 +26,7 @@ public class Gui extends JPanel {
 
 	//Main Menu
 	public JButton Join = new JButton("New Game");
+	public JButton Load = new JButton("Continue");
 	public JButton Options = new JButton("Options");
 	public JButton Exit = new JButton("Exit");
 
@@ -35,8 +34,7 @@ public class Gui extends JPanel {
 	DefaultListModel maps_model = new DefaultListModel();
 	public GameMenus gms = new GameMenus();
 		
-	public Gui(JFrame item) {
-	    item.add(this);
+	public Gui() {
 		setPreferredSize(new Dimension(width,height));
 		setBounds(0, 0, width, height);
 		setLayout(null);
@@ -50,6 +48,7 @@ public class Gui extends JPanel {
 		removeAll();
 		
 		add(Join);
+		add(Load);
 		add(Options);
 		add(Exit);
 		
@@ -57,11 +56,14 @@ public class Gui extends JPanel {
 		Dimension size = Join.getPreferredSize();
 		Join.setBounds(220 + insets.left, 200 + insets.top, 
 				size.width, size.height);
+		size = Load.getPreferredSize();
+		Load.setBounds(220 + insets.left, 230 + insets.top, 
+				size.width, size.height);
 		size = Options.getPreferredSize();
-		Options.setBounds(220 + insets.left, 230 + insets.top, 
+		Options.setBounds(220 + insets.left, 260 + insets.top, 
 				size.width, size.height);
 		size = Exit.getPreferredSize();
-		Exit.setBounds(220 + insets.left, 260 + insets.top, 
+		Exit.setBounds(220 + insets.left, 290 + insets.top, 
 				size.width, size.height);
 		
 		JScrollPane maps_pane = new JScrollPane(maps_list = new JList(maps_model));
@@ -262,5 +264,4 @@ public class Gui extends JPanel {
 		gg.drawString(x + " and " + y, 520+32, 190);
 		
 	}
-
 }

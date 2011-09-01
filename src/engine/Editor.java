@@ -2,7 +2,7 @@ package engine;
 
 public class Editor {
 	int Type;
-	int Player;
+	int Player;//Displays the avalable placed units, buildings, and tiles
 	int Tile;
 	int Unit;
 	int Building;

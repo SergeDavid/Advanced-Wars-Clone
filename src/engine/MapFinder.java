@@ -1,7 +1,5 @@
 package engine;
 
-import java.awt.Dimension;
-import java.awt.Insets;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,10 +24,6 @@ public class MapFinder {
 				}
 			}
 		}
-		//This apparently makes it show up...
-		Insets insets = Game.gui.getInsets();
-		Dimension size = Game.gui.maps_list.getPreferredSize();
-		Game.gui.maps_list.setBounds(insets.left, insets.top, size.width, size.height);
 		return (ArrayList<String>) maps;
 	}
 }

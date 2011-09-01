@@ -37,6 +37,7 @@ public class Game extends JFrame {
 	public static ErrorHandler error = new ErrorHandler();
 	public static Pathfinding pathing = new Pathfinding();
 	public static ListData list;
+	public static Save save = new Save();
 	public static ViewPoint view = new ViewPoint();
 	
 	//Image handling settings are as follows
@@ -66,7 +67,8 @@ public class Game extends JFrame {
 		setResizable(false);
 				
 		//Creates all the gui elements and sets them up
-		gui = new Gui(this);
+		gui = new Gui();
+		add(gui);
 		gui.setFocusable(true);
 		gui.requestFocusInWindow();
 		
@@ -96,7 +98,7 @@ public class Game extends JFrame {
 			last = System.nanoTime();
 			
 			//FPS settings
-			if (System.currentTimeMillis() - lastCPSTime > 1000) {//20 Sleep = 50 FPS 30 Sleep = 33 FPS
+			if (System.currentTimeMillis() - lastCPSTime > 1000) {
 				lastCPSTime = System.currentTimeMillis();
 				fpscount = fps;
 				fps = 0;
@@ -118,6 +120,10 @@ public class Game extends JFrame {
 			//Paints the scene then sleeps for a bit.
 			try { Thread.sleep(20);} catch (Exception e) {};
 		}
+	}
+	
+	public void LoadGame() {
+		
 	}
 	
 	//TODO: Find out how to display units, buildings, and the map before entering a battle / in a menu

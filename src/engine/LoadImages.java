@@ -10,6 +10,8 @@ public class LoadImages {
 		Game.img_char = tool.getImage(getClass().getResource("/img/"+"Units"+".png"));
 		Game.img_tile = tool.getImage(getClass().getResource("/img/"+"Terrain"+".png"));
 		Game.img_city = tool.getImage(getClass().getResource("/img/"+"Cities"+".png"));
+		//TODO: Add Commander images (Probably two, an ingame and menu version)
+		//TODO: Add in menu images
 		Game.img_menu[0] = tool.getImage(getClass().getResource("/img/"+"GameInfo"+".png"));
 	}
 	/**This loads all the images not used in the startup screen*/

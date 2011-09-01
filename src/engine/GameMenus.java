@@ -2,12 +2,15 @@ package engine;
 
 import java.awt.Color;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JPanel;
 
-public class GameMenus extends JPanel {
+public class GameMenus extends JPanel implements ActionListener {
 	private static final long serialVersionUID = -7953759133984304287L;
 	//TODO: Redesign the menu's to be set around and handled better.
 	//TODO: Include unit picture/description/statistics when a unit is selected
@@ -38,6 +41,21 @@ public class GameMenus extends JPanel {
 	
 	public GameMenus() {
 		setBackground(new Color(80,80,80));
+		
+		//Main Pause Menu
+		Resume.addActionListener(this);
+		Save.addActionListener(this);
+		Options.addActionListener(this);
+		EndTurn.addActionListener(this);
+		Quit.addActionListener(this);
+		//Unit Menu Options
+		Buy.addActionListener(this);
+		Wait.addActionListener(this);
+		Attack.addActionListener(this);
+		Capture.addActionListener(this);
+		//Yes/No
+		Yes.addActionListener(this);
+		No.addActionListener(this);
 	}
 	
 	/**This one is for non-city menu's, for city menu's add the X and Y of said city.
@@ -113,5 +131,19 @@ public class GameMenus extends JPanel {
 		add(Resume);
 		add(Buy);
 		add(Units);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		Object s = e.getSource();
+		Game.gui.requestFocusInWindow();
+		if (s==Quit) {CloseMenu();Game.gui.LoginScreen();}
+		else if (s==EndTurn) {Game.gui.gms.CloseMenu();Game.btl.EndTurn();}
+		else if (s==Resume) {Game.gui.gms.CloseMenu();}
+		else if (s==Buy) {
+			Game.btl.Buyunit(Game.gui.gms.Units.getSelectedIndex(), Game.gui.gms.x, Game.gui.gms.y);
+			Game.gui.gms.CloseMenu();
+		}
+		else if (s==Save) {Game.save.SaveGame();}
 	}
 }

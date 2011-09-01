@@ -6,6 +6,7 @@ import java.util.ArrayList;
 public class Battle {
 	int totalplayers = 2;
 	public int currentplayer = 0;
+	public String mapname;
 	
 	//Game settings
 	boolean FogOfWar;
@@ -25,10 +26,12 @@ public class Battle {
 		Game.units = new ArrayList<units.Base>();
 		Game.view.Loc.x = 0;
 		Game.view.Loc.y = 0;
+		System.out.println(mapname + " !!!");
 		if (!Game.map.parse.decode(mapname)) {
-			Game.gui.LoginScreen();
+			Game.GameState = Game.TheMenu;
 			return;
 		}
+		this.mapname = mapname;
 	}
 
 	public void EndTurn() {
