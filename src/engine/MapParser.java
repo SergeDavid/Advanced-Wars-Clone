@@ -110,7 +110,14 @@ public class MapParser {
 				x, y,
 				Integer.parseInt(info.substring(1,3),16)));
 	}
+	/**
+	 * (xx) type
+	 * (x) owner
+	 * (xx) x
+	 * (xx) y
+	 */
 	private void ParseUnit(String info) {
+		if (info.length()<7) {return;}
 		Game.units.add(Game.list.CreateUnit(
 				Integer.parseInt(info.substring(5,7),16), 
 				Integer.parseInt(info.substring(0,1),16), 

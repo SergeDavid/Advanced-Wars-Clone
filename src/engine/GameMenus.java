@@ -136,7 +136,6 @@ public class GameMenus extends JPanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object s = e.getSource();
-		Game.gui.requestFocusInWindow();
 		if (s==Quit) {CloseMenu();Game.gui.LoginScreen();}
 		else if (s==EndTurn) {Game.gui.gms.CloseMenu();Game.btl.EndTurn();}
 		else if (s==Resume) {Game.gui.gms.CloseMenu();}
@@ -145,5 +144,6 @@ public class GameMenus extends JPanel implements ActionListener {
 			Game.gui.gms.CloseMenu();
 		}
 		else if (s==Save) {Game.save.SaveGame();}
+		Game.gui.requestFocusInWindow();
 	}
 }

@@ -5,12 +5,12 @@ import engine.Game;
 public class Base {
 	//Image and other info
 	int img = 0;
-	String name = "Bacon";
+	public String name = "Bacon";
 	String desc = "Giggles";
 	
 	//Health (How long until it is captured / destroyed, and how far along it is)
 	int maxhealth = 20;
-	int health = maxhealth;
+	public int health = maxhealth;
 	
 	//owner's ID and team #
 	public int owner;

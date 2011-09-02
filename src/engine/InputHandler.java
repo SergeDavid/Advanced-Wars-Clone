@@ -9,7 +9,8 @@ import java.awt.event.MouseListener;
 
 /**This handles all of the mouse, key, and action listeners.*/
 public class InputHandler implements KeyListener,MouseListener,ActionListener {
-	//Keyboard shortcuts, might change this method for the different dev ones and any character shortcuts.
+	
+	//Development buttons and the exit game button (escape key)
 	public int dev1 = KeyEvent.VK_NUMPAD1;
 	public int dev2 = KeyEvent.VK_NUMPAD2;
 	public int dev3 = KeyEvent.VK_NUMPAD3;
@@ -21,17 +22,13 @@ public class InputHandler implements KeyListener,MouseListener,ActionListener {
 	public int dev9 = KeyEvent.VK_NUMPAD9;
 	public int exit = KeyEvent.VK_ESCAPE;
 	
-	//KeyShortcuts
-	public int up = KeyEvent.VK_W;
-	public int down = KeyEvent.VK_S;
-	public int left = KeyEvent.VK_A;
-	public int right = KeyEvent.VK_D;
-	public int up2 = KeyEvent.VK_UP;
-	public int down2 = KeyEvent.VK_DOWN;
-	public int left2 = KeyEvent.VK_LEFT;
-	public int right2 = KeyEvent.VK_RIGHT;
-	public int enter = KeyEvent.VK_SPACE;
-	
+	//Movement buttons
+	public int up = KeyEvent.VK_UP;
+	public int down = KeyEvent.VK_DOWN;
+	public int left = KeyEvent.VK_LEFT;
+	public int right = KeyEvent.VK_RIGHT;
+
+	//Command buttons
 	public int select = KeyEvent.VK_Z;
 	public int cancle = KeyEvent.VK_X;
 	public int start = KeyEvent.VK_ENTER;
@@ -55,10 +52,10 @@ public class InputHandler implements KeyListener,MouseListener,ActionListener {
 		if (i==exit) {System.exit(0);}
 		if (Game.GameState==Game.Playing) {
 			players.Base ply = Game.player.get(Game.btl.currentplayer);
-			if (i==up||i==up2) {ply.selecty--;if (ply.selecty<0) {ply.selecty++;}}
-			if (i==down||i==down2) {ply.selecty++;if (ply.selecty>=Game.map.height) {ply.selecty--;}}
-			if (i==left||i==left2) {ply.selectx--;if (ply.selectx<0) {ply.selectx++;}}
-			if (i==right||i==right2) {ply.selectx++;if (ply.selectx>=Game.map.width) {ply.selectx--;}}
+			if (i==up) {ply.selecty--;if (ply.selecty<0) {ply.selecty++;}}
+			if (i==down) {ply.selecty++;if (ply.selecty>=Game.map.height) {ply.selecty--;}}
+			if (i==left) {ply.selectx--;if (ply.selectx<0) {ply.selectx++;}}
+			if (i==right) {ply.selectx++;if (ply.selectx>=Game.map.width) {ply.selectx--;}}
 			if (i==select) {Game.btl.Action();}
 			if (i==cancle) {Game.player.get(Game.btl.currentplayer).Cancle();}
 			if (i==start) {
@@ -87,13 +84,15 @@ public class InputHandler implements KeyListener,MouseListener,ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		Game.gui.requestFocusInWindow();
 		Object s = e.getSource();
-		if (s==Game.gui.Join) {//TODO: Change this from creating a new battle, to a method inside battle.
+		if (s==Game.gui.Join) {
 			Game.btl.NewGame(Game.map.MapNames.get(Game.gui.maps_list.getSelectedIndex()));
 			Game.gui.InGameScreen();
 		}
 		else if (s==Game.gui.Load) {
 			Game.save.LoadGame();
 		}
-		else if (s==Game.gui.Exit) {System.exit(0);}
+		else if (s==Game.gui.Exit) {
+			System.exit(0);
+		}
 	}
 }

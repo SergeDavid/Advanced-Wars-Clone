@@ -4,19 +4,28 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
+import java.util.ArrayList;
 import java.util.Properties;
 
+/**
+ * When SaveGame() is called upon it grabs a screen shot of the current battle (current_player,days) and the important variables from the player, buildings, and unit lists.
+ * It currently saves them in a property file, with each saved variable having their own line (it gets very long fast).
+ * When LoadGame() is called, it will create a new battle, change the current day and player, and then loads the players / units / cities from here.
+ * An example is Unit#_Health = 50;
+ * @author SergeDavid
+ * @version 0.1
+ */
 public class Save {
-	
 	final String path = "saves/";
 	
 	public void SaveGame() {
-		
+		//If the folder doesn't exist, create it so we can save our save files inside it.
 		File directory = new File(path);
 		if (!directory.exists()) {
 			if (directory.mkdir()) {Game.error.ShowError("The " + path + " directory has been created.");} 
 	    	else {Game.error.ShowError("Cannot create the save directory. " + path + "");return;}
 		}
+		//Saves the game in a property file (since it is easy)
 		try {
 			FileWriter fstream = new FileWriter(path + "savegame.properties");
 		    BufferedWriter out = new BufferedWriter(fstream);
@@ -26,25 +35,115 @@ public class Save {
 		    		  "Map = " + Game.btl.mapname + "\n" +
 		    		  "CurrentPlayer = " + Game.btl.currentplayer + "\n" +
 		    		  "Days = " + Game.btl.day + "\n" +
-		    		  "# type,money,kills,loses,power,currentlyusingpower,selectorX/Y,etc.\n" +
-		    		  "Player1 = 400\n" +
-		    		  "Player2 = same.\n" +
-		    		  "Buildings = owner,health,type*#\n" +
-		    		  "Units = owner,type,health,ammo,fuel,x,y,etc.*#\n");
+		    		  "Units = " + Game.units.size() + "\n");
+		    out.write(SavePlayerData());
+		    out.write(SaveCityData());
+		    out.write(SaveUnitData());
 		    out.close();
 		} 
 		catch (Exception e) {Game.error.ShowError("Save Failed:" + e.getMessage());}
 	}
-	
+	private String SavePlayerData() {
+		String plyrdata = "\n# Player Data\n";
+		for (int i = 0; i < Game.btl.totalplayers; i++) {
+	    	players.Base ply = Game.player.get(i);
+	    	plyrdata+="Player" + i + "_Type = " + ply.name + "\n" +//This is the character (commander) that said player is using. (Using name to find them)
+	    			  "Player" + i + "_Defeated = " + false + "\n" +//If true, this character has lost. (Out of the game)
+	    			  "Player" + i + "_Team = " + ply.team + "\n" +//Current monetary balance
+	    			  "Player" + i + "_Money = " + ply.money + "\n" +//Current monetary balance
+	    			  "Player" + i + "_Kills = " + ply.kills + "\n" +//How many units they've killed
+	    			  "Player" + i + "_Loses = " + ply.loses + "\n" +//How many units they've lost
+	    			  "Player" + i + "_Power = " + ply.power + "\n" +//Current power level
+	    			  "Player" + i + "_Using = " + 0 + "\n";//0 = none, 1 = using first power, 2 = using 2nd power
+		}
+		return plyrdata;
+	}
+	private String SaveCityData() {
+		String citydata = "\n# Unit Data\n";
+		for (int i = 0; i < Game.builds.size(); i++) {
+	    	buildings.Base bld = Game.builds.get(i);
+	    	citydata+="City" + i + "_Type = " + bld.name + "\n" +
+	    			  "City" + i + "_Owner = " + bld.owner + "\n" +
+	    			  "City" + i + "_Health = " + bld.health + "\n";
+	    }
+		return citydata;
+	}
+	private String SaveUnitData() {
+		String unitdata = "\n# Unit Data\n";
+	    for (int i = 0; i < Game.units.size(); i++) {
+	    	units.Base unit = Game.units.get(i);
+	    	unitdata+="Unit" + i + "_Type = " + unit.name + "\n" +
+	    			  "Unit" + i + "_Owner = " + unit.owner + "\n" +
+	    			  "Unit" + i + "_Health = " + unit.health + "\n" +
+	    			  "Unit" + i + "_Ammo = " + unit.Ammo + "\n" +
+	    			  "Unit" + i + "_Fuel = " + unit.Fuel + "\n" +
+	    			  "Unit" + i + "_X = " + unit.x + "\n" +
+	    			  "Unit" + i + "_Y = " + unit.y + "\n" +
+	    			  "Unit" + i + "_Acted = " + !unit.acted + "\n";  
+	    }
+		return unitdata;
+	}
+
 	public void LoadGame() {
 		try {
+			//Opens the property file and starts a battle with the map in the save folder. 
 			Properties configFile = new Properties();
 			configFile.load(new FileInputStream(System.getProperty("user.dir") + "/" + path + "savegame.properties"));
 			Game.btl.NewGame(configFile.getProperty("Map"));
-			Game.btl.currentplayer = Integer.parseInt(configFile.getProperty("CurrentPlayer")); 
-			Game.player.get(0).money = Integer.parseInt(configFile.getProperty("Player1")); 
+			Game.btl.currentplayer = Integer.parseInt(configFile.getProperty("CurrentPlayer"));
+			Game.btl.day = Integer.parseInt(configFile.getProperty("Days"));
+			
+			//TODO: Load player data outside of the map parser so Player reset is not needed here.
+			//TODO: set up so resetting units is not needed here.
+			Game.player = new ArrayList<players.Base>();
+			Game.units = new ArrayList<units.Base>();
+			
+			//Player Setup 
+			LoadPlayers(configFile);
+			LoadCities(configFile);
+			LoadUnits(configFile);
+			
+			//Changes the gui to match the appropriate bla bla bla
 			Game.gui.InGameScreen();
 		} 
 		catch (Exception e) {Game.error.ShowError("Saved game failed to load."); e.printStackTrace();}
+		//TODO: Add in more catches or something so the error handler explains why an error occurred.
+	}
+	private void LoadPlayers(Properties configFile) {
+		for (int i=0; i < Game.btl.totalplayers; i++) {
+			Game.list.LoadCommander(
+					configFile.getProperty("Player" + i + "_Type"),
+					Boolean.parseBoolean(configFile.getProperty("Player" + i + "_Defeated")),
+					Integer.parseInt(configFile.getProperty("Player" + i + "_Team")),
+					Integer.parseInt(configFile.getProperty("Player" + i + "_Money")),
+					Integer.parseInt(configFile.getProperty("Player" + i + "_Kills")),
+					Integer.parseInt(configFile.getProperty("Player" + i + "_Loses")),
+					Integer.parseInt(configFile.getProperty("Player" + i + "_Power")),
+					Integer.parseInt(configFile.getProperty("Player" + i + "_Using")),//Currently unused
+					false);//Currently not included
+		}
+	}
+	private void LoadCities(Properties configFile) {
+		for (int i=0; i < Game.builds.size(); i++) {
+			Game.list.LoadCity(
+					configFile.getProperty("City" + i + "_Type"),
+					Integer.parseInt(configFile.getProperty("City" + i + "_Owner")),
+					Integer.parseInt(configFile.getProperty("City" + i + "_Health")),
+					i);
+		}
+	}
+	private void LoadUnits(Properties configFile) {
+		int unitcount = Integer.parseInt(configFile.getProperty("Units"));
+		for (int i=0; i < unitcount; i++) {
+			Game.list.LoadUnit(
+					configFile.getProperty("Unit" + i + "_Type"),
+					Integer.parseInt(configFile.getProperty("Unit" + i + "_Owner")),
+					Integer.parseInt(configFile.getProperty("Unit" + i + "_Health")),
+					Integer.parseInt(configFile.getProperty("Unit" + i + "_Ammo")),
+					Integer.parseInt(configFile.getProperty("Unit" + i + "_Fuel")),
+					Integer.parseInt(configFile.getProperty("Unit" + i + "_X")),
+					Integer.parseInt(configFile.getProperty("Unit" + i + "_Y")),
+					Boolean.parseBoolean(configFile.getProperty("Unit" + i + "_Acted")));
+		}
 	}
 }
