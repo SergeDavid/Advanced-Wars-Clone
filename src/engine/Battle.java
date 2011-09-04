@@ -26,7 +26,6 @@ public class Battle {
 		Game.units = new ArrayList<units.Base>();
 		Game.view.Loc.x = 0;
 		Game.view.Loc.y = 0;
-		System.out.println(mapname + " !!!");
 		if (!Game.map.parse.decode(mapname)) {
 			Game.GameState = Game.TheMenu;
 			return;

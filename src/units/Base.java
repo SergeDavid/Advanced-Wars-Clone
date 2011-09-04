@@ -34,6 +34,7 @@ public class Base {
 	public double speed = 2;
 	
 	//Battle Settings
+	public boolean MoveAndShoot = true;//Allows units to move then shoot, or make them stay in the same location in order to attack.
 	public double mainatk = 1.0;//Percentage bonus for main weapon.
 	public double attack = 100;//Base damage done to others
 	public double defense = 60;//Base armor for taking damage
@@ -127,6 +128,9 @@ public class Base {
 	}
 
 	private boolean attack(int destx, int desty, boolean returnfire) {
+		//Disables the ability to attack when a unit has already moved positions.
+		if (x != oldx && y != oldy && !MoveAndShoot) {return false;}
+		
 		Random rand = new Random();
 		units.Base target = FindTarget(destx, desty, true, false);
 		if (target!=null) {

@@ -47,9 +47,11 @@ public class Pathfinding {
 			openlist.remove(current);
 			
 			maphits[current.loc.y][current.loc.x]++;
-			map.add(new Point(current.loc.x,current.loc.y));
 			
 			current=LowestCostOpen();
+		}
+		for (PathNode node : closedlist) {
+			map.add(new Point(node.loc.x,node.loc.y));
 		}
 		System.out.println("Pathing Took : " + (System.currentTimeMillis() - start));
 		unit.LastPathed = System.currentTimeMillis();
@@ -104,11 +106,10 @@ public class Pathfinding {
 		}
 		return false;
 	}
-
 	private boolean InClosed(int x, int y) {
 		for (PathNode node : closedlist) {
 			if (node.loc.x == x && node.loc.y == y) {
-				SwitchParent(node);
+				SwitchParentClosed(node);
 				return true;
 			}
 		}
@@ -119,6 +120,14 @@ public class Pathfinding {
 		double cost = Game.map.map[node.loc.y][node.loc.x].speed() + current.cost;
 		if (cost<node.cost) {
 			node.cost = Math.round(cost*100.0) / 100.0;
+		}
+	}
+	private void SwitchParentClosed(PathNode node) {
+		double cost = Game.map.map[node.loc.y][node.loc.x].speed() + current.cost;
+		if (cost<node.cost) {
+			node.cost = Math.round(cost*100.0) / 100.0;
+			closedlist.remove(node);
+			openlist.add(node);
 		}
 	}
 	

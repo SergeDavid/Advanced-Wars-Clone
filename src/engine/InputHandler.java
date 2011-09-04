@@ -65,11 +65,9 @@ public class InputHandler implements KeyListener,MouseListener,ActionListener {
 		}
 		
 		if (i==dev1) {Game.gui.LoginScreen();}
-		if (i==dev2) {Game.gui.gms.OpenMenu("Pause");}
-		if (i==dev3) {Game.gui.remove(Game.gui.gms);}
-		if (i==dev4) {Game.error.ShowError("Herp derp le worpdte gerpa nerpa derp her her wor her!");}
-		if (i==dev5) {Game.pathing.ShowCost=!Game.pathing.ShowCost;}
-		if (i==dev6) {Game.pathing.ShowHits=!Game.pathing.ShowHits;}
+		if (i==dev4) {Game.btl.EndTurn();}
+		if (i==dev6) {Game.pathing.ShowCost=!Game.pathing.ShowCost;}
+		if (i==dev3) {Game.pathing.ShowHits=!Game.pathing.ShowHits;}
 	}
 	public void keyReleased(KeyEvent arg0) {}
 	public void keyTyped(KeyEvent arg0) {}

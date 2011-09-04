@@ -10,5 +10,4 @@ public class Infantry extends Base {
 		img = 0;
 		speed = 4;
 	}
-
 }

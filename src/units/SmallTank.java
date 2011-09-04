@@ -12,5 +12,4 @@ public class SmallTank extends Base {
 		defense = 80;
 		img = 2;
 	}
-
 }
