@@ -2,6 +2,11 @@ package engine;
 
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+
+import javax.imageio.ImageIO;
 
 /**A very simple class that takes a nice big list of images and loads them into the game. It is separated from the main class to decrease size.*/
 public class LoadImages {
@@ -11,10 +16,12 @@ public class LoadImages {
 	public boolean Bool_Terrain;
 	public boolean Bool_City;
 	public boolean Bool_Player;
-	public int[] size_Unit = {512,512};
-	public int[] size_Terrain = {512,512};
-	public int[] size_City = {512,512};
+	public boolean Bool_Menus;
+	public int[] size_Unit = {256,256};
+	public int[] size_Terrain = {256,128};
+	public int[] size_City = {256,256};
 	public int[] size_Player = {512,512};
+	public int[] size_Menus = {64,256};
 	
 	/**This will initialize the loading images area by only loading up the logo, the rest are called as the game loads different parts.*/
 	public LoadImages() {
@@ -26,21 +33,29 @@ public class LoadImages {
 		//TODO: Add in menu images
 		Game.img_menu[0] = tool.getImage(getClass().getResource("/img/"+"GameInfo"+".png"));
 	}
-	
-	/**This loads all the images not used in the startup screen*/
-	public void LoadMenu() {}
-	public void LoadGame() {}
-	public void LoadCredit() {}
-	
-	public void UseTextures() {
-		if (CompareSizes(size_Unit,512,512)) {
-			Game.img_char = ResizeImage("Units", size_Unit[0], size_Unit[1]);
-		}
-		else {
-			Game.img_char = OldImage("Units");
-		}
+	public void LoadTexturePack() {
+		ZipHandler zip = new ZipHandler("Test");
+	    Game.img_char = TryNewImage("Units", zip, size_Unit);
+	    Game.img_tile = TryNewImage("Terrain", zip, size_Terrain);
+	    Game.img_city = TryNewImage("Cities", zip, size_City);
+	   // Game.img_menu[0] = TryNewImage("Info", zip, size_Menus);
 	}
 	
+	private Image TryNewImage(String path, ZipHandler zip, int[] size) {
+	    try {
+	    	InputStream in = new ByteArrayInputStream(zip.getEntry(path + ".png"));
+	        BufferedImage ZipImg = ImageIO.read(in);
+	        if (CompareSizes(size,ZipImg)) {
+				return ResizeImage(ZipImg, size[0], size[1]);
+			}
+			else {
+				return OldImage(path);
+			}
+	    }
+	    catch (Exception e) {
+	        return OldImage(path);
+	    }
+	}
 	/**
 	 * Compares the default image size with the new images size for custom texture packs.
 	 * @param base = Size to compare too.
@@ -48,10 +63,10 @@ public class LoadImages {
 	 * @param height = New images height.
 	 * @return = return true if they match
 	 */
-	private boolean CompareSizes(int[] base, int width, int height) {
+	private boolean CompareSizes(int[] base, Image img) {
 		//TODO: change it to (width%base[0] == 0)
-		if (base[0]!=width) {return false;}
-		if (base[1]!=height) {return false;}
+		if (base[0]!=img.getWidth(null)) {return false;}
+		if (base[1]!=img.getHeight(null)) {return false;}
 		return true;
 	}
 	/**
@@ -61,8 +76,7 @@ public class LoadImages {
 	 * @param height = the height the image is to become
 	 * @return = Returns the resized image.
 	 */
-	private Image ResizeImage(String type, int width, int height) {
-		Image img = Toolkit.getDefaultToolkit().getImage(getClass().getResource("packs/" + type + ".png"));
+	private Image ResizeImage(Image img, int width, int height) {
 		//TODO: Resize image to default size using Graphics2D or something.
 		return img;
 	}
