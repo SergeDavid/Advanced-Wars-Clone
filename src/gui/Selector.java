@@ -1,6 +1,9 @@
 package gui;
 
 import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+
 import engine.Game;
 
 /**
@@ -9,27 +12,46 @@ import engine.Game;
  * @version 0.1
  */
 public class Selector {
-	public Selector(Graphics2D gg, int frame) {
-		int x = Game.player.get(Game.btl.currentplayer).selectx;
-		int y = Game.player.get(Game.btl.currentplayer).selecty;
+	
+	private static boolean Dev = false;
+	
+	public static Image Draw(int frame) {
+		int size = Game.load.Times_Unit;
+		BufferedImage img = new BufferedImage(Game.gui.width*size, Game.gui.height*size, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g = (Graphics2D) img.getGraphics();
+		size *= 32;
+		int x = Game.player.get(Game.btl.currentplayer).selectx - Game.view.ViewX();
+		int y = Game.player.get(Game.btl.currentplayer).selecty - Game.view.ViewY();
 		if (Game.view.Viewable(x,y)) {
-			int off = (frame>5) ? frame/2+2 : 6-frame/2+2;
-			gg.drawImage(Game.img_tile,
-					(x-Game.view.ViewX())*32-off,   (y-Game.view.ViewY())*32-off,   
-					(x-Game.view.ViewX())*32+10-off,   (y-Game.view.ViewY())*32+10-off,
-					32*7, 32, 32*7+10, 32+10,null);
-			gg.drawImage(Game.img_tile,
-					(x-Game.view.ViewX())*32+22+off,   (y-Game.view.ViewY())*32-off,   
-					(x-Game.view.ViewX())*32+32+off,   (y-Game.view.ViewY())*32+10-off,
-					32*7+22, 32, 32*7+32, 32+10,null);
-			gg.drawImage(Game.img_tile,
-					(x-Game.view.ViewX())*32-off,  (y-Game.view.ViewY())*32+22+off,   
-					(x-Game.view.ViewX())*32+10-off,   (y-Game.view.ViewY())*32+32+off,
-					32*7, 32+22, 32*7+10, 32+32,null);
-			gg.drawImage(Game.img_tile,
-					(x-Game.view.ViewX())*32+22+off,  (y-Game.view.ViewY())*32+22+off,   
-					(x-Game.view.ViewX())*32+32+off,   (y-Game.view.ViewY())*32+32+off,
-					32*7+22, 32+22, 32*7+32, 32+32,null);
+			int off = (frame>5) ? frame/2 : 6-frame/2;
+			off += 2;
+		
+			if (Dev==true) {ShowArea(g, x, y, size, off);}
+			
+			g.drawImage(Game.img_tile,
+					x*size-off,   y*size-off,   
+					x*size+(size/2)-off,   y*size+(size/2)-off,
+					size*7, size, size*7+(size/2), size+(size/2),null);
+			g.drawImage(Game.img_tile,
+					x*size+(size/2)+off,   y*size-off,   
+					x*size+size+off,   y*size+(size/2)-off,
+					size*7+(size/2), size, size*7+size, size+(size/2),null);
+			g.drawImage(Game.img_tile,
+					x*size-off,  y*size+(size/2)+off,   
+					x*size+(size/2)-off,   y*size+size+off,
+					size*7, size+(size/2), size*7+(size/2), size+size,null);
+			g.drawImage(Game.img_tile,
+					x*size+(size/2)+off,  y*size+(size/2)+off,   
+					x*size+size+off,   y*size+size+off,
+					size*7+(size/2), size+(size/2), size*7+size, size+size,null);
 		}
+		return img;
+	}
+	
+	private static void ShowArea(Graphics2D gg,int x, int y, int size, int off) {
+		gg.drawRect(x*size-off,   y*size-off,   size/2,size/2);
+		gg.drawRect(x*size+(size/2)+off,   y*size-off,   size/2,size/2);
+		gg.drawRect(x*size-off,  y*size+(size/2)+off,   size/2,size/2);
+		gg.drawRect(x*size+(size/2)+off,  y*size+(size/2)+off,   size/2,size/2);
 	}
 }

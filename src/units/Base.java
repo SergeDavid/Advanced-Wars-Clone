@@ -1,7 +1,6 @@
 package units;
 
 import java.awt.Point;
-import java.util.Random;
 import java.util.Vector;
 
 import engine.Game;
@@ -130,27 +129,27 @@ public class Base {
 	private boolean attack(int destx, int desty, boolean returnfire) {
 		//Disables the ability to attack when a unit has already moved positions.
 		if (x != oldx && y != oldy && !MoveAndShoot) {return false;}
-		
-		Random rand = new Random();
+
 		units.Base target = FindTarget(destx, desty, true, false);
 		if (target!=null) {
 			if (inrange(target.x, target.y)) {
 				//TODO: Add in commander bonuses as well as main weapon and armor bonuses. And also Terrain defense bonus
 				double damage = (attack)-
-						(target.defense*Game.map.map[target.y][target.x].defense())+
-						(rand.nextInt(20)-10)/10;
+						(target.defense*Game.map.map[target.y][target.x].defense());
 				if (damage<1) {damage=1;}
 				target.health-=damage;
 				if (target.health<=0) {
+					damage+=target.health;
 					Game.units.remove(target);
 					Game.player.get(owner).kills++;
 					Game.player.get(target.owner).loses++;
-					System.out.println("Enemy unit has been destroyed!");
 					Game.pathing.LastChanged = System.currentTimeMillis();
 				}
-				else {
-				  System.out.println("Enemy unit now has " + target.health + " hp left!");
-				}
+				System.out.println(target.defense*Game.map.map[target.y][target.x].defense());
+				//Increases commander power.
+				Game.player.get(owner).Powerup(damage, false);
+				Game.player.get(target.owner).Powerup(damage, true);
+				
 				if (returnfire) {target.attack(x,y,false);}//return fire?
 				return true;
 			}
@@ -215,7 +214,8 @@ public class Base {
 
 	public void Pathing() {
 		if (LastPathed<Game.pathing.LastChanged) {
-			map = Game.pathing.FindPath(this);	
+			int distance = (int) ((Fuel < speed) ? Fuel : speed);
+			map = Game.pathing.FindPath(this, distance);	
 		}
 	}
 }

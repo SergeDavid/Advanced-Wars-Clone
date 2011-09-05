@@ -12,6 +12,7 @@ public class Pathfinding {
 	//Used for tracking the currently selected node and a shortcut to the currently selected unit.
 	private units.Base unit;
 	private PathNode current;
+	private int distance;
 	
 	//Output information
 	private Vector<Point> map = new Vector<Point>();
@@ -20,14 +21,9 @@ public class Pathfinding {
 	//View Tile Cost/Hits and when the last time something was updated.
 	public boolean ShowCost;
 	public boolean ShowHits;
-	public long LastChanged;
+	public long LastChanged = 1;
 	
-	public Pathfinding() {
-		LastChanged++;
-		//No presetup required currently.
-	}
-	
-	public Vector<Point> FindPath(units.Base unit) {
+	public Vector<Point> FindPath(units.Base unit, int range) {
 		long start = System.currentTimeMillis();
 		
 		maphits = new int[Game.map.height][Game.map.width];
@@ -35,6 +31,7 @@ public class Pathfinding {
 		closedlist = new Vector<PathNode>();
 		map = new Vector<Point>();
 		
+		distance = range;
 		this.unit = unit;
 		openlist.add(new PathNode(unit.x, unit.y, 0));
 		current = openlist.get(0);
@@ -90,7 +87,7 @@ public class Pathfinding {
 		if (!InClosed(x,y)) {//Ignores any node that is already in the closed list.
 			if (!InOpen(x,y)) {//Switches parents if it is in the list, adds it if it isn't
 				double cost = Math.round(FindCost(x,y,current)*100.0) / 100.0;
-				if (cost<=unit.speed) {
+				if (cost<=distance) {
 					openlist.add(new PathNode(x,y,cost));
 				}
 			}
@@ -132,8 +129,10 @@ public class Pathfinding {
 	}
 	
 	private double FindCost(int x, int y, PathNode parent) {
-		double cost = Game.map.map[parent.loc.y][parent.loc.x].speed();
-		if (parent!=null) {cost+=parent.cost;}
+		double cost = Game.map.map[y][x].speed();
+		if (parent!=null) {
+			cost+=parent.cost;
+		}
 		return Math.round(cost*100.0) / 100.0;
 	}
 		

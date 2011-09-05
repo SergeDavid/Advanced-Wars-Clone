@@ -66,6 +66,7 @@ public class Game extends JFrame {
 	    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    setUndecorated(false);
 		setResizable(false);
+	    setLocationRelativeTo(null);
 				
 		//Creates all the gui elements and sets them up
 		gui = new Gui();
@@ -114,22 +115,16 @@ public class Game extends JFrame {
 				if (GameState==Playing) {view.MoveView();}//This controls the view-point on the map
 				Game.gui.frame++;//This is controlling the current frame of animation.
 				if (Game.gui.frame>=12) {Game.gui.frame=0;}
-				gui.repaint();
+				fps++;
 			}
 			else logics++;
 			
 			//Paints the scene then sleeps for a bit.
+			gui.repaint();
 			try { Thread.sleep(20);} catch (Exception e) {};
 		}
 	}
 	
-	public void LoadGame() {
-		
-	}
-	
-	//TODO: Find out how to display units, buildings, and the map before entering a battle / in a menu
-		//Load all the units/building/Commanders into an array (Sort by some property they have [Order=1])
-		//Compare unit cost/attack/defense with current commander's cost bonus and atk/def bonus
 	//TODO: More battle settings
 	//TODO: Fog of war
 	//TODO: Create a map editor

@@ -82,7 +82,6 @@ public class Gui extends JPanel {
 		if (Game.error.showing) {add(Game.error);}
 	}
 	
-	//TODO: See about making different layers for easier control.
 	//TODO: See about optimizing the layers so that I can skip some to make this part faster.
 	public void paintComponent(Graphics g) {
 		//Creates the buffer image and graphic settings.
@@ -97,11 +96,12 @@ public class Gui extends JPanel {
 		break;
 		case Game.Playing:
 			gg.drawImage(Game.img_menu[0], 0, 0, width, height, 32, 0, 64, 256, null);
-			new gui.Terrain(gg);
+			gg.drawImage(gui.Terrain.Draw(), 0, 0, width, height, null);
 			new gui.Ranges(gg);
-			new gui.Cities(gg);
-			new gui.Units(gg);
-			new gui.Selector(gg, frame);
+			gg.drawImage(gui.Cities.Draw(), 0, 0, width, height, null);
+			gg.drawImage(gui.Units.Draw(), 0, 0, width, height, null);
+			gg.drawImage(gui.Selector.Draw(frame), 0, 0, width, height, null);
+			
 			if (Game.input.MenuHack) {new gui.InfoMenu(gg);}//This displays the menu only when it is paused.
 			else {/*Include a mini menu that floats around the map*/}
 		break;

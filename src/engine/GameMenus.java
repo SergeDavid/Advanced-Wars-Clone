@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JList;
@@ -14,7 +13,6 @@ public class GameMenus extends JPanel implements ActionListener {
 	private static final long serialVersionUID = -7953759133984304287L;
 	//TODO: Redesign the menu's to be set around and handled better.
 	//TODO: Include unit picture/description/statistics when a unit is selected
-	//TODO: When loading units into the lists, grab only units that are connected to that menu.
 	//TODO: Hook the menu up to the keyboard.
 	DefaultListModel UnitModel = new DefaultListModel();
 	JList Units = new JList(UnitModel);
@@ -72,6 +70,7 @@ public class GameMenus extends JPanel implements ActionListener {
 			YesNoMenu();}
 		Game.gui.add(this);
 		Game.input.MenuHack=true;
+		requestFocusInWindow();
 	}
 	/**Special setup for unit creation menu's*/
 	public void OpenMenu(String Type, int xx, int yy) {
@@ -85,10 +84,12 @@ public class GameMenus extends JPanel implements ActionListener {
 		else if (Type.equals("Airport")) {CityMenuGround();}
 		Game.gui.add(this);
 		Game.input.MenuHack=true;
+		requestFocusInWindow();
 	}
 	public void CloseMenu() {
 		Game.gui.remove(this);
 		Game.input.MenuHack=false;
+		Game.gui.requestFocusInWindow();
 	}
 	
 	private void YesNoMenu() {
@@ -144,6 +145,5 @@ public class GameMenus extends JPanel implements ActionListener {
 			Game.gui.gms.CloseMenu();
 		}
 		else if (s==Save) {Game.save.SaveGame();}
-		Game.gui.requestFocusInWindow();
 	}
 }

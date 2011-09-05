@@ -23,6 +23,7 @@ public class InfoMenu {
 		gg.setColor(new Color(255,255,255));
 		gg.drawImage(Game.img_menu[0], offset-2, 0, Game.gui.width, Game.gui.height, 0, 0, 32, 256, null);
 		gg.drawString("Funds = " + Game.player.get(Game.btl.currentplayer).money,offset+4,128);
+		gg.drawString("Power = " + Game.player.get(Game.btl.currentplayer).power,offset+4,142);
 		
 		DrawUnitInfo(gg, offset);
 		DrawTerrainInfo(gg);

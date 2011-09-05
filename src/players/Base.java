@@ -54,8 +54,9 @@ public class Base {
 		money = bling;
 	}
 	
-	public void Powerup() {//TODO: Power gained is based on how much damage you do / are dealt and some other fancy modifiers.
-		power+=10;
+	public void Powerup(double damage, boolean defending) {//TODO: Power gained is based on how much damage you do / are dealt and some other fancy modifiers.
+		power += (defending) ? damage/3 : damage ;
+		System.out.println("User now has " + power + " power!");
 		if (power>level2) {power=level2;}
 	}
 	

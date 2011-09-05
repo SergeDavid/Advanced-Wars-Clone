@@ -22,6 +22,11 @@ public class LoadImages {
 	public int[] size_City = {256,256};
 	public int[] size_Player = {512,512};
 	public int[] size_Menus = {64,256};
+	public int Times_Unit = 1;
+	public int Times_Terrain = 1;
+	public int Times_City = 1;
+	public int Times_Player = 1;
+	public int Times_Menus = 1;
 	
 	/**This will initialize the loading images area by only loading up the logo, the rest are called as the game loads different parts.*/
 	public LoadImages() {
@@ -35,18 +40,29 @@ public class LoadImages {
 	}
 	public void LoadTexturePack() {
 		ZipHandler zip = new ZipHandler("Test");
+		
 	    Game.img_char = TryNewImage("Units", zip, size_Unit);
+	    Times_Unit = ResizeImage(size_Unit[0], Game.img_char.getWidth(null));
+	    
 	    Game.img_tile = TryNewImage("Terrain", zip, size_Terrain);
+	    Times_Terrain = ResizeImage(size_Terrain[0], Game.img_tile.getWidth(null));
+	    
 	    Game.img_city = TryNewImage("Cities", zip, size_City);
-	   // Game.img_menu[0] = TryNewImage("Info", zip, size_Menus);
+	    Times_City = ResizeImage(size_City[0], Game.img_city.getWidth(null));
 	}
 	
+	private int ResizeImage(int original, int modified) {
+		int i = modified/original;
+		System.out.println(i + " new size!");
+		return i;
+	}
 	private Image TryNewImage(String path, ZipHandler zip, int[] size) {
 	    try {
 	    	InputStream in = new ByteArrayInputStream(zip.getEntry(path + ".png"));
 	        BufferedImage ZipImg = ImageIO.read(in);
+	        in.close();
 	        if (CompareSizes(size,ZipImg)) {
-				return ResizeImage(ZipImg, size[0], size[1]);
+				return ZipImg;
 			}
 			else {
 				return OldImage(path);
@@ -64,21 +80,15 @@ public class LoadImages {
 	 * @return = return true if they match
 	 */
 	private boolean CompareSizes(int[] base, Image img) {
-		//TODO: change it to (width%base[0] == 0)
-		if (base[0]!=img.getWidth(null)) {return false;}
-		if (base[1]!=img.getHeight(null)) {return false;}
-		return true;
-	}
-	/**
-	 * 
-	 * @param type = The name of the image to be changed
-	 * @param width = the width the image is to become
-	 * @param height = the height the image is to become
-	 * @return = Returns the resized image.
-	 */
-	private Image ResizeImage(Image img, int width, int height) {
-		//TODO: Resize image to default size using Graphics2D or something.
-		return img;
+		if (img.getHeight(null)%base[1]==0) {
+			int y = img.getHeight(null)/base[1];
+			if (img.getWidth(null)%base[0]==0) {
+				int x = img.getWidth(null)/base[0];
+				//This checks to see if both X and Y are the same size for integrate (Change when supporting additional characters).
+				if (x == y) {return true;}
+			}
+		}
+		return false;
 	}
 	/**
 	 * Loads the default image into the game.

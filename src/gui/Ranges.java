@@ -16,6 +16,7 @@ import engine.Pathfinding;
  * @version 0.1
  */
 public class Ranges {
+	//TODO: Change this to support texture packs.
 	public Ranges(Graphics2D gg) {
 		if (Game.player.get(Game.btl.currentplayer).unitselected) {
 			units.Base unit = Game.units.get(Game.player.get(Game.btl.currentplayer).selectedunit);
