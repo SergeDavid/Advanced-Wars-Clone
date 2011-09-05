@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Map {
 	//Base settings
-	public int width = 12;//Base = 16
+	public int width = 12;
 	public int height = 12;
 	public final int minsize = 6;
 	public final int maxsize = 64;
@@ -15,14 +15,11 @@ public class Map {
 	/**A square/rectangular area that you play on. Diamond shaped if isometric.*/
 	public terrain.Base[][] map;
 	public List<terrain.Base> tiles = new ArrayList<terrain.Base>();
-	public MapFinder finder = new MapFinder();
 	public MapParser parse = new MapParser();
-	public List<String> MapNames;
 	
 	public Map() {
 		LoadTiles();
 		map = new terrain.Base[height][width];
-		MapNames = finder.GrabMaps();
 	}
 	
 	public void MapSetup(int width, int height) {

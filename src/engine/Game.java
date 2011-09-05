@@ -38,6 +38,7 @@ public class Game extends JFrame {
 	public static Pathfinding pathing = new Pathfinding();
 	public static ListData list;
 	public static Save save = new Save();
+	public static FileFinder finder = new FileFinder();
 	public static ViewPoint view = new ViewPoint();
 	
 	//Image handling settings are as follows

@@ -24,7 +24,7 @@ public class MapParser {
 		CityString = "";
 		CityPoint = new Vector<Point>();
 		try {
-			BufferedReader in = new BufferedReader(new FileReader("maps/"+mapname));
+			BufferedReader in = new BufferedReader(new FileReader("maps/" + mapname + ".txt"));
 			String line;
 			while ((line = in.readLine()) != null) {
 				if (line.startsWith("1")) {

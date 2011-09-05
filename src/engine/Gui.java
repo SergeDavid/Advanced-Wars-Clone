@@ -31,6 +31,8 @@ public class Gui extends JPanel {
 
 	JList maps_list = new JList();
 	DefaultListModel maps_model = new DefaultListModel();
+	JList packs_list = new JList();
+	DefaultListModel packs_model = new DefaultListModel();
 	public GameMenus gms = new GameMenus();
 		
 	public Gui() {
@@ -65,6 +67,7 @@ public class Gui extends JPanel {
 		Exit.setBounds(220 + insets.left, 290 + insets.top, 
 				size.width, size.height);
 		
+		maps_model = Game.finder.GrabMaps();
 		JScrollPane maps_pane = new JScrollPane(maps_list = new JList(maps_model));
 		maps_pane.setBounds(400 + insets.left, 40 + insets.top, 140, 300);
 		add(maps_pane);
