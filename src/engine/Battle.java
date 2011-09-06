@@ -46,6 +46,9 @@ public class Battle {
 			ply.money+=buildingmoney*Buildingcount(currentplayer);
 		}
 		Game.pathing.LastChanged++;
+		if (ply.npc) {
+			Game.brain.UseBrain(ply);
+		}
 	}
 	
 	/**Grabs the number of buildings a player owns.*/

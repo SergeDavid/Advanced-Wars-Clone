@@ -12,21 +12,14 @@ import engine.Game;
 public class InfoMenu {
 	public InfoMenu(Graphics2D gg) {
 		int offset = 514;
-		switch (Game.btl.currentplayer) {//TODO: Redesign coloring to be taken from the player.
-			case 0:gg.setColor(new Color(200,0,0));break;
-			case 1:gg.setColor(new Color(0,0,200));break;
-			case 2:gg.setColor(new Color(0,200,0));break;
-			case 3:gg.setColor(new Color(200,200,0));break;
-			default:gg.setColor(new Color(200,200,200));break;
-		}
-		gg.fillRect(offset-2, 0, Game.gui.width, Game.gui.height);
 		gg.setColor(new Color(255,255,255));
-		gg.drawImage(Game.img_menu[0], offset-2, 0, Game.gui.width, Game.gui.height, 0, 0, 32, 256, null);
+		gg.drawImage(Game.img_menu[0], offset-2, 0, Game.gui.width, Game.gui.height, 32, 0, 64, 256, null);
 		gg.drawString("Funds = " + Game.player.get(Game.btl.currentplayer).money,offset+4,128);
 		gg.drawString("Power = " + Game.player.get(Game.btl.currentplayer).power,offset+4,142);
 		
 		DrawUnitInfo(gg, offset);
 		DrawTerrainInfo(gg);
+		gg.dispose();
 	}
 	private void DrawUnitInfo(Graphics2D gg, int offset) {
 		players.Base plyer = Game.player.get(Game.btl.currentplayer);

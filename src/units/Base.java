@@ -9,7 +9,7 @@ public class Base {
 	public String name = "Missing No.";
 	public String nick = "MsNo";
 	public String desc = "Unknown description present.";
-	public int building;//Which building it can be bought from. TODO: Might turn into an array so I can have multiple buildings / other things can buy them.
+	public int building = 0;//Which building it can be bought from.
 	public int owner;
 	int img;
 	public int cost = 100;
@@ -42,7 +42,7 @@ public class Base {
 	public int MinAtkRange = 1;//This is used for ranged units such as artillery.
 	
 	public int Fog = 5;//Fog of war setting.
-	public int Fuel = 100;//Total fuel left TODO: Add fuel and refueling at cities
+	public int Fuel = 1000;//Total fuel left TODO: Add fuel and refueling at cities
 	public int FuelUse = 1;//How much fuel is used each tile the unit moves.
 	public int Ammo = 10;//Ammo used for the main weapon (uses alternate when it is gone)
 	
@@ -79,13 +79,23 @@ public class Base {
 	public void move(int destx, int desty) {
 		if (moved) {return;}
 		if (moveable(destx,desty)) {
+			Fuel -= FuelCost(destx,desty);
+			moved=true;
+			
 			oldx=x;oldy=y;
 			x=destx;y=desty;
-			moved=true;
-			//Path finding stuff
+
+			//Path finding update
 			Game.pathing.LastChanged = System.currentTimeMillis();
 		}
 	}
+	private int FuelCost(int x2, int y2) {
+		//TODO: Use destination cost instead of distance.
+		int used = (x>x2) ? x - x2 : x2 - x ;
+		used += (y>y2) ? y - y2 : y2 - y ;
+		return used;
+	}
+
 	/**This checks to see if the destination is in the map, and then calls the path-finder and returns true if the location is movable.*/
 	private boolean moveable(int destx, int desty) {
 		if (destx<0||desty<0) {return false;}
@@ -126,7 +136,7 @@ public class Base {
 		acted=true;
 	}
 
-	private boolean attack(int destx, int desty, boolean returnfire) {
+	public boolean attack(int destx, int desty, boolean returnfire) {
 		//Disables the ability to attack when a unit has already moved positions.
 		if (x != oldx && y != oldy && !MoveAndShoot) {return false;}
 
@@ -156,7 +166,7 @@ public class Base {
 		}
 		return false;
 	}
-	private void capture(int destx,int desty) {
+	public void capture(int destx,int desty) {
 		if (destx==x&&desty==y) {
 			buildings.Base bld = FindBuilding();
 			if (bld!=null) {
@@ -167,7 +177,7 @@ public class Base {
 		}
 	}
 	
-	private buildings.Base FindBuilding() {
+	public buildings.Base FindBuilding() {
 		for (buildings.Base bld : Game.builds) {
 			if (bld.x==x&&bld.y==y) {return bld;}
 		}

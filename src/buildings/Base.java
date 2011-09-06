@@ -7,6 +7,7 @@ public class Base {
 	int img = 0;
 	public String name = "Bacon";
 	String desc = "Giggles";
+	public boolean Locked;//Easy determination if a unit is standing on it or not. TODO: Install this or do something.
 	
 	//Health (How long until it is captured / destroyed, and how far along it is)
 	int maxhealth = 20;

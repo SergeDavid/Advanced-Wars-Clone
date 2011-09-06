@@ -31,6 +31,7 @@ public class Game extends JFrame {
 	//Setup the quick access to all of the other class files.
 	public static Map map;
 	public static Gui gui;
+	public static GameMenus gms;
 	public static LoadImages load;
 	public static InputHandler input;
 	public static Battle btl = new Battle();
@@ -38,6 +39,7 @@ public class Game extends JFrame {
 	public static Pathfinding pathing = new Pathfinding();
 	public static ListData list;
 	public static Save save = new Save();
+	public static ComputerBrain brain = new ComputerBrain();
 	public static FileFinder finder = new FileFinder();
 	public static ViewPoint view = new ViewPoint();
 	
@@ -75,6 +77,7 @@ public class Game extends JFrame {
 		gui.requestFocusInWindow();
 		
 		//load images, initialize the map, and adds the input settings.
+		gms = new GameMenus();
 		load = new LoadImages();
 		map = new Map();
 		input = new InputHandler();
@@ -106,22 +109,28 @@ public class Game extends JFrame {
 				fps = 0;
 				error.ErrorTicker();
 				setTitle(name + " v" + build + "." + version + " : FPS " + fpscount);
+				if (GameState == Playing) {
+					if (player.get(btl.currentplayer).npc) {
+						if (brain.finished) {
+							brain.NextMove();
+						}
+					}
+				}
 			}
 			else fps++;
 			//Current Logic and frames per second location (capped at 20 I guess?)
-			if (System.currentTimeMillis() - lastCPSTime2 > 50) {
+			if (System.currentTimeMillis() - lastCPSTime2 > 100) {
 				lastCPSTime2 = System.currentTimeMillis();
 				logics = 0;
 				if (GameState==Playing) {view.MoveView();}//This controls the view-point on the map
 				Game.gui.frame++;//This is controlling the current frame of animation.
 				if (Game.gui.frame>=12) {Game.gui.frame=0;}
-				fps++;
+				gui.repaint();
 			}
 			else logics++;
 			
 			//Paints the scene then sleeps for a bit.
-			gui.repaint();
-			try { Thread.sleep(20);} catch (Exception e) {};
+			try { Thread.sleep(30);} catch (Exception e) {};
 		}
 	}
 	

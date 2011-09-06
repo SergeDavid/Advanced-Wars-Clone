@@ -37,6 +37,7 @@ public class Units {
 				}
 			}
 		}
+		g.dispose();
 		return img;
 	}
 }

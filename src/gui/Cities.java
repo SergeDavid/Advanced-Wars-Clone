@@ -29,6 +29,7 @@ public class Cities {
 						loc[0]*size, loc[1]*size, loc[0]*size+size, loc[1]*size+size, null);
 			}
 		}
+		g.dispose();
 		return img;
 	}
 }

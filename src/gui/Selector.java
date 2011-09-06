@@ -20,9 +20,11 @@ public class Selector {
 		BufferedImage img = new BufferedImage(Game.gui.width*size, Game.gui.height*size, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g = (Graphics2D) img.getGraphics();
 		size *= 32;
-		int x = Game.player.get(Game.btl.currentplayer).selectx - Game.view.ViewX();
-		int y = Game.player.get(Game.btl.currentplayer).selecty - Game.view.ViewY();
+		int x = Game.player.get(Game.btl.currentplayer).selectx;
+		int y = Game.player.get(Game.btl.currentplayer).selecty;
 		if (Game.view.Viewable(x,y)) {
+			x -= Game.view.ViewX();
+			y -= Game.view.ViewY();
 			int off = (frame>5) ? frame/2 : 6-frame/2;
 			off += 2;
 		
@@ -45,6 +47,7 @@ public class Selector {
 					x*size+size+off,   y*size+size+off,
 					size*7+(size/2), size+(size/2), size*7+size, size+size,null);
 		}
+		g.dispose();
 		return img;
 	}
 	

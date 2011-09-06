@@ -32,6 +32,7 @@ public class Terrain {
 				}
 			}
 		}
+		g.dispose();
 		return img;
 	}
 }

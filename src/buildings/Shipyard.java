@@ -1,7 +1,5 @@
 package buildings;
 
-import engine.Game;
-
 public class Shipyard extends Base {
 
 	public Shipyard(int owner, int team, int xx, int yy) {
@@ -12,7 +10,7 @@ public class Shipyard extends Base {
 	}
 
 	public void OpenMenu() {
-		Game.gui.gms.OpenMenu("Seaport", x, y);
+		new menus.City("Seaport", x, y);
 	}
 
 }

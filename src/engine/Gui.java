@@ -17,8 +17,8 @@ public class Gui extends JPanel {
 	private static final long serialVersionUID = 3457450162330022096L;
 	
 	/**The width and height of the content box.*/
-	public int width = 640;
-	public int height = 400;
+	public int width = Game.width-6;
+	public int height = Game.height-12;
 	
 	/**The base frame to keep animations in sync (1 frame = 100ms) Remember to reset this to zero when it hits 12.*/
 	public int frame = 0; //counts up to 12 (resets to zero)
@@ -33,7 +33,6 @@ public class Gui extends JPanel {
 	DefaultListModel maps_model = new DefaultListModel();
 	JList packs_list = new JList();
 	DefaultListModel packs_model = new DefaultListModel();
-	public GameMenus gms = new GameMenus();
 		
 	public Gui() {
 		setPreferredSize(new Dimension(width,height));
@@ -81,8 +80,7 @@ public class Gui extends JPanel {
 		Game.GameState=Game.Playing;
 		if (Game.error.showing) {add(Game.error);}
 	}
-	
-	//TODO: See about optimizing the layers so that I can skip some to make this part faster.
+
 	public void paintComponent(Graphics g) {
 		//Creates the buffer image and graphic settings.
 		Image buffimage = createImage(width, height);
@@ -95,7 +93,9 @@ public class Gui extends JPanel {
 			gg.setColor(new Color(255,255,255));
 		break;
 		case Game.Playing:
-			gg.drawImage(Game.img_menu[0], 0, 0, width, height, 32, 0, 64, 256, null);
+			gg.setColor(GrabColor());
+			gg.fillRect(0, 0, width, height);
+			gg.drawImage(Game.img_menu[0], 0, 0, width, height, 0, 0, 32, 256, null);
 			gg.drawImage(gui.Terrain.Draw(), 0, 0, width, height, null);
 			new gui.Ranges(gg);
 			gg.drawImage(gui.Cities.Draw(), 0, 0, width, height, null);
@@ -106,8 +106,23 @@ public class Gui extends JPanel {
 			else {/*Include a mini menu that floats around the map*/}
 		break;
 		case Game.Editor:
+			gg.drawImage(gui.Terrain.Draw(), 0, 0, width, height, null);
+			gg.drawImage(gui.Cities.Draw(), 0, 0, width, height, null);
+			gg.drawImage(gui.Units.Draw(), 0, 0, width, height, null);
 		break;
 		}
 		g.drawImage(buffimage, 0, 0, this);
+		buffimage.flush();
+		gg.dispose();
+	}
+
+	private Color GrabColor() {
+		switch (Game.btl.currentplayer) {//TODO: Redesign coloring to be taken from the player.
+			case 0:return new Color(200,0,0);
+			case 1:return new Color(0,0,200);
+			case 2:return new Color(0,200,0);
+			case 3:return new Color(200,200,0);
+			default:return new Color(200,200,200);
+		}
 	}
 }

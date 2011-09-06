@@ -66,13 +66,16 @@ public class InputHandler implements KeyListener,MouseListener,ActionListener {
 			if (i==select) {Game.btl.Action();}
 			if (i==cancle) {Game.player.get(Game.btl.currentplayer).Cancle();}
 			if (i==start) {
-				if (MenuHack) {Game.gui.gms.CloseMenu();}
-				else {Game.gui.gms.OpenMenu("Pause");}
+				if (MenuHack) {Game.gms.CloseMenu();}
+				else {
+					new menus.Pause();
+				}
+				//else {Game.gui.gms.OpenMenu("Pause");}
 			}
 		}
 		
 		if (i==dev1) {Game.gui.LoginScreen();}
-		if (i==dev4) {Game.btl.EndTurn();}
+		if (i==dev2) {Game.load.LoadTexturePack();}
 		if (i==dev3) {
 			DevPathing++;
 			switch (DevPathing) {
@@ -81,8 +84,9 @@ public class InputHandler implements KeyListener,MouseListener,ActionListener {
 				case 3:Game.pathing.ShowHits=false;Game.pathing.ShowCost=true;DevPathing=0;break;
 			}
 		}
-		if (i==dev2) {Game.load.LoadTexturePack();}
-		if (i==dev8) {Game.finder.GrabMods();}
+		if (i==dev4) {Game.btl.EndTurn();}
+		if (i==dev5) {Game.player.get(Game.btl.currentplayer).npc = !Game.player.get(Game.btl.currentplayer).npc; Game.btl.EndTurn();}
+		if (i==dev6) {Game.finder.GrabMods();}
 	}
 	public void keyReleased(KeyEvent arg0) {}
 	public void keyTyped(KeyEvent arg0) {}
