@@ -8,6 +8,7 @@ public class Base {
 	public String name = "Bacon";
 	String desc = "Giggles";
 	public boolean Locked;//Easy determination if a unit is standing on it or not. TODO: Install this or do something.
+	public boolean HasAMenu = false;//TODO: Redesign this and the open menu area for better effect.
 	
 	//Health (How long until it is captured / destroyed, and how far along it is)
 	int maxhealth = 20;

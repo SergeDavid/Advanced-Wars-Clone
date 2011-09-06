@@ -10,5 +10,6 @@ public class Mechanic extends Base {
 		img = 1;
 		speed = 3;
 		cost = 200;
+		raider = true;
 	}
 }

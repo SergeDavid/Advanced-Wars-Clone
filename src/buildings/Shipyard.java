@@ -7,6 +7,7 @@ public class Shipyard extends Base {
 		name="Capital";
 		desc="Creates water units.";
 		img = 3;
+		HasAMenu = true;
 	}
 
 	public void OpenMenu() {

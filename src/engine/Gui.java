@@ -44,7 +44,7 @@ public class Gui extends JPanel {
 
 	/**Creates the Login screen layout*/
 	public void LoginScreen() {
-		Game.GameState=Game.TheMenu;
+		Game.GameState=Game.State.MENU;
 		removeAll();
 		
 		add(Join);
@@ -72,12 +72,13 @@ public class Gui extends JPanel {
 		add(maps_pane);
 		size = maps_list.getPreferredSize();
 		maps_list.setBounds(insets.left, insets.top, size.width, size.height);
+		maps_list.setSelectedIndex(0);
 		if (Game.error.showing) {add(Game.error);}
 	}
 	/**Creates the InGame screen layout*/
 	public void InGameScreen() {
 		removeAll();
-		Game.GameState=Game.Playing;
+		Game.GameState=Game.State.PLAYING;
 		if (Game.error.showing) {add(Game.error);}
 	}
 
@@ -87,12 +88,12 @@ public class Gui extends JPanel {
 		Graphics2D gg = (Graphics2D) buffimage.getGraphics();
 		
 		switch (Game.GameState) {
-		case Game.TheMenu:
+		case MENU:
 			gg.setColor(new Color(0,0,60));
 			gg.fillRect(0, 0, width, height);
 			gg.setColor(new Color(255,255,255));
 		break;
-		case Game.Playing:
+		case PLAYING:
 			gg.setColor(GrabColor());
 			gg.fillRect(0, 0, width, height);
 			gg.drawImage(Game.img_menu[0], 0, 0, width, height, 0, 0, 32, 256, null);
@@ -105,7 +106,7 @@ public class Gui extends JPanel {
 			if (Game.input.MenuHack) {new gui.InfoMenu(gg);}//This displays the menu only when it is paused.
 			else {/*Include a mini menu that floats around the map*/}
 		break;
-		case Game.Editor:
+		case EDITOR:
 			gg.drawImage(gui.Terrain.Draw(), 0, 0, width, height, null);
 			gg.drawImage(gui.Cities.Draw(), 0, 0, width, height, null);
 			gg.drawImage(gui.Units.Draw(), 0, 0, width, height, null);

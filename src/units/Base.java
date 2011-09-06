@@ -20,6 +20,7 @@ public class Base {
 	public int health = maxhp;
 	public boolean moved;
 	public boolean acted;
+	public boolean raider = false;
 	
 	//Pathing Stuff
 	public Vector<Point> map = new Vector<Point>();//TEST
@@ -76,41 +77,6 @@ public class Base {
 		}
 	}
 	
-	public void move(int destx, int desty) {
-		if (moved) {return;}
-		if (moveable(destx,desty)) {
-			Fuel -= FuelCost(destx,desty);
-			moved=true;
-			
-			oldx=x;oldy=y;
-			x=destx;y=desty;
-
-			//Path finding update
-			Game.pathing.LastChanged = System.currentTimeMillis();
-		}
-	}
-	private int FuelCost(int x2, int y2) {
-		//TODO: Use destination cost instead of distance.
-		int used = (x>x2) ? x - x2 : x2 - x ;
-		used += (y>y2) ? y - y2 : y2 - y ;
-		return used;
-	}
-
-	/**This checks to see if the destination is in the map, and then calls the path-finder and returns true if the location is movable.*/
-	private boolean moveable(int destx, int desty) {
-		if (destx<0||desty<0) {return false;}
-		if (destx>=Game.map.width||desty>=Game.map.height) {return false;}
-		if (Pathed(destx,desty)) {return true;}
-		return false;
-	}
-	/**If the location is in the movable locations list, the unit will move there.*/
-	private boolean Pathed(int destx, int desty) {
-		for (Point p : map) {
-			if (p.x == destx && p.y == desty) {return true;}
-		}
-		return false;
-	}
-
 	/**This is currently being used by the path finding, the other is so I can have a pretty visual for actually moving it.*/
 	public boolean PathCheck(int destx, int desty) {
 		if (destx<0||desty<0) {return false;}
@@ -128,6 +94,7 @@ public class Base {
 		return false;
 	}
 	
+	/**Use this method instead of attack or capture for ai (m)*/
 	public void action(int destx, int desty) {
 		if (acted) {return;}//TODO: Switch this area to a menu with wait, attack (any unit in range after moving), capture(if map[y][x]==city)
 		if (!attack(destx,desty,true)) {//If there was no unit to attack, the unit checks to see if there is a building there.
@@ -135,8 +102,7 @@ public class Base {
 		}
 		acted=true;
 	}
-
-	public boolean attack(int destx, int desty, boolean returnfire) {
+	private boolean attack(int destx, int desty, boolean returnfire) {
 		//Disables the ability to attack when a unit has already moved positions.
 		if (x != oldx && y != oldy && !MoveAndShoot) {return false;}
 
@@ -166,7 +132,7 @@ public class Base {
 		}
 		return false;
 	}
-	public void capture(int destx,int desty) {
+	private void capture(int destx,int desty) {
 		if (destx==x&&desty==y) {
 			buildings.Base bld = FindBuilding();
 			if (bld!=null) {
@@ -176,10 +142,21 @@ public class Base {
 			}
 		}
 	}
+	public void move(int destx, int desty) {
+		if (moved) {return;}
+		if (moveable(destx,desty)) {
+			Fuel -= FuelCost(destx,desty);
+			moved=true;
+			oldx=x;oldy=y;
+			x=destx;y=desty;
+			//Path finding update
+			Game.pathing.LastChanged = System.currentTimeMillis();
+		}
+	}
 	
 	public buildings.Base FindBuilding() {
 		for (buildings.Base bld : Game.builds) {
-			if (bld.x==x&&bld.y==y) {return bld;}
+			if (bld.x==x && bld.y==y && bld.owner != owner) {return bld;}
 		}
 		return null;
 	}
@@ -192,15 +169,23 @@ public class Base {
 		if (xx+yy<MinAtkRange) {return false;}
 		return true;
 	}
-	/**This finds a unit with the x and y coordinates and returns their data to be used, friendly-fire set to true to find allies, hostile-fire to attack foes.*/
-	private units.Base FindTarget(int destx, int desty, boolean hostilefire, boolean friendlyfire) {
-		for (units.Base unit : Game.units) {
-			if (Game.player.get(unit.owner).team!=Game.player.get(owner).team||friendlyfire) {
-				if (unit.x==destx&&unit.y==desty) {return unit;}
-			}
+	/**Undoes what the unit has done so far.*/
+	public void cancle() {
+		if (moved&&!acted) {
+			moved=false;
+			x=oldx;
+			y=oldy;
 		}
-		return null;
 	}
+	/**Hits the Path-finding to get a list of reachable points on the map.*/
+	public void Pathing() {
+		if (LastPathed<Game.pathing.LastChanged) {
+			int distance = (int) ((Fuel < speed) ? Fuel : speed);
+			map = Game.pathing.FindPath(this, distance);	
+		}
+	}
+	
+	//==================================================
 	
 	/**
 	 * Returns the image location of the sprite sheet where this unit is located.
@@ -212,20 +197,35 @@ public class Base {
 		if (acted) {loc[1]++;}
 		return loc;
 	}
-
-	/**Undoes what the unit has done so far.*/
-	public void cancle() {
-		if (moved&&!acted) {
-			moved=false;
-			x=oldx;
-			y=oldy;
+	/**This finds a unit with the x and y coordinates and returns their data to be used, friendly-fire set to true to find allies, hostile-fire to attack foes.*/
+	private units.Base FindTarget(int destx, int desty, boolean hostilefire, boolean friendlyfire) {
+		for (units.Base unit : Game.units) {
+			if (Game.player.get(unit.owner).team!=Game.player.get(owner).team||friendlyfire) {
+				if (unit.x==destx&&unit.y==desty) {return unit;}
+			}
 		}
+		return null;
 	}
-
-	public void Pathing() {
-		if (LastPathed<Game.pathing.LastChanged) {
-			int distance = (int) ((Fuel < speed) ? Fuel : speed);
-			map = Game.pathing.FindPath(this, distance);	
+	/**Returns the cost of fuel for traveling to your desired destination.*/
+	private int FuelCost(int x2, int y2) {
+		//TODO: Use destination cost instead of distance.
+		int used = (x>x2) ? x - x2 : x2 - x ;
+		used += (y>y2) ? y - y2 : y2 - y ;
+		return used;
+	}
+	/**This checks to see if the destination is in the map, and then calls the path-finder and returns true if the location is movable.*/
+	private boolean moveable(int destx, int desty) {
+		if (destx<0||desty<0) {return false;}
+		if (destx>=Game.map.width||desty>=Game.map.height) {return false;}
+		if (Pathed(destx,desty)) {return true;}
+		return false;
+	}
+	/**If the location is in the movable locations list, the unit will move there.*/
+	private boolean Pathed(int destx, int desty) {
+		for (Point p : map) {
+			if (p.x == destx && p.y == desty) {return true;}
 		}
+		return false;
 	}
 }
+ 

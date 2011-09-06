@@ -9,5 +9,6 @@ public class Infantry extends Base {
 		desc = "Weakest units here.";
 		img = 0;
 		speed = 4;
+		raider = true;
 	}
 }

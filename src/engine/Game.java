@@ -17,16 +17,8 @@ public class Game extends JFrame {
 	public static final int height = 400+12;
 	public static final boolean dev = true;//Is this a dev copy or not... useless? D:
 	
-	//Game state
-	public static int GameState;
-	/**The game is loading something, so disable all user input except for closing the application.*/
-	public static final int Loading = 0;
-	/**Pause any in game logic as to not have something time sensitive happen when you die.*/
-	public static final int TheMenu = 1;
-	/**This enables things with controlling pieces and logic that happen during gameplay to work.*/
-	public static final int Playing = 2;
-	/**The built in map editor.*/
-	public static final int Editor = 3;
+	public static enum State {STARTUP, MENU, PLAYING, EDITOR};
+	public static State GameState = State.STARTUP;
 		
 	//Setup the quick access to all of the other class files.
 	public static Map map;
@@ -109,11 +101,9 @@ public class Game extends JFrame {
 				fps = 0;
 				error.ErrorTicker();
 				setTitle(name + " v" + build + "." + version + " : FPS " + fpscount);
-				if (GameState == Playing) {
+				if (GameState == State.PLAYING) {
 					if (player.get(btl.currentplayer).npc) {
-						if (brain.finished) {
-							brain.NextMove();
-						}
+						brain.ThinkDamnYou(player.get(btl.currentplayer));
 					}
 				}
 			}
@@ -122,7 +112,7 @@ public class Game extends JFrame {
 			if (System.currentTimeMillis() - lastCPSTime2 > 100) {
 				lastCPSTime2 = System.currentTimeMillis();
 				logics = 0;
-				if (GameState==Playing) {view.MoveView();}//This controls the view-point on the map
+				if (GameState==State.PLAYING) {view.MoveView();}//This controls the view-point on the map
 				Game.gui.frame++;//This is controlling the current frame of animation.
 				if (Game.gui.frame>=12) {Game.gui.frame=0;}
 				gui.repaint();

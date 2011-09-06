@@ -27,7 +27,7 @@ public class Battle {
 		Game.view.Loc.x = 0;
 		Game.view.Loc.y = 0;
 		if (!Game.map.parse.decode(mapname)) {
-			Game.GameState = Game.TheMenu;
+			Game.GameState = Game.State.MENU;
 			return;
 		}
 		this.mapname = mapname;
@@ -46,9 +46,6 @@ public class Battle {
 			ply.money+=buildingmoney*Buildingcount(currentplayer);
 		}
 		Game.pathing.LastChanged++;
-		if (ply.npc) {
-			Game.brain.UseBrain(ply);
-		}
 	}
 	
 	/**Grabs the number of buildings a player owns.*/

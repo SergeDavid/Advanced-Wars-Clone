@@ -24,8 +24,6 @@ public class Pathfinding {
 	public long LastChanged = 1;
 	
 	public Vector<Point> FindPath(units.Base unit, int range) {
-		long start = System.currentTimeMillis();
-		
 		maphits = new int[Game.map.height][Game.map.width];
 		openlist = new Vector<PathNode>();
 		closedlist = new Vector<PathNode>();
@@ -50,7 +48,6 @@ public class Pathfinding {
 		for (PathNode node : closedlist) {
 			map.add(new Point(node.loc.x,node.loc.y));
 		}
-		System.out.println("Pathing Took : " + (System.currentTimeMillis() - start));
 		unit.LastPathed = System.currentTimeMillis();
 		return map;
 	}

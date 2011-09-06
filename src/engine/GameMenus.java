@@ -3,7 +3,6 @@ package engine;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Insets;
-import javax.swing.JButton;
 import javax.swing.JPanel;
 
 /**
@@ -13,16 +12,7 @@ import javax.swing.JPanel;
  */
 public class GameMenus extends JPanel {
 	private static final long serialVersionUID = -7953759133984304287L;
-	
-	//Confirmation
-	JButton Yes = new JButton("Yes");
-	JButton No = new JButton("No");
-	
-	//Unit Menu
-	JButton Wait = new JButton("Wait");
-	JButton Attack = new JButton("Attack");
-	JButton Capture = new JButton("Capture");
-	
+
 	public GameMenus() {
 		setBackground(new Color(80,80,80));
 		//Setup Unit menu
@@ -51,5 +41,6 @@ public class GameMenus extends JPanel {
 		Game.gui.remove(this);
 		Game.input.MenuHack=false;
 		Game.gui.requestFocusInWindow();
+		setOpaque(true);
 	}
 }

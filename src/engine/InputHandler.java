@@ -57,7 +57,7 @@ public class InputHandler implements KeyListener,MouseListener,ActionListener {
 	public void keyPressed(KeyEvent e) {
 		int i=e.getKeyCode();
 		if (i==exit) {System.exit(0);}
-		if (Game.GameState==Game.Playing) {
+		if (Game.GameState==Game.State.PLAYING) {
 			players.Base ply = Game.player.get(Game.btl.currentplayer);
 			if (i==up) {ply.selecty--;if (ply.selecty<0) {ply.selecty++;}}
 			if (i==down) {ply.selecty++;if (ply.selecty>=Game.map.height) {ply.selecty--;}}
