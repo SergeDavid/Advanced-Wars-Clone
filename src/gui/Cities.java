@@ -1,23 +1,18 @@
 package gui;
 
 import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
-
 import engine.Game;
 
 /**
  * This draws all of the cities currently in the game that are visible.
+ * @param g = The Graphics2D to drawn too.
+ * @param resize = Size setup of the window to use.
  * @author SergeDavid
- * @version 0.2
+ * @version 0.3
  */
 public class Cities {
-	public static Image Draw() {
-		int size = Game.load.Times_City;
-		BufferedImage img = new BufferedImage(Game.gui.width*size, Game.gui.height*size, BufferedImage.TYPE_INT_ARGB);
-		Graphics2D g = (Graphics2D) img.getGraphics();
-		
-		size *= 32;
+	public static void Draw(Graphics2D g, int resize) {
+		int size = Game.load.Times_City*32;
 		int xoff = Game.view.ViewX();
 		int yoff = Game.view.ViewY();
 		
@@ -25,11 +20,9 @@ public class Cities {
 			if (Game.view.Viewable(bld.x,bld.y)) {
 				int[] loc = bld.DrawMe();
 				g.drawImage(Game.img_city,
-						(bld.x-xoff)*size,(bld.y-yoff)*size,(bld.x-xoff)*size+size,(bld.y-yoff)*size+size,
+						(bld.x-xoff)*resize,(bld.y-yoff)*resize,(bld.x-xoff)*resize+resize,(bld.y-yoff)*resize+resize,
 						loc[0]*size, loc[1]*size, loc[0]*size+size, loc[1]*size+size, null);
 			}
 		}
-		g.dispose();
-		return img;
 	}
 }

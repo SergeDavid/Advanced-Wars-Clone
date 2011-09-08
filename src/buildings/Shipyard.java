@@ -7,11 +7,6 @@ public class Shipyard extends Base {
 		name="Capital";
 		desc="Creates water units.";
 		img = 3;
-		HasAMenu = true;
+		Menu = "shipyard";
 	}
-
-	public void OpenMenu() {
-		new menus.City("Seaport", x, y);
-	}
-
 }

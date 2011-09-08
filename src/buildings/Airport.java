@@ -7,11 +7,6 @@ public class Airport extends Base {
 		name="Airport";
 		desc="Creates Air units.";
 		img = 4;
-		HasAMenu = true;
+		Menu = "airbase";
 	}
-
-	public void OpenMenu() {
-		new menus.City("Airport", x, y);
-	}
-
 }

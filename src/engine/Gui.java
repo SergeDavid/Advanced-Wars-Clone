@@ -17,8 +17,9 @@ public class Gui extends JPanel {
 	private static final long serialVersionUID = 3457450162330022096L;
 	
 	/**The width and height of the content box.*/
-	public int width = Game.width-6;
-	public int height = Game.height-12;
+	public int width = Game.ScreenBase*20;
+	public int height = (int) (Game.ScreenBase*12);
+	private Game ThisMadeMeWantToRageQuit; // Use for resizing the window.
 	
 	/**The base frame to keep animations in sync (1 frame = 100ms) Remember to reset this to zero when it hits 12.*/
 	public int frame = 0; //counts up to 12 (resets to zero)
@@ -34,10 +35,11 @@ public class Gui extends JPanel {
 	JList packs_list = new JList();
 	DefaultListModel packs_model = new DefaultListModel();
 		
-	public Gui() {
+	public Gui(Game game) {
 		setPreferredSize(new Dimension(width,height));
 		setBounds(0, 0, width, height);
 		setLayout(null);
+		ThisMadeMeWantToRageQuit = game;
 		
 		LoginScreen();
 	}
@@ -97,19 +99,21 @@ public class Gui extends JPanel {
 			gg.setColor(GrabColor());
 			gg.fillRect(0, 0, width, height);
 			gg.drawImage(Game.img_menu[0], 0, 0, width, height, 0, 0, 32, 256, null);
-			gg.drawImage(gui.Terrain.Draw(), 0, 0, width, height, null);
-			new gui.Ranges(gg);
-			gg.drawImage(gui.Cities.Draw(), 0, 0, width, height, null);
-			gg.drawImage(gui.Units.Draw(), 0, 0, width, height, null);
-			gg.drawImage(gui.Selector.Draw(frame), 0, 0, width, height, null);
+			//long start = System.currentTimeMillis();
+			gui.Terrain.Draw(gg, Game.ScreenBase);
+			gui.Ranges.Draw(gg, Game.ScreenBase);
+			gui.Cities.Draw(gg, Game.ScreenBase);
+			gui.Units.Draw(gg, Game.ScreenBase);
+			gui.Selector.Draw(frame, gg, Game.ScreenBase);
+			//System.out.println("Time: " + (System.currentTimeMillis() - start));
 			
 			if (Game.input.MenuHack) {new gui.InfoMenu(gg);}//This displays the menu only when it is paused.
 			else {/*Include a mini menu that floats around the map*/}
 		break;
 		case EDITOR:
-			gg.drawImage(gui.Terrain.Draw(), 0, 0, width, height, null);
-			gg.drawImage(gui.Cities.Draw(), 0, 0, width, height, null);
-			gg.drawImage(gui.Units.Draw(), 0, 0, width, height, null);
+			gui.Terrain.Draw(gg, Game.ScreenBase);
+			gui.Cities.Draw(gg, Game.ScreenBase);
+			gui.Units.Draw(gg, Game.ScreenBase);
 		break;
 		}
 		g.drawImage(buffimage, 0, 0, this);
@@ -125,5 +129,32 @@ public class Gui extends JPanel {
 			case 3:return new Color(200,200,0);
 			default:return new Color(200,200,200);
 		}
+	}
+
+	/**
+	 * Changes the size of the game screens, the setup is 5:3 ratio.
+	 */
+	public void ResizeScreen(int size) {
+		switch  (size) {//Ratio is 5:3 (20:12)
+			case 1: size=16; break; // 320 x 192
+			case 2: size=24; break; // 480 x 288
+			case 3: size=32; break; // 640 x 384
+			case 4: size=48; break; // 960 x 
+			case 5: size=64; break; // 1280 x 800
+			default: size=32; break;
+		}
+		//Window
+		ThisMadeMeWantToRageQuit.setSize(new Dimension(20*size+12,12*size+6));
+		ThisMadeMeWantToRageQuit.setBounds(0,0,20*size+12,12*size+6);
+		ThisMadeMeWantToRageQuit.setLocationRelativeTo(null);
+		Game.ScreenBase = size;
+		//GUI
+		width = size*20;
+		height = size*12;
+		setPreferredSize(new Dimension(width,height));
+		setBounds(0, 0, width, height);
+		//TODO: Resize menu's based on current size.
+		//Menu
+		//Save setting
 	}
 }

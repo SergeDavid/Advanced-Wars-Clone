@@ -42,6 +42,7 @@ public class ComputerBrain {
 				HandleBuilding(bld);
 			}
 		}
+		
 		else {
 			finished = true;
 			Game.btl.EndTurn();
@@ -61,7 +62,7 @@ public class ComputerBrain {
 	private void NextCities(int me) {
 		if (DoneCities) {return;}
 		for (int i = CityCount; i < Game.builds.size(); i++) {
-			if (Game.builds.get(i).owner == me && Game.builds.get(i).HasAMenu) {
+			if (Game.builds.get(i).owner == me && !Game.builds.get(i).Menu.isEmpty()) {
 				CityCount = i;
 				return;
 			}
@@ -70,11 +71,14 @@ public class ComputerBrain {
 	}
 
 	private void HandleBuilding(buildings.Base bld) {
-		if (bld.HasAMenu) {
+		if (!bld.Menu.isEmpty()) {
 			if (NoUnit(bld.x,bld.y)) {
-				Game.btl.Buyunit(0, bld.x, bld.y);
-				Game.player.get(bld.owner).selectx = bld.x;
-				Game.player.get(bld.owner).selecty = bld.y;
+				Random rand = new Random();
+				if (rand.nextInt(2)==0 || Game.btl.day<3) {
+					Game.btl.Buyunit(rand.nextInt(3), bld.x, bld.y);
+					Game.player.get(bld.owner).selectx = bld.x;
+					Game.player.get(bld.owner).selecty = bld.y;
+				}
 			}
 		}
 	}

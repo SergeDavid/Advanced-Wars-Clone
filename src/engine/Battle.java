@@ -107,4 +107,14 @@ public class Battle {
 			Game.player.add(Game.list.CreateCommander(0,i+1,startingmoney,false));
 		}
 	}
+
+	public void ChangeBuilding(int x, int y) {
+		for (int i = 0; i < Game.builds.size(); i++) {
+			if (Game.builds.get(i).x == x && Game.builds.get(i).y == y) {
+				Game.builds.remove(i);
+				Game.builds.add(i,Game.list.CreateCity(currentplayer, x, y, 1));
+				break;
+			}
+		}
+	}
 }

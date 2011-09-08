@@ -13,8 +13,7 @@ public class Game extends JFrame {
 	private static final String build = "0";
 	private static final String version = "0";
 	public static final String name = "Strategy Game";
-	public static final int width = 640+6;//Offset for borders.
-	public static final int height = 400+12;
+	public static int ScreenBase = 32;//Bit size for the screen, 16 / 32 / 64 / 128
 	public static final boolean dev = true;//Is this a dev copy or not... useless? D:
 	
 	public static enum State {STARTUP, MENU, PLAYING, EDITOR};
@@ -55,15 +54,15 @@ public class Game extends JFrame {
 	
 	public Game() {super (name);
 		//Default Settings of the JFrame
-		setBounds(0,0,width,height);
-		setSize(width,height);
+		setBounds(0,0,20*ScreenBase+6,12*ScreenBase+12);
+		setSize(20*ScreenBase+6,12*ScreenBase+12);
 	    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    setUndecorated(false);
 		setResizable(false);
 	    setLocationRelativeTo(null);
 				
 		//Creates all the gui elements and sets them up
-		gui = new Gui();
+		gui = new Gui(this);
 		add(gui);
 		gui.setFocusable(true);
 		gui.requestFocusInWindow();

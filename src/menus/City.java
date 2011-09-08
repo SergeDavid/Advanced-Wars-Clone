@@ -31,14 +31,6 @@ public class City implements ActionListener,ListSelectionListener {
 	int x;
 	int y;
 	public City(String Type, int xx, int yy) {
-		Insets insets = Game.gms.getInsets();
-		
-		Main.setBounds(insets.left, insets.top, 150, 260);
-		Alt.setBounds(140 + 20 + insets.left, insets.top, 320, 200);
-		
-		Buy.setBounds(25, 30*6+16+insets.top, 100, 24);
-		Return.setBounds(25, 30*7+16+insets.top, 100, 24);
-		Units.setBounds(10, 10+insets.top, 135, 176);
 		UnitModel.removeAllElements();
 		for (int i = 0; i < Game.displayU.size(); i++) {
 			UnitModel.addElement(Game.displayU.get(i).name + " = $" + (Game.displayU.get(i).cost * Game.player.get(Game.btl.currentplayer).CostBonus));
@@ -46,12 +38,8 @@ public class City implements ActionListener,ListSelectionListener {
 		Main.add(Buy);
 		Main.add(Return);
 		Main.add(Units);
-		
-		UnitName.setBounds(25, 16, 200, 32);
-		UnitDesc.setBounds(25, 64, 200, 100);
 		UnitName.setFocusable(false);
 		UnitDesc.setFocusable(false);
-			
 		Return.addActionListener(this);
 		Buy.addActionListener(this);
 		Units.addListSelectionListener(this);
@@ -60,11 +48,23 @@ public class City implements ActionListener,ListSelectionListener {
 		
 		Main.setBackground(new Color(80,80,80));
 		Alt.setBackground(new Color(120,120,120));
-		UnitDesc.setBackground(new Color(130,130,130));
+		UnitDesc.setBackground(new Color(138,138,146));
+		UnitDesc.setEditable(false);
 		//TODO: Split up what is shown via a String.
+		ChangeSizes();
 		Show();
 	}
-	public void Show() {
+	private void ChangeSizes() {
+		Insets insets = Game.gms.getInsets();
+		Main.setBounds(insets.left, insets.top, 150, 260);
+		Alt.setBounds(140 + 20 + insets.left, insets.top, 320, 200);
+		Buy.setBounds(25, 30*6+16+insets.top, 100, 24);
+		Return.setBounds(25, 30*7+16+insets.top, 100, 24);
+		Units.setBounds(10, 10+insets.top, 135, 176);
+		UnitName.setBounds(42, 10, 200, 24);
+		UnitDesc.setBounds(10, 42, 300, 152);
+	}
+	private void Show() {
 		current = 0;
 		ChangeAlt();
 		Game.gms.OpenMenu(480,260);
@@ -95,7 +95,14 @@ public class City implements ActionListener,ListSelectionListener {
 		Alt.removeAll();
 		units.Base unit = Game.displayU.get(current);
 		UnitName.setText(unit.name);
-		UnitDesc.setText(unit.desc);
+		UnitDesc.setText(
+				"Health: " + unit.maxhp + "\n" +
+				"Fuel: " + unit.MaxFuel + "\n" +
+				"Ammo: " + unit.Ammo + "\n" +
+				"Base Damage: " + unit.attack + "\n" +
+				"Base Armor: " + unit.defense + "\n" +
+				"Speed: " + unit.speed + "\n" +
+				"\nDescription: " + unit.desc);
 		Alt.add(UnitName);
 		Alt.add(UnitDesc);
 	}

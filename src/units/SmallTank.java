@@ -6,7 +6,7 @@ public class SmallTank extends Base {
 		super(owner, xx, yy, active);
 		name = "Small Tank";
 		nick = "STnk";
-		desc = "A small tank.";
+		desc = "A small tank, very effective against lightly armored opponents.";
 		MovType = MovMob;
 		speed = 6;
 		defense = 80;

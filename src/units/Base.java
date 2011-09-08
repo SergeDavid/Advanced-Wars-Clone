@@ -16,7 +16,7 @@ public class Base {
 	
 	//life settings
 	boolean dead;
-	int maxhp = 100;
+	public int maxhp = 100;
 	public int health = maxhp;
 	public boolean moved;
 	public boolean acted;
@@ -34,7 +34,7 @@ public class Base {
 	public double speed = 2;
 	
 	//Battle Settings
-	public boolean MoveAndShoot = true;//Allows units to move then shoot, or make them stay in the same location in order to attack.
+	public boolean MoveAndShoot;//Allows units to move then shoot, or make them stay in the same location in order to attack.
 	public double mainatk = 1.0;//Percentage bonus for main weapon.
 	public double attack = 100;//Base damage done to others
 	public double defense = 60;//Base armor for taking damage
@@ -43,8 +43,8 @@ public class Base {
 	public int MinAtkRange = 1;//This is used for ranged units such as artillery.
 	
 	public int Fog = 5;//Fog of war setting.
-	public int Fuel = 1000;//Total fuel left TODO: Add fuel and refueling at cities
-	public int FuelUse = 1;//How much fuel is used each tile the unit moves.
+	public int MaxFuel = 1000;
+	public int Fuel = 1000;//Total fuel left
 	public int Ammo = 10;//Ammo used for the main weapon (uses alternate when it is gone)
 	
 	//TODO: Add armor types ()
@@ -70,6 +70,7 @@ public class Base {
 		this.owner = owner;
 		oldx = x = xx;//Old locations are used when someone changes their minds on moving a unit.
 		oldy = y = yy;
+		MoveAndShoot = true;
 		if (!active) {
 			acted = true;
 			moved = true;	
@@ -102,9 +103,16 @@ public class Base {
 		}
 		acted=true;
 	}
+	/**
+	 * Attacks someone at X,Y and either returns fire or not.
+	 * @param destx = Attacked Y location
+	 * @param desty = Attacked X location
+	 * @param returnfire = Allows units to shoot back and not cause a never ending loop until someone dies.
+	 * @return Returns true if the unit attacked something, returns false if it didn't. (so it can see if it can capture a building)
+	 */
 	private boolean attack(int destx, int desty, boolean returnfire) {
 		//Disables the ability to attack when a unit has already moved positions.
-		if (x != oldx && y != oldy && !MoveAndShoot) {return false;}
+		if ((x != oldx && y != oldy) && !MoveAndShoot) {return false;}
 
 		units.Base target = FindTarget(destx, desty, true, false);
 		if (target!=null) {
@@ -121,7 +129,6 @@ public class Base {
 					Game.player.get(target.owner).loses++;
 					Game.pathing.LastChanged = System.currentTimeMillis();
 				}
-				System.out.println(target.defense*Game.map.map[target.y][target.x].defense());
 				//Increases commander power.
 				Game.player.get(owner).Powerup(damage, false);
 				Game.player.get(target.owner).Powerup(damage, true);
@@ -133,11 +140,15 @@ public class Base {
 		return false;
 	}
 	private void capture(int destx,int desty) {
+		if (!raider) {return;}
 		if (destx==x&&desty==y) {
 			buildings.Base bld = FindBuilding();
 			if (bld!=null) {
 				if (bld.team!=Game.player.get(owner).team) {
 					bld.Capture(health/10,owner);
+					if (bld.name.equals("Capital") && bld.owner==owner) {
+						Game.btl.ChangeBuilding(x,y);Game.list.CreateCity(owner, x, y, 1);
+					}
 				}
 			}
 		}

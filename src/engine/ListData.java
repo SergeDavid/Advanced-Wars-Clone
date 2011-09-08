@@ -88,6 +88,7 @@ public class ListData {
 			case 0:return new units.Infantry(owner, xx, yy, active);
 			case 1:return new units.Mechanic(owner, xx, yy, active);
 			case 2:return new units.SmallTank(owner, xx, yy, active);
+			case 3:return new units.Artillery(owner, xx, yy, active);
 		}
 		return null;
 	}
