@@ -11,22 +11,19 @@ import javax.imageio.ImageIO;
 /**A very simple class that takes a nice big list of images and loads them into the game. It is separated from the main class to decrease size.*/
 public class LoadImages {
 	
-	//These boolean and int's are used for texture packs.
-	public boolean Bool_Unit;
-	public boolean Bool_Terrain;
-	public boolean Bool_City;
-	public boolean Bool_Player;
-	public boolean Bool_Menus;
-	public int[] size_Unit = {256,256};
-	public int[] size_Terrain = {256,128};
-	public int[] size_City = {256,256};
-	public int[] size_Player = {512,512};
-	public int[] size_Menus = {64,256};
+	private int[] size_Unit = {256,256};
+	private int[] size_Terrain = {256,128};
+	private int[] size_City = {256,256};
+	//private int[] size_Player = {512,512};//To Add
+	//private int[] size_Menus = {64,256};//To add
+	private int[] size_Extras = {128,128};
+	
 	public int Times_Unit = 1;
 	public int Times_Terrain = 1;
 	public int Times_City = 1;
-	public int Times_Player = 1;
-	public int Times_Menus = 1;
+	//public int Times_Player = 1;
+	//public int Times_Menus = 1;
+	public int Times_Extras = 1;
 	
 	/**This will initialize the loading images area by only loading up the logo, the rest are called as the game loads different parts.*/
 	public LoadImages() {
@@ -34,8 +31,7 @@ public class LoadImages {
 		Game.img_char = tool.getImage(getClass().getResource("/img/"+"Units"+".png"));
 		Game.img_tile = tool.getImage(getClass().getResource("/img/"+"Terrain"+".png"));
 		Game.img_city = tool.getImage(getClass().getResource("/img/"+"Cities"+".png"));
-		//TODO: Add Commander images (Probably two, an ingame and menu version)
-		//TODO: Add in menu images
+		Game.img_exts = tool.getImage(getClass().getResource("/img/"+"Extras"+".png"));
 		Game.img_menu[0] = tool.getImage(getClass().getResource("/img/"+"GameInfo"+".png"));
 	}
 	public void LoadTexturePack() {
@@ -49,6 +45,9 @@ public class LoadImages {
 	    
 	    Game.img_city = TryNewImage("Cities", zip, size_City);
 	    Times_City = ResizeImage(size_City[0], Game.img_city.getWidth(null));
+	    
+	    Game.img_exts = TryNewImage("Extras", zip, size_City);
+	    Times_Extras = ResizeImage(size_Extras[0], Game.img_city.getWidth(null));
 	}
 	
 	private int ResizeImage(int original, int modified) {

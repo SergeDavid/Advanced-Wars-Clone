@@ -17,31 +17,31 @@ import java.awt.event.MouseListener;
 public class InputHandler implements KeyListener,MouseListener,ActionListener {
 	
 	//Development buttons and the exit game button (escape key)
-	private int dev1 = KeyEvent.VK_NUMPAD1;
-	private int dev2 = KeyEvent.VK_NUMPAD2;
-	private int dev3 = KeyEvent.VK_NUMPAD3;
-	private int dev4 = KeyEvent.VK_NUMPAD4;
-	private int dev5 = KeyEvent.VK_NUMPAD5;
-	private int dev6 = KeyEvent.VK_NUMPAD6;
-	private int dev7 = KeyEvent.VK_NUMPAD7;
-	private int dev8 = KeyEvent.VK_NUMPAD8;
-	private int dev9 = KeyEvent.VK_NUMPAD9;
-	private int exit = KeyEvent.VK_ESCAPE;
+	private final int dev1 = KeyEvent.VK_NUMPAD1;
+	private final int dev2 = KeyEvent.VK_NUMPAD2;
+	private final int dev3 = KeyEvent.VK_NUMPAD3;
+	private final int dev4 = KeyEvent.VK_NUMPAD4;
+	private final int dev5 = KeyEvent.VK_NUMPAD5;
+	private final int dev6 = KeyEvent.VK_NUMPAD6;
+	private final int dev7 = KeyEvent.VK_NUMPAD7;
+	private final int dev8 = KeyEvent.VK_NUMPAD8;
+	private final int dev9 = KeyEvent.VK_NUMPAD9;
+	private final int exit = KeyEvent.VK_ESCAPE;
 	
 	//Movement buttons
-	private int up = KeyEvent.VK_UP;
-	private int down = KeyEvent.VK_DOWN;
-	private int left = KeyEvent.VK_LEFT;
-	private int right = KeyEvent.VK_RIGHT;
+	private final int up = KeyEvent.VK_UP;
+	private final int down = KeyEvent.VK_DOWN;
+	private final int left = KeyEvent.VK_LEFT;
+	private final int right = KeyEvent.VK_RIGHT;
 
 	//Command buttons
-	private int select = KeyEvent.VK_Z;
-	private int cancle = KeyEvent.VK_X;
-	private int start = KeyEvent.VK_ENTER;
+	private final int select = KeyEvent.VK_Z;
+	private final int cancel = KeyEvent.VK_X;
+	private final int start = KeyEvent.VK_ENTER;
 	
 	//Mouse (right/left clicks)
-	private int main = MouseEvent.BUTTON1;
-	private int alt = MouseEvent.BUTTON1;
+	private final int main = MouseEvent.BUTTON1;
+	private final int alt = MouseEvent.BUTTON1;
 	
 	public boolean MenuHack;
 	
@@ -52,25 +52,25 @@ public class InputHandler implements KeyListener,MouseListener,ActionListener {
 		Game.gui.Load.addActionListener(this);
 		Game.gui.Exit.addActionListener(this);
 	}
-	
+
 	int DevPathing = 1;
 	public void keyPressed(KeyEvent e) {
 		int i=e.getKeyCode();
 		if (i==exit) {System.exit(0);}
 		if (Game.GameState==Game.State.PLAYING) {
 			players.Base ply = Game.player.get(Game.btl.currentplayer);
+			
 			if (i==up) {ply.selecty--;if (ply.selecty<0) {ply.selecty++;}}
 			if (i==down) {ply.selecty++;if (ply.selecty>=Game.map.height) {ply.selecty--;}}
 			if (i==left) {ply.selectx--;if (ply.selectx<0) {ply.selectx++;}}
 			if (i==right) {ply.selectx++;if (ply.selectx>=Game.map.width) {ply.selectx--;}}
 			if (i==select) {Game.btl.Action();}
-			if (i==cancle) {Game.player.get(Game.btl.currentplayer).Cancle();}
+			if (i==cancel) {Game.player.get(Game.btl.currentplayer).Cancle();}
 			if (i==start) {
 				if (MenuHack) {Game.gms.CloseMenu();}
 				else {
 					new menus.Pause();
 				}
-				//else {Game.gui.gms.OpenMenu("Pause");}
 			}
 		}
 		
@@ -86,7 +86,6 @@ public class InputHandler implements KeyListener,MouseListener,ActionListener {
 		}
 		if (i==dev4) {Game.btl.EndTurn();}
 		if (i==dev5) {Game.player.get(Game.btl.currentplayer).npc = !Game.player.get(Game.btl.currentplayer).npc; Game.btl.EndTurn();}
-		if (i==dev6) {Game.finder.GrabMods();}
 	}
 	public void keyReleased(KeyEvent arg0) {}
 	public void keyTyped(KeyEvent arg0) {}

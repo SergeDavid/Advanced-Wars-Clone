@@ -57,10 +57,9 @@ public class Battle {
 		return total;
 	}
 	
-	//TODO: Work on the unitselected version to work better along with the FindCity part.
 	public void Action() {
 		players.Base ply = Game.player.get(currentplayer);
-		//if (NPC) {return;}//Remove comment to make npc players unplayable.
+		if (ply.npc) {return;}
 		if (ply.unitselected) {
 			if (currentplayer==Game.units.get(ply.selectedunit).owner) {
 				if (Game.units.get(ply.selectedunit).moved&&!Game.units.get(ply.selectedunit).acted) {
@@ -75,11 +74,9 @@ public class Battle {
 			else {ply.unitselected=false;}
 		}
 		else {
-			if (!ply.FindUnit()) {//Improved version
+			if (!ply.FindUnit()) {
 				ply.unitselected=false;
-				if (ply.FindCity()) {
-					//Not sure what to do with this yet.
-				}
+				ply.FindCity();
 			}
 		}
 	}	
@@ -101,9 +98,9 @@ public class Battle {
 		if (max>4) {totalplayers = 4;
 			Game.error.ShowError("The game currently supports only 4 players, not " + max + ".");
 		}
-		//Adds players, current hacked version. TODO: Unhack this
 		for (int i = 0;i<totalplayers;i++) {
 			//TODO: Load commander info from the different gui settings somewhere.
+			//TODO: Load commanders from the savegame file also.
 			Game.player.add(Game.list.CreateCommander(0,i+1,startingmoney,false));
 		}
 	}

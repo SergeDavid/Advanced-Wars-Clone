@@ -154,7 +154,5 @@ public class Gui extends JPanel {
 		setPreferredSize(new Dimension(width,height));
 		setBounds(0, 0, width, height);
 		//TODO: Resize menu's based on current size.
-		//Menu
-		//Save setting
 	}
 }

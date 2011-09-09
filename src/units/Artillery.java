@@ -8,7 +8,7 @@ public class Artillery extends Base {
 		nick = "Art";
 		desc = "A ranged unit.";
 		MoveAndShoot = false;
-		img = 0;
+		img = 3;
 		speed = 5;
 		MinAtkRange = 2;
 		MaxAtkRange = 4;

@@ -15,10 +15,6 @@ public class GameMenus extends JPanel {
 
 	public GameMenus() {
 		setBackground(new Color(80,80,80));
-		//Setup Unit menu
-		//Setup Yes/No menu
-		//Add Commander Powers to the Pause menu
-		//Move StartMenu to menu
 	}
 
 	/**

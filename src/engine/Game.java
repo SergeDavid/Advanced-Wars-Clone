@@ -11,10 +11,10 @@ public class Game extends JFrame {
 	
 	//Application Settings
 	private static final String build = "0";
-	private static final String version = "0";
+	private static final String version = "1";
 	public static final String name = "Strategy Game";
 	public static int ScreenBase = 32;//Bit size for the screen, 16 / 32 / 64 / 128
-	public static final boolean dev = true;//Is this a dev copy or not... useless? D:
+	public static boolean dev = true;//Is this a dev copy or not... useless? D:
 	
 	public static enum State {STARTUP, MENU, PLAYING, EDITOR};
 	public static State GameState = State.STARTUP;
@@ -41,6 +41,7 @@ public class Game extends JFrame {
 	public static Image img_tile;
 	public static Image img_char;
 	public static Image img_city;
+	public static Image img_exts;
 	public static Boolean readytopaint;
 	
 	//This handles the different players and also is used to speed logic arrays (contains a list of all characters they own)
@@ -129,6 +130,9 @@ public class Game extends JFrame {
 	//TODO: Reorganize sprite sheets to support animations on units
 	//TODO: When units are on a building, they gain health at the beginning of their turn (if enough money)
 	//TODO: End game setup, someone wins when someone else loses all their units (and can't make more), or loses their capital building.
+	//TODO: Support 16x and 8x texture packs.
+	//TODO: Resize font to match screen resizes
+	//TODO: Resize menu's to support screen resizes
 	
 	/**Starts a new game when launched.*/
 	public static void main(String args[]) throws Exception {new Game();}

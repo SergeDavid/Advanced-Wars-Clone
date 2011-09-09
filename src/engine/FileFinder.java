@@ -14,13 +14,15 @@ public class FileFinder {
 	final String mappath = "maps";
 	final String packpath = "mods";
 	final String modpath = "mods";
-	//TODO: Include the lists for use in loading items here.
 
 	/**This looks for .txt files and returns the list of names.*/
 	public DefaultListModel GrabMaps() {
 		String name;
 		File folder = new File(mappath);
-		if (folder.mkdir()) {Game.error.ShowError("The " + mappath + " folder was created.");}
+		if (folder.mkdir()) {
+			Game.error.ShowError("The " + mappath + " folder was created.");
+		    //TODO: Transfer pre-made map files into here, or include src/maps/ to the list of maps somehow.
+		}
 		File[] filelist = folder.listFiles();
 		DefaultListModel ListModel = new DefaultListModel();
 		for (int i = 0; i < filelist.length; i++) {

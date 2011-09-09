@@ -13,10 +13,46 @@ import java.util.Properties;
  * When LoadGame() is called, it will create a new battle, change the current day and player, and then loads the players / units / cities from here.
  * An example is Unit#_Health = 50;
  * @author SergeDavid
- * @version 0.1
+ * @version 0.2
  */
 public class Save {
 	final String path = "saves/";
+	
+	public void SaveSettings() {
+		//If the folder doesn't exist, create it so we can save our save files inside it.
+		File directory = new File(path);
+		if (!directory.exists()) {
+			if (directory.mkdir()) {Game.error.ShowError("The " + path + " directory has been created.");} 
+	    	else {Game.error.ShowError("Cannot create the save directory. " + path + "");return;}
+		}
+		//Saves the game in a property file (since it is easy)
+		try {
+			FileWriter fstream = new FileWriter(path + "PlayerData.properties");
+		    BufferedWriter out = new BufferedWriter(fstream);
+		    out.write(
+		    		"# Current testing setup for saving player data. To be improved when I finally get around to adding options\n" +
+		    		"# If you enable developer keys then they will override the number pad (return to default key)\n" +
+		    		"Player = Player\n" +
+		    		"ScreenSize = 32\n" +
+		    		"TexturePack = " +
+		    		"Dev = False\n" +
+		    		"Volume = 0\n" +
+		    		"Music = 0");
+		    out.close();
+		} 
+		catch (Exception e) {Game.error.ShowError("Saving PlayerData failed:" + e.getMessage());}
+	}
+	public void LoadSettings() {
+		try {
+			//Opens the property file and starts a battle with the map in the save folder. 
+			Properties configFile = new Properties();
+			configFile.load(new FileInputStream(System.getProperty("user.dir") + "/" + path + "savegame.properties"));
+
+			Game.dev = ( Boolean.parseBoolean(configFile.getProperty("Dev", "false")));
+			Game.gui.ResizeScreen( Integer.parseInt(configFile.getProperty("ScreenSize", "32")));
+		} 
+		catch (Exception e) {Game.error.ShowError("Saved game failed to load."); e.printStackTrace();}
+	}
 	
 	public void SaveGame() {
 		//If the folder doesn't exist, create it so we can save our save files inside it.
@@ -92,9 +128,7 @@ public class Save {
 			Game.btl.NewGame(configFile.getProperty("Map"));
 			Game.btl.currentplayer = Integer.parseInt(configFile.getProperty("CurrentPlayer"));
 			Game.btl.day = Integer.parseInt(configFile.getProperty("Days"));
-			
-			//TODO: Load player data outside of the map parser so Player reset is not needed here.
-			//TODO: set up so resetting units is not needed here.
+
 			Game.player = new ArrayList<players.Base>();
 			Game.units = new ArrayList<units.Base>();
 			
@@ -107,7 +141,6 @@ public class Save {
 			Game.gui.InGameScreen();
 		} 
 		catch (Exception e) {Game.error.ShowError("Saved game failed to load."); e.printStackTrace();}
-		//TODO: Add in more catches or something so the error handler explains why an error occurred.
 	}
 	private void LoadPlayers(Properties configFile) {
 		for (int i=0; i < Game.btl.totalplayers; i++) {

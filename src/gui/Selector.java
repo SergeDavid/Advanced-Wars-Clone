@@ -8,14 +8,14 @@ import engine.Game;
  * @param g = The Graphics2D to drawn too.
  * @param resize = Size setup of the window to use.
  * @author SergeDavid
- * @version 0.2
+ * @version 0.3
  */
 public class Selector {
 	
 	private static boolean Dev = false;
 	
 	public static void Draw(int frame, Graphics2D g, int resize) {
-		int size = Game.load.Times_Unit * 32;
+		int size = Game.load.Times_Extras * 32;
 		int x = Game.player.get(Game.btl.currentplayer).selectx;
 		int y = Game.player.get(Game.btl.currentplayer).selecty;
 		if (Game.view.Viewable(x,y)) {
@@ -26,22 +26,22 @@ public class Selector {
 		
 			if (Dev==true) {ShowArea(g, x, y, resize, off);}
 			
-			g.drawImage(Game.img_tile,
+			g.drawImage(Game.img_exts,
 					x*resize-off,   y*resize-off,   
 					x*resize+(resize/2)-off,   y*resize+(resize/2)-off,
-					size*7, size, size*7+(size/2), size+(size/2),null);
-			g.drawImage(Game.img_tile,
+					size*3, size*3, size*3+(size/2), size*3+(size/2),null);
+			g.drawImage(Game.img_exts,
 					x*resize+(resize/2)+off,   y*resize-off,   
 					x*resize+resize+off,   y*resize+(resize/2)-off,
-					size*7+(size/2), size, size*7+size, size+(size/2),null);
-			g.drawImage(Game.img_tile,
+					size*3+(size/2), size*3, size*3+size, size*3+(size/2),null);
+			g.drawImage(Game.img_exts,
 					x*resize-off,  y*resize+(resize/2)+off,   
 					x*resize+(resize/2)-off,   y*resize+resize+off,
-					size*7, size+(size/2), size*7+(size/2), size+size,null);
-			g.drawImage(Game.img_tile,
+					size*3, size*3+(size/2), size*3+(size/2), size*3+size,null);
+			g.drawImage(Game.img_exts,
 					x*resize+(resize/2)+off,  y*resize+(resize/2)+off,   
 					x*resize+resize+off,   y*resize+resize+off,
-					size*7+(size/2), size+(size/2), size*7+size, size+size,null);
+					size*3+(size/2), size*3+(size/2), size*3+size, size*3+size,null);
 		}
 	}
 	

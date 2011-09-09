@@ -39,7 +39,7 @@ public class ListData {
 	 * This loads a playable commander into the game for the reference and in use commanders. [Battle]
 	 * @param which = Which commander to add (list must match order of LoadLists)
 	 * @param team = Which team the commander is joined too (A,B,C,D,Etc.)
-	 * @param money = How much money the player starts with //TODO: remove this as I changed the way Battle is handled.
+	 * @param money = How much money the player starts with
 	 * @param npc = If true, this commander is not playable by the player (controlled by the computer)
 	 */
 	public players.Base CreateCommander(int which,int team, int money, boolean npc) {
