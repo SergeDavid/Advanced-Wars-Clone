@@ -13,7 +13,7 @@ public class Base {
 	public int owner;
 	int img;
 	public int cost = 100;
-	
+
 	//life settings
 	boolean dead;
 	public int maxhp = 100;
@@ -32,9 +32,10 @@ public class Base {
 	public int oldx;
 	public int oldy;
 	public double speed = 2;
+	public int bld = -1;//The building this unit is currently standing on, null or -1 if none.
 	
 	//Battle Settings
-	public boolean MoveAndShoot;//Allows units to move then shoot, or make them stay in the same location in order to attack.
+	public boolean MoveAndShoot = true;//Allows units to move then shoot, or make them stay in the same location in order to attack.
 	public double mainatk = 1.0;//Percentage bonus for main weapon.
 	public double attack = 100;//Base damage done to others
 	public double defense = 60;//Base armor for taking damage
@@ -53,12 +54,9 @@ public class Base {
 	
 	//Move Types
 	/**This is the movement type of the unit.
-	 * 0 = Infantry, 1 = Vehicle, 2 = Ship, 3 = Aircraft*/
-	int MovType = 0;
-	final int MovInf = 0;
-	final int MovMob = 1;
-	final int MovShp = 2;
-	final int MovFly = 3;
+	 * 0 = Infantry, 1 = Vehicle, 2 = Tank, 3 = Ship, 4 = Aircraft*/
+	public enum Move {INF,TIRE,TANK,SHIP,FLY};
+	public Move legs = Move.INF;
 	
 	/** I need to add what kind of unit is being constructed or split it into extended classes.
 	 * 
@@ -70,10 +68,10 @@ public class Base {
 		this.owner = owner;
 		oldx = x = xx;//Old locations are used when someone changes their minds on moving a unit.
 		oldy = y = yy;
-		MoveAndShoot = true;
-		if (!active) {
+		CityPointer();
+		if (!active) {//On building option.
 			acted = true;
-			moved = true;	
+			moved = true;
 			Game.pathing.LastChanged = System.currentTimeMillis();
 		}
 	}
@@ -85,11 +83,12 @@ public class Base {
 		for (units.Base unit : Game.units) {
 			if (unit.x==destx&&unit.y==desty) {return false;}
 		}
-		switch (MovType) {//This is used to find out if the unit can move to said tile or not.
-			case 0: if (Game.map.map[desty][destx].walk()) {return true;} break;
-			case 1: if (Game.map.map[desty][destx].drive()) {return true;} break;
-			case 2: if (Game.map.map[desty][destx].swim()) {return true;} break;
-			case 3: if (Game.map.map[desty][destx].fly()) {return true;} break;
+		switch (legs) {//This is used to find out if the unit can move to said tile or not.
+			case INF: if (Game.map.map[desty][destx].walk()) {return true;} break;
+			case TIRE: if (Game.map.map[desty][destx].drive()) {return true;} break;
+			case TANK: if (Game.map.map[desty][destx].drive()) {return true;} break;
+			case SHIP: if (Game.map.map[desty][destx].swim()) {return true;} break;
+			case FLY: if (Game.map.map[desty][destx].fly()) {return true;} break;
 			default: if (Game.map.map[desty][destx].fly()) {return true;} break;
 		}
 		return false;
@@ -110,7 +109,7 @@ public class Base {
 	 * @param returnfire = Allows units to shoot back and not cause a never ending loop until someone dies.
 	 * @return Returns true if the unit attacked something, returns false if it didn't. (so it can see if it can capture a building)
 	 */
-	private boolean attack(int destx, int desty, boolean returnfire) {
+	public boolean attack(int destx, int desty, boolean returnfire) {
 		//Disables the ability to attack when a unit has already moved positions.
 		if ((x != oldx && y != oldy) && !MoveAndShoot) {return false;}
 
@@ -124,6 +123,9 @@ public class Base {
 				target.health-=damage;
 				if (target.health<=0) {
 					damage+=target.health;
+					if (target.bld!=-1) {
+						Game.builds.get(target.bld).Locked=false;
+					}
 					Game.units.remove(target);
 					Game.player.get(owner).kills++;
 					Game.player.get(target.owner).loses++;
@@ -142,11 +144,11 @@ public class Base {
 	private void capture(int destx,int desty) {
 		if (!raider) {return;}
 		if (destx==x&&desty==y) {
-			buildings.Base bld = FindBuilding();
-			if (bld!=null) {
-				if (bld.team!=Game.player.get(owner).team) {
-					bld.Capture(health/10,owner);
-					if (bld.name.equals("Capital") && bld.owner==owner) {
+			if (bld!=-1) {
+				buildings.Base city = Game.builds.get(bld);
+				if (city.team!=Game.player.get(owner).team) {
+					city.Capture(health/10,owner);
+					if (city.name.equals("Capital") && city.owner==owner) {
 						Game.btl.ChangeBuilding(x,y);Game.list.CreateCity(owner, x, y, 1);
 					}
 				}
@@ -160,16 +162,10 @@ public class Base {
 			moved=true;
 			oldx=x;oldy=y;
 			x=destx;y=desty;
+			CityPointer();
 			//Path finding update
 			Game.pathing.LastChanged = System.currentTimeMillis();
 		}
-	}
-	
-	public buildings.Base FindBuilding() {
-		for (buildings.Base bld : Game.builds) {
-			if (bld.x==x && bld.y==y && bld.owner != owner) {return bld;}
-		}
-		return null;
 	}
 
 	public boolean inrange(int xx, int yy) {
@@ -208,6 +204,18 @@ public class Base {
 		if (acted) {loc[1]++;}
 		return loc;
 	}
+	/**Returns the ID# of the building the unit is currently standing on to "bld". This is updated on creation and move.*/
+	private void CityPointer() {
+		for (int i = 0; i < Game.builds.size(); i++) {
+			if (Game.builds.get(i).x==x && Game.builds.get(i).y==y) {
+				bld = i;
+				Game.builds.get(bld).Locked = true;
+				return;
+			}
+		}
+		if (bld!=-1){Game.builds.get(bld).Locked = false;}
+		bld = -1;
+	}
 	/**This finds a unit with the x and y coordinates and returns their data to be used, friendly-fire set to true to find allies, hostile-fire to attack foes.*/
 	private units.Base FindTarget(int destx, int desty, boolean hostilefire, boolean friendlyfire) {
 		for (units.Base unit : Game.units) {
@@ -237,6 +245,15 @@ public class Base {
 			if (p.x == destx && p.y == desty) {return true;}
 		}
 		return false;
+	}
+
+	public void Medic() {
+		double hp = health+2;
+		if (hp>maxhp) {hp=maxhp;}
+		double money = Math.floor((hp-health)*50);
+		if (money<=Game.player.get(Game.btl.currentplayer).money) {
+			Game.player.get(Game.btl.currentplayer).money-=money;
+		}
 	}
 }
  

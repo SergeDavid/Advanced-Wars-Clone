@@ -60,6 +60,7 @@ public class Base {
 		if (power>level2) {power=level2;}
 	}
 	
+	//TODO: Remove the UserPower thing if I can get the direct MyPower1/2 to work correctly this time.
 	/** This method is used in place of directly calling MyPower1 or 2
 	 * I did it so I don't have to add the (enough power and not 0) checks along with removing the appropriate amount.
 	 * 

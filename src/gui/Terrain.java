@@ -8,11 +8,11 @@ import engine.Game;
  * @param g = The Graphics2D to drawn too.
  * @param resize = Size setup of the window to use.
  * @author SergeDavid
- * @version 0.3
+ * @version 0.4
  */
 public class Terrain {
 	public static void Draw(Graphics2D g, int resize) {
-		int size = Game.load.Times_Terrain*32;
+		int size = (int) Math.pow(2, Game.load.Times_Terrain);
 		int xoff = Game.view.ViewX();
 		int yoff = Game.view.ViewY();
 		

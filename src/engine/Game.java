@@ -102,7 +102,7 @@ public class Game extends JFrame {
 				error.ErrorTicker();
 				setTitle(name + " v" + build + "." + version + " : FPS " + fpscount);
 				if (GameState == State.PLAYING) {
-					if (player.get(btl.currentplayer).npc) {
+					if (player.get(btl.currentplayer).npc&&btl.totalplayers>1) {
 						brain.ThinkDamnYou(player.get(btl.currentplayer));
 					}
 				}

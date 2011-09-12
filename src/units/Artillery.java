@@ -8,8 +8,9 @@ public class Artillery extends Base {
 		nick = "Art";
 		desc = "A ranged unit.";
 		MoveAndShoot = false;
+		legs = Move.TIRE;
 		img = 3;
-		speed = 5;
+		speed = 4;
 		MinAtkRange = 2;
 		MaxAtkRange = 4;
 	}

@@ -8,7 +8,11 @@ import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 
-/**A very simple class that takes a nice big list of images and loads them into the game. It is separated from the main class to decrease size.*/
+/**
+ * A very simple class that takes a nice big list of images and loads them into the game. It is separated from the main class to decrease size.
+ * @author SergeDavid
+ * @version 0.2
+ */
 public class LoadImages {
 	
 	private int[] size_Unit = {256,256};
@@ -18,12 +22,12 @@ public class LoadImages {
 	//private int[] size_Menus = {64,256};//To add
 	private int[] size_Extras = {128,128};
 	
-	public int Times_Unit = 1;
-	public int Times_Terrain = 1;
-	public int Times_City = 1;
-	//public int Times_Player = 1;
-	//public int Times_Menus = 1;
-	public int Times_Extras = 1;
+	public int Times_Unit = 5;
+	public int Times_Terrain = 5;
+	public int Times_City = 5;
+	//public int Times_Player = 5;
+	//public int Times_Menus = 5;
+	public int Times_Extras = 5;
 	
 	/**This will initialize the loading images area by only loading up the logo, the rest are called as the game loads different parts.*/
 	public LoadImages() {
@@ -47,13 +51,19 @@ public class LoadImages {
 	    Times_City = ResizeImage(size_City[0], Game.img_city.getWidth(null));
 	    
 	    Game.img_exts = TryNewImage("Extras", zip, size_City);
-	    Times_Extras = ResizeImage(size_Extras[0], Game.img_city.getWidth(null));
+	    Times_Extras = ResizeImage(size_Extras[0], Game.img_exts.getWidth(null));
 	}
-	
+	/**Currently supports 2x2 to 1024x1024 images.*/
 	private int ResizeImage(int original, int modified) {
-		int i = modified/original;
-		System.out.println(i + " new size!");
-		return i;
+		if (original == modified) {return 5;}
+		int base = original/(32);
+		for (int size = 1; size<=10; size++) {
+			if (Math.pow(2, size)*base == modified) {
+				System.out.println("ROAR! " + size);
+				return size;
+			}
+		}
+		return 5;
 	}
 	private Image TryNewImage(String path, ZipHandler zip, int[] size) {
 	    try {
@@ -78,7 +88,7 @@ public class LoadImages {
 	 * @param height = New images height.
 	 * @return = return true if they match
 	 */
-	private boolean CompareSizes(int[] base, Image img) {
+	private boolean CompareSizes(int[] base, Image img) {//TODO: Redesign this to make sure it is a power of 2.
 		if (img.getHeight(null)%base[1]==0) {
 			int y = img.getHeight(null)/base[1];
 			if (img.getWidth(null)%base[0]==0) {

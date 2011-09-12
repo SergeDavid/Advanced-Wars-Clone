@@ -96,11 +96,10 @@ public class City implements ActionListener,ListSelectionListener {
 		units.Base unit = Game.displayU.get(current);
 		UnitName.setText(unit.name);
 		UnitDesc.setText(
-				"Health: " + unit.maxhp + "\n" +
-				"Fuel: " + unit.MaxFuel + "\n" +
-				"Ammo: " + unit.Ammo + "\n" +
 				"Base Damage: " + unit.attack + "\n" +
 				"Base Armor: " + unit.defense + "\n" +
+				"Fuel: " + unit.MaxFuel + "\n" +
+				"Ammo: " + unit.Ammo + "\n" +
 				"Speed: " + unit.speed + "\n" +
 				"\nDescription: " + unit.desc);
 		Alt.add(UnitName);

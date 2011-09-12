@@ -136,11 +136,11 @@ public class Gui extends JPanel {
 	 */
 	public void ResizeScreen(int size) {
 		switch  (size) {//Ratio is 5:3 (20:12)
-			case 1: size=16; break; // 320 x 192
-			case 2: size=24; break; // 480 x 288
-			case 3: size=32; break; // 640 x 384
-			case 4: size=48; break; // 960 x 
-			case 5: size=64; break; // 1280 x 800
+			//case 1: size=16; break; // 320 x 192
+			case 1: size=24; break; // 480 x 288
+			case 2: size=32; break; // 640 x 384
+			case 3: size=48; break; // 960 x 
+			case 4: size=64; break; // 1280 x 800
 			default: size=32; break;
 		}
 		//Window

@@ -14,9 +14,10 @@ public class ComputerBrain {
 	
 	public boolean DoneCities;
 	public int CityCount;
-
+	
 	/**This method is hit every game loop for npcs and handles a single unit / city so it is less heavy on the game.*/
 	public void ThinkDamnYou(players.Base ply) {
+		//TODO: Redesign it to allow the npc to grab if someone is in firing range faster and easier.
 		if (finished) {
 			finished = false;
 			DoneCities = DoneUnits = false;
@@ -49,6 +50,7 @@ public class ComputerBrain {
 		}
 	}
 	
+	/**Grabs the next unit in line, if none are found sets DoneUnits to true.*/
 	private void NextUnit(int me) {
 		if (DoneUnits) {return;}
 		for (int i = UnitCount; i < Game.units.size(); i++) {
@@ -59,6 +61,7 @@ public class ComputerBrain {
 		}
 		DoneUnits = true;
 	}
+	/**Grabs the next city in line, if none are found sets DoneCities to true.*/
 	private void NextCities(int me) {
 		if (DoneCities) {return;}
 		for (int i = CityCount; i < Game.builds.size(); i++) {
@@ -72,7 +75,7 @@ public class ComputerBrain {
 
 	private void HandleBuilding(buildings.Base bld) {
 		if (!bld.Menu.equals("")) {
-			if (NoUnit(bld.x,bld.y)) {
+			if (!bld.Locked) {
 				Random rand = new Random();
 				if (rand.nextInt(2)==0 || Game.btl.day<3) {
 					Game.btl.Buyunit(rand.nextInt(3), bld.x, bld.y);
@@ -82,20 +85,9 @@ public class ComputerBrain {
 			}
 		}
 	}
-
-	private boolean NoUnit(int x, int y) {
-		for (units.Base unit : Game.units) {
-			if (unit.x == x && unit.y == y) {
-				return false;
-			}
-		}
-		return true;
-	}
-
 	private void HandleUnit(Base unit) {
 		unit.Pathing();
-		//If the unit can capture cities and is on a city, it does it then returns so the rest of this code is not ran.
-		if (unit.raider && unit.FindBuilding()!=null) {
+		if (unit.raider && unit.bld!=-1) {//Finds, moves, and captures a building if the unit can capture it.
 			unit.action(unit.x, unit.y);
 			Game.player.get(unit.owner).selectx = unit.x;
 			Game.player.get(unit.owner).selecty = unit.y;
@@ -104,25 +96,44 @@ public class ComputerBrain {
 		if (unit.raider && BuildingInRange(unit)) {
 			unit.move(building.x,building.y);
 			unit.action(building.x,building.y);
+			unit.acted=true;
 			Game.player.get(unit.owner).selectx = unit.x;
 			Game.player.get(unit.owner).selecty = unit.y;
 		}
 		else {
+			if (WannaHug(unit)) {
+				unit.acted=true;
+				return;
+			}
 			Random rand = new Random();
 			for (int i = 0; i < unit.map.size(); i++) {
 				if (rand.nextInt(5)==0) {
 					unit.move(unit.map.get(i).x, unit.map.get(i).y);
 					Game.player.get(unit.owner).selectx = unit.x;
 					Game.player.get(unit.owner).selecty = unit.y;
+					
+					WannaHug(unit);
+					unit.acted=true;
 					break;
 				}
 			}
 		}
-		// Basic Brain Functions...
-		//   - Else If it can attack something worth while, move and attack it. (Don't move if MoveAndShoot is false)
-		//   - Else Move towards an enemy city / unit
+	}
+	
+	/**Looks for any enemies in range at the units current location by attacking each location in the attackable locations.*/
+	private boolean WannaHug(units.Base unit) {
+		for (int y = unit.y - unit.MaxAtkRange; y <= unit.y + unit.MaxAtkRange; y++) {
+			for (int x = unit.x - unit.MaxAtkRange; x <= unit.x + unit.MaxAtkRange; x++) {
+				if (unit.attack(x, y, true)) {
+					return true;
+				}
+			}
+		}
+		// TODO Auto-generated method stub
+		return false;
 	}
 
+	/**Finds a building in the unit's movement range.*/
 	private boolean BuildingInRange(units.Base unit) {
 		for (int i = 0; i < unit.map.size(); i++) {
 			for (buildings.Base bld : Game.builds) {

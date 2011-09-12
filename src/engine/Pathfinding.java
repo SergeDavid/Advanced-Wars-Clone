@@ -23,6 +23,7 @@ public class Pathfinding {
 	public boolean ShowHits;
 	public long LastChanged = 1;
 	
+	//TODO: Allies don't block path finding, but add in a condition for occupied so they are skipped / removed afterwards.
 	public Vector<Point> FindPath(units.Base unit, int range) {
 		maphits = new int[Game.map.height][Game.map.width];
 		openlist = new Vector<PathNode>();

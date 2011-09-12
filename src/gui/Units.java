@@ -9,11 +9,11 @@ import engine.Game;
  * @param g = The Graphics2D to drawn too.
  * @param resize = Size setup of the window to use.
  * @author SergeDavid
- * @version 0.4
+ * @version 0.5
  */
 public class Units {
 	public static void Draw(Graphics2D g, int resize) {
-		int size = Game.load.Times_Unit * 32;
+		int size = (int) Math.pow(2, Game.load.Times_Unit);
 		int xoff = Game.view.ViewX();
 		int yoff = Game.view.ViewY();
 		
@@ -29,6 +29,9 @@ public class Units {
 					g.drawImage(Game.img_char,
 							(chars.x-xoff)*resize,(chars.y-yoff)*resize,(chars.x-xoff)*resize+resize,(chars.y-yoff)*resize+resize,
 							loc[0]*size+size,loc[1]*size,loc[0]*size,loc[1]*size+size,null);
+				}
+				if (chars.health<chars.maxhp) {
+					ActionInfo.DrawUnitHP(g, resize, chars.x, chars.y, chars.health/10);
 				}
 			}
 		}

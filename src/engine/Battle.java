@@ -4,7 +4,9 @@ import java.util.ArrayList;
 
 /**Put the game stuff in here so all I have to do is end/start this to make a game work or not.*/
 public class Battle {
-	int totalplayers = 2;
+	/**A count of all the players in the game, used before Game.player is populated so this is required.*/
+	public int totalplayers = 2;
+	/**The current player who is playing, this loops back to 0 when it goes too high.*/
 	public int currentplayer = 0;
 	public String mapname;
 	
@@ -14,11 +16,9 @@ public class Battle {
 	int buildingmoney = 50;//How much each building provides.
 	int day = 1;
 	
-	//Winning condition settings	
-	
-	public Battle() {
-		//Moved this to NewGame() so I can reference things in this class before I finish adding a new game.
-	}
+	//Winning condition settings
+	/**This keeps score of how many players are left, TODO: refine in a function to account for teams. Should never be under 1.*/
+	public int playersleft = 1;
 	
 	public void NewGame(String mapname) {
 		Game.player = new ArrayList<players.Base>();
@@ -31,6 +31,7 @@ public class Battle {
 			return;
 		}
 		this.mapname = mapname;
+		playersleft = totalplayers;
 	}
 
 	public void EndTurn() {
@@ -44,6 +45,11 @@ public class Battle {
 		ply = Game.player.get(currentplayer);
 		if (day!=1) {
 			ply.money+=buildingmoney*Buildingcount(currentplayer);
+		}
+		for (units.Base unit : Game.units) {
+			if (unit.owner == currentplayer && unit.health<unit.maxhp) {
+				unit.Medic();
+			}
 		}
 		Game.pathing.LastChanged++;
 	}
@@ -61,12 +67,12 @@ public class Battle {
 		players.Base ply = Game.player.get(currentplayer);
 		if (ply.npc) {return;}
 		if (ply.unitselected) {
-			if (currentplayer==Game.units.get(ply.selectedunit).owner) {
+			if (currentplayer==Game.units.get(ply.selectedunit).owner) {//Action
 				if (Game.units.get(ply.selectedunit).moved&&!Game.units.get(ply.selectedunit).acted) {
 					Game.units.get(ply.selectedunit).action(ply.selectx,ply.selecty);
 					ply.unitselected=false;
 				}
-				else if (!Game.units.get(ply.selectedunit).moved) {
+				else if (!Game.units.get(ply.selectedunit).moved) {//Move
 					Game.units.get(ply.selectedunit).move(ply.selectx,ply.selecty);
 				}
 				else {ply.unitselected=false;}
@@ -108,8 +114,13 @@ public class Battle {
 	public void ChangeBuilding(int x, int y) {
 		for (int i = 0; i < Game.builds.size(); i++) {
 			if (Game.builds.get(i).x == x && Game.builds.get(i).y == y) {
+				Game.player.get(Game.builds.get(i).owner).defeated=true;//Makes a player lose.
 				Game.builds.remove(i);
 				Game.builds.add(i,Game.list.CreateCity(currentplayer, x, y, 1));
+				playersleft--;
+				if (playersleft<=1) {
+					new menus.EndBattle();
+				}
 				break;
 			}
 		}

@@ -13,12 +13,12 @@ import engine.Pathfinding;
  * with the inclusion of two development settings to display times a tile has been hit in path finding, or just the tiles cost.
  * It will also draw the attackable locations depending on the units max and min attack ranges.
  * @author SergeDavid
- * @version 0.2
+ * @version 0.3
  */
 public class Ranges {
 	public static void Draw(Graphics2D gg, int resize) {
 		if (Game.player.get(Game.btl.currentplayer).unitselected) {
-			int size = Game.load.Times_Extras * 32;
+			int size = (int) Math.pow(2, Game.load.Times_Extras);
 			units.Base unit = Game.units.get(Game.player.get(Game.btl.currentplayer).selectedunit);
 			if (unit.moved&&!unit.acted) {
 				Attacking(gg,unit,size,resize);
