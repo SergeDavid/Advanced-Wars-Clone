@@ -102,7 +102,7 @@ public class Game extends JFrame {
 				error.ErrorTicker();
 				setTitle(name + " v" + build + "." + version + " : FPS " + fpscount);
 				if (GameState == State.PLAYING) {
-					if (player.get(btl.currentplayer).npc&&btl.totalplayers>1) {
+					if (player.get(btl.currentplayer).npc&&!btl.GameOver) {
 						brain.ThinkDamnYou(player.get(btl.currentplayer));
 					}
 				}
@@ -123,16 +123,6 @@ public class Game extends JFrame {
 			try { Thread.sleep(30);} catch (Exception e) {};
 		}
 	}
-	
-	//TODO: More battle settings
-	//TODO: Fog of war
-	//TODO: Create a map editor
-	//TODO: Reorganize sprite sheets to support animations on units
-	//TODO: When units are on a building, they gain health at the beginning of their turn (if enough money)
-	//TODO: End game setup, someone wins when someone else loses all their units (and can't make more), or loses their capital building.
-	//TODO: Support 16x and 8x texture packs.
-	//TODO: Resize font to match screen resizes
-	//TODO: Resize menu's to support screen resizes
 	
 	/**Starts a new game when launched.*/
 	public static void main(String args[]) throws Exception {new Game();}

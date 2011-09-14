@@ -88,14 +88,14 @@ public class LoadImages {
 	 * @param height = New images height.
 	 * @return = return true if they match
 	 */
-	private boolean CompareSizes(int[] base, Image img) {//TODO: Redesign this to make sure it is a power of 2.
-		if (img.getHeight(null)%base[1]==0) {
-			int y = img.getHeight(null)/base[1];
-			if (img.getWidth(null)%base[0]==0) {
-				int x = img.getWidth(null)/base[0];
-				//This checks to see if both X and Y are the same size for integrate (Change when supporting additional characters).
-				if (x == y) {return true;}
+	private boolean CompareSizes(int[] base, Image img) {
+		if (img.getHeight(null)%2==0 && img.getWidth(null)%2==0) {
+			int y = img.getHeight(null);
+			int x = img.getWidth(null);
+			if (x/y == base[0]/base[1]) {
+				return true;
 			}
+			else {Game.error.ShowError("An Images in this texturepack does not have the correct width/height ratio.");}
 		}
 		return false;
 	}

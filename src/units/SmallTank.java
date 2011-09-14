@@ -9,7 +9,6 @@ public class SmallTank extends Base {
 		desc = "A small tank, very effective against lightly armored opponents.";
 		legs = Move.TANK;
 		speed = 6;
-		defense = 80;
 		img = 2;
 	}
 }

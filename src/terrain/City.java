@@ -7,7 +7,7 @@ public class City extends Base {
 	public boolean swim() {return false;}
 	public boolean fly() {return true;}
 	public double speed() {return 1;}
-	public double defense() {return 1.5;};
+	public double defense() {return 1.3;};
 	public int x() {return 0;};
 	public int y() {return 0;}
 }

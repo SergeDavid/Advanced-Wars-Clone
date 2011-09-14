@@ -9,18 +9,22 @@ public class Base {
 	public String name = "Missing No.";
 	public String nick = "MsNo";
 	public String desc = "Unknown description present.";
-	public int building = 0;//Which building it can be bought from.
 	public int owner;
 	int img;
-	public int cost = 100;
 
+	//Extras
+	public int Fog = 5;//Fog of war setting.
+	public int cost = 100;
+	public int building = 0;//Which building it can be bought from.
+	public boolean raider = false;
+	public int bld = -1;//The building this unit is currently standing on, null or -1 if none.
+	
 	//life settings
 	boolean dead;
 	public int maxhp = 100;
 	public int health = maxhp;
 	public boolean moved;
 	public boolean acted;
-	public boolean raider = false;
 	
 	//Pathing Stuff
 	public Vector<Point> map = new Vector<Point>();//TEST
@@ -32,31 +36,26 @@ public class Base {
 	public int oldx;
 	public int oldy;
 	public double speed = 2;
-	public int bld = -1;//The building this unit is currently standing on, null or -1 if none.
+	/**This is the movement type of the unit. 0 = Infantry, 1 = Vehicle, 2 = Tank, 3 = Ship, 4 = Aircraft*/
+	public enum Move {INF,TIRE,TANK,SHIP,FLY};
+	public Move legs = Move.INF;
 	
 	//Battle Settings
 	public boolean MoveAndShoot = true;//Allows units to move then shoot, or make them stay in the same location in order to attack.
-	public double mainatk = 1.0;//Percentage bonus for main weapon.
-	public double attack = 100;//Base damage done to others
-	public double defense = 60;//Base armor for taking damage
+	public double attack = 50;//Base damage done to others
+	public double defense = 20;//Base armor for taking damage
 	
 	public int MaxAtkRange = 1;//How many squares away from the unit can it attack. (1 being default, 0 being none)
 	public int MinAtkRange = 1;//This is used for ranged units such as artillery.
 	
-	public int Fog = 5;//Fog of war setting.
 	public int MaxFuel = 1000;
 	public int Fuel = 1000;//Total fuel left
-	public int Ammo = 10;//Ammo used for the main weapon (uses alternate when it is gone)
+	public int Ammo = 10;//Ammo used for the main weapon, secondary weapon doesn't run out.
 	
-	//TODO: Add armor types ()
-	//TODO: Add Ammo for main attack (targets units with armor type of listed elements)
-	//TODO: Add a list/array of armor types the main weapon fires at
-	
-	//Move Types
-	/**This is the movement type of the unit.
-	 * 0 = Infantry, 1 = Vehicle, 2 = Tank, 3 = Ship, 4 = Aircraft*/
-	public enum Move {INF,TIRE,TANK,SHIP,FLY};
-	public Move legs = Move.INF;
+	public enum Armor {FOOT,VEHICLE,TANK,AIR,SHIP,ALL,NONE};//TODO: Hook this up to attacking.
+	public Armor ArmorType = Armor.FOOT;
+	public Armor[] MainATK = {Armor.NONE};//The main attack to be used.
+	public Armor[] AltATK = {Armor.ALL};//The secondary weapon to be used.
 	
 	/** I need to add what kind of unit is being constructed or split it into extended classes.
 	 * 
@@ -80,8 +79,8 @@ public class Base {
 	public boolean PathCheck(int destx, int desty) {
 		if (destx<0||desty<0) {return false;}
 		if (destx>=Game.map.width||desty>=Game.map.height) {return false;}
-		for (units.Base unit : Game.units) {
-			if (unit.x==destx&&unit.y==desty) {return false;}
+		for (units.Base unit : Game.units) {//Allows units in the same team to walk past each other.
+			if (unit.x==destx&&unit.y==desty&&Game.player.get(unit.owner).team!=Game.player.get(owner).team) {return false;}
 		}
 		switch (legs) {//This is used to find out if the unit can move to said tile or not.
 			case INF: if (Game.map.map[desty][destx].walk()) {return true;} break;
@@ -96,7 +95,7 @@ public class Base {
 	
 	/**Use this method instead of attack or capture for ai (m)*/
 	public void action(int destx, int desty) {
-		if (acted) {return;}//TODO: Switch this area to a menu with wait, attack (any unit in range after moving), capture(if map[y][x]==city)
+		if (acted) {return;}
 		if (!attack(destx,desty,true)) {//If there was no unit to attack, the unit checks to see if there is a building there.
 			capture(destx,desty);
 		}
@@ -115,11 +114,9 @@ public class Base {
 
 		units.Base target = FindTarget(destx, desty, true, false);
 		if (target!=null) {
-			if (inrange(target.x, target.y)) {
-				//TODO: Add in commander bonuses as well as main weapon and armor bonuses. And also Terrain defense bonus
-				double damage = (attack)-
-						(target.defense*Game.map.map[target.y][target.x].defense());
-				if (damage<1) {damage=1;}
+			if (inrange(target.x, target.y)) {				
+				double damage = DamageFormula(target);
+				
 				target.health-=damage;
 				if (target.health<=0) {
 					damage+=target.health;
@@ -131,11 +128,11 @@ public class Base {
 					Game.player.get(target.owner).loses++;
 					Game.pathing.LastChanged = System.currentTimeMillis();
 				}
+				else if (returnfire) {target.attack(x,y,false);}
 				//Increases commander power.
 				Game.player.get(owner).Powerup(damage, false);
 				Game.player.get(target.owner).Powerup(damage, true);
 				
-				if (returnfire) {target.attack(x,y,false);}//return fire?
 				return true;
 			}
 		}
@@ -206,6 +203,8 @@ public class Base {
 	}
 	/**Returns the ID# of the building the unit is currently standing on to "bld". This is updated on creation and move.*/
 	private void CityPointer() {
+		if (bld!=-1) {Game.builds.get(bld).Locked = false;}
+		bld = -1;
 		for (int i = 0; i < Game.builds.size(); i++) {
 			if (Game.builds.get(i).x==x && Game.builds.get(i).y==y) {
 				bld = i;
@@ -213,8 +212,6 @@ public class Base {
 				return;
 			}
 		}
-		if (bld!=-1){Game.builds.get(bld).Locked = false;}
-		bld = -1;
 	}
 	/**This finds a unit with the x and y coordinates and returns their data to be used, friendly-fire set to true to find allies, hostile-fire to attack foes.*/
 	private units.Base FindTarget(int destx, int desty, boolean hostilefire, boolean friendlyfire) {
@@ -232,6 +229,24 @@ public class Base {
 		used += (y>y2) ? y - y2 : y2 - y ;
 		return used;
 	}
+	private double DamageFormula(Base target) {
+		double dmg = attack; //Base Attack
+		dmg *= health*0.01;
+		dmg *= Game.player.get(owner).WeaponBonus; //Commander Bonus
+		//dmg *= ArmorTypeBonus; //TODO: Specific effectiveness bonus
+		
+		double def = defense; //Base Defense
+		def *= target.health*0.01;
+		def *= Game.player.get(target.owner).ArmorBonus; //Commander Bonus
+		def *= Game.map.map[target.y][target.x].defense(); //Terrain Defense Bonus
+		
+		//Returns the outcome, with a minimum damage of 0%
+		double outcome = dmg-def;
+		if (outcome < 0) {outcome = 0;}
+		System.out.println("Health: " + (health*0.01));
+		System.out.println("Outcome: " + outcome + " dmg: " + dmg + " def: " + def);
+		return outcome;
+	}
 	/**This checks to see if the destination is in the map, and then calls the path-finder and returns true if the location is movable.*/
 	private boolean moveable(int destx, int desty) {
 		if (destx<0||desty<0) {return false;}
@@ -248,11 +263,14 @@ public class Base {
 	}
 
 	public void Medic() {
-		double hp = health+2;
+		//Health Stuff
+		int hp = health+20;
 		if (hp>maxhp) {hp=maxhp;}
-		double money = Math.floor((hp-health)*50);
+		//Money Stuff
+		double money = Math.floor((hp-health)*5);
 		if (money<=Game.player.get(Game.btl.currentplayer).money) {
 			Game.player.get(Game.btl.currentplayer).money-=money;
+			health = hp;
 		}
 	}
 }

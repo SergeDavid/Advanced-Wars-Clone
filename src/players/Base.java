@@ -8,19 +8,15 @@ public class Base {
 	public String desc;
 	public int team;
 	public int money;
+	public boolean npc;
+	public boolean defeated;
 	
 	//Modifiers (unit cost/damage/defense)
 	/**Percentage offset for how much a unit costs to build with 1.0 = 100% (0.5 = half / 2.0 = double)*/
 	public double CostBonus = 1.0;
-	public double[] ArmorBonus = {1,1,1,1,1};//Current set at 5 just because.
-	public double[] WeaponBonus = {1,1,1,1,1};//TODO: Weapon and Armor Bonus
-	
-	//Control Info (npc / skip)
-	/**If true the computer will control said units instead of the player.*/
-	public boolean npc;
-	/**If true the player is skipped.*/
-	public boolean defeated;
-	
+	public double ArmorBonus = 1.0;//Currently just an overall bonus, TODO: Add in specific bonuses (foot, vehicle, tank, artillery, etc.)
+	public double WeaponBonus = 1.0;
+
 	//Special Power
 	/**The current power level, max is level2.*/
 	public int power;
@@ -29,15 +25,14 @@ public class Base {
 	/**The amount of power points needed to achieve the second ability.*/
 	public int level2;
 	
-	//Unit selection, 
-	//TODO: Place game cursor here instead of having every player share one
+	//Unit selection and unit end game statistics (total kills / loses)
 	public boolean unitselected;//If the character has selected a unit or not. (using this instead of selectedunit=-1)
 	public int selectedunit = 0;//Which unit is currently selected to use.
 	public int usedunits;//How many units does the player have left until turn ends. Currently unused.
 	public int kills;
 	public int loses;
 	
-	//Location of players images to be used in game (Might do a sprite sheet done in rows, but right now I'm planning on a grid)
+	//Player's image in the sprite sheet and the current looking location.
 	int imgx;
 	int imgy;
 	public int selectx = 2;
@@ -54,9 +49,8 @@ public class Base {
 		money = bling;
 	}
 	
-	public void Powerup(double damage, boolean defending) {//TODO: Power gained is based on how much damage you do / are dealt and some other fancy modifiers.
+	public void Powerup(double damage, boolean defending) {
 		power += (defending) ? damage/3 : damage ;
-		System.out.println("User now has " + power + " power!");
 		if (power>level2) {power=level2;}
 	}
 	
@@ -108,7 +102,6 @@ public class Base {
 		for (buildings.Base bld : Game.builds) {
 			if (bld.x==selectx&&bld.y==selecty&&bld.owner==Game.btl.currentplayer) {
 				bld.OpenMenu();
-				//Game.btl.Buyunit(bld.x, bld.y);
 				return true;
 			}
 		}

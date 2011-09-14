@@ -9,6 +9,7 @@ public class Battle {
 	/**The current player who is playing, this loops back to 0 when it goes too high.*/
 	public int currentplayer = 0;
 	public String mapname;
+	public boolean GameOver;
 	
 	//Game settings
 	boolean FogOfWar;
@@ -32,6 +33,7 @@ public class Battle {
 		}
 		this.mapname = mapname;
 		playersleft = totalplayers;
+		GameOver = false;
 	}
 
 	public void EndTurn() {
@@ -47,7 +49,8 @@ public class Battle {
 			ply.money+=buildingmoney*Buildingcount(currentplayer);
 		}
 		for (units.Base unit : Game.units) {
-			if (unit.owner == currentplayer && unit.health<unit.maxhp) {
+			if (unit.owner == currentplayer && unit.health<unit.maxhp && unit.bld!=-1) {
+				System.out.println("Hello!");
 				unit.Medic();
 			}
 		}
@@ -119,6 +122,7 @@ public class Battle {
 				Game.builds.add(i,Game.list.CreateCity(currentplayer, x, y, 1));
 				playersleft--;
 				if (playersleft<=1) {
+					GameOver = true;
 					new menus.EndBattle();
 				}
 				break;
