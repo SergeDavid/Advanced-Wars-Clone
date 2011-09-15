@@ -271,6 +271,8 @@ public class Base {
 		if (money<=Game.player.get(Game.btl.currentplayer).money) {
 			Game.player.get(Game.btl.currentplayer).money-=money;
 			health = hp;
+			//Fuel
+			Fuel = MaxFuel;
 		}
 	}
 }

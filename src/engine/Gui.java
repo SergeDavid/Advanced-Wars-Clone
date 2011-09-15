@@ -105,10 +105,9 @@ public class Gui extends JPanel {
 			gui.Cities.Draw(gg, Game.ScreenBase);
 			gui.Units.Draw(gg, Game.ScreenBase);
 			gui.Selector.Draw(frame, gg, Game.ScreenBase);
-			//System.out.println("Time: " + (System.currentTimeMillis() - start));
-			
+					
 			if (Game.input.MenuHack) {new gui.InfoMenu(gg);}//This displays the menu only when it is paused.
-			else {/*Include a mini menu that floats around the map*/}
+			else {gui.SmallMenu.Draw(gg,frame);}
 		break;
 		case EDITOR:
 			gui.Terrain.Draw(gg, Game.ScreenBase);

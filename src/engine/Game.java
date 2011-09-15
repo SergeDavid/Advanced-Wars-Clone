@@ -11,7 +11,7 @@ public class Game extends JFrame {
 	
 	//Application Settings
 	private static final String build = "0";
-	private static final String version = "1";
+	private static final String version = "2";
 	public static final String name = "Strategy Game";
 	public static int ScreenBase = 32;//Bit size for the screen, 16 / 32 / 64 / 128
 	public static boolean dev = true;//Is this a dev copy or not... useless? D:
@@ -40,6 +40,7 @@ public class Game extends JFrame {
 	public static Image[] img_menu = new Image[5];
 	public static Image img_tile;
 	public static Image img_char;
+	public static Image img_plys;
 	public static Image img_city;
 	public static Image img_exts;
 	public static Boolean readytopaint;

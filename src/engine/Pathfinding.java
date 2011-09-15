@@ -23,7 +23,6 @@ public class Pathfinding {
 	public boolean ShowHits;
 	public long LastChanged = 1;
 	
-	//TODO: Allies don't block path finding, but add in a condition for occupied so they are skipped / removed afterwards.
 	public Vector<Point> FindPath(units.Base unit, int range) {
 		maphits = new int[Game.map.height][Game.map.width];
 		openlist = new Vector<PathNode>();
@@ -50,6 +49,7 @@ public class Pathfinding {
 			map.add(new Point(node.loc.x,node.loc.y));
 		}
 		unit.LastPathed = System.currentTimeMillis();
+		RemoveOccupied();
 		return map;
 	}
 	
@@ -80,7 +80,6 @@ public class Pathfinding {
 			}
 		}
 	}
-	
 	private void AddNode(int x, int y) {
 		if (!InClosed(x,y)) {//Ignores any node that is already in the closed list.
 			if (!InOpen(x,y)) {//Switches parents if it is in the list, adds it if it isn't
@@ -133,7 +132,23 @@ public class Pathfinding {
 		}
 		return Math.round(cost*100.0) / 100.0;
 	}
-		
+	private void RemoveOccupied() {
+		if (map.size()<=1) {return;}
+		for (int i = 1; i<map.size(); i++) {
+			if (Occupied(map.get(i).x,map.get(i).y)) {
+				map.remove(i);
+			}
+		}
+	}
+	private boolean Occupied(int x, int y) {
+		for (units.Base unit : Game.units) {
+			if (unit.x == x && unit.y == y) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public class PathNode {
 		public double cost;
 		public Point loc;

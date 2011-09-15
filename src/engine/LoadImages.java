@@ -18,14 +18,14 @@ public class LoadImages {
 	private int[] size_Unit = {256,256};
 	private int[] size_Terrain = {256,128};
 	private int[] size_City = {256,256};
-	//private int[] size_Player = {512,512};//To Add
+	private int[] size_Player = {128,128};
 	//private int[] size_Menus = {64,256};//To add
 	private int[] size_Extras = {128,128};
 	
 	public int Times_Unit = 5;
 	public int Times_Terrain = 5;
 	public int Times_City = 5;
-	//public int Times_Player = 5;
+	public int Times_Player = 5;
 	//public int Times_Menus = 5;
 	public int Times_Extras = 5;
 	
@@ -36,6 +36,7 @@ public class LoadImages {
 		Game.img_tile = tool.getImage(getClass().getResource("/img/"+"Terrain"+".png"));
 		Game.img_city = tool.getImage(getClass().getResource("/img/"+"Cities"+".png"));
 		Game.img_exts = tool.getImage(getClass().getResource("/img/"+"Extras"+".png"));
+		Game.img_plys = tool.getImage(getClass().getResource("/img/"+"Players"+".png"));
 		Game.img_menu[0] = tool.getImage(getClass().getResource("/img/"+"GameInfo"+".png"));
 	}
 	public void LoadTexturePack() {
@@ -49,6 +50,9 @@ public class LoadImages {
 	    
 	    Game.img_city = TryNewImage("Cities", zip, size_City);
 	    Times_City = ResizeImage(size_City[0], Game.img_city.getWidth(null));
+	    
+	    Game.img_plys = TryNewImage("Players", zip, size_Player);
+	    Times_Player = ResizeImage(size_Player[0], Game.img_plys.getWidth(null));
 	    
 	    Game.img_exts = TryNewImage("Extras", zip, size_City);
 	    Times_Extras = ResizeImage(size_Extras[0], Game.img_exts.getWidth(null));

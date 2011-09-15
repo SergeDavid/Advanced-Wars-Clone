@@ -88,10 +88,12 @@ public class ComputerBrain {
 	private void HandleUnit(Base unit) {
 		unit.Pathing();
 		if (unit.raider && unit.bld!=-1) {//Finds, moves, and captures a building if the unit can capture it.
-			unit.action(unit.x, unit.y);
-			Game.player.get(unit.owner).selectx = unit.x;
-			Game.player.get(unit.owner).selecty = unit.y;
-			return;
+			if (Game.builds.get(unit.bld).owner != unit.owner) {
+				unit.action(unit.x, unit.y);
+				Game.player.get(unit.owner).selectx = unit.x;
+				Game.player.get(unit.owner).selecty = unit.y;
+				return;
+			}
 		}
 		if (unit.raider && BuildingInRange(unit)) {
 			unit.move(building.x,building.y);
@@ -101,12 +103,17 @@ public class ComputerBrain {
 			Game.player.get(unit.owner).selecty = unit.y;
 		}
 		else {
-			if (WannaHug(unit)) {
+			if (WannaHug(unit)) {//Attack anyone near you.
+				unit.acted=true;
+				return;
+			}
+			else if (unit.map.size() <= 1) {//For when a unit can't move anywhere
+				WannaHug(unit);
 				unit.acted=true;
 				return;
 			}
 			Random rand = new Random();
-			for (int i = 0; i < unit.map.size(); i++) {
+			for (int i = unit.map.size()-1; i >= 0; i--) {//Randomly selects somewhere to run.
 				if (rand.nextInt(5)==0) {
 					unit.move(unit.map.get(i).x, unit.map.get(i).y);
 					Game.player.get(unit.owner).selectx = unit.x;

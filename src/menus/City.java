@@ -30,6 +30,8 @@ public class City implements ActionListener,ListSelectionListener {
 	int current;
 	int x;
 	int y;
+	//Vector<int> UnitIDs = new Vector<int>;
+	
 	public City(String Type, int xx, int yy) {
 		UnitModel.removeAllElements();
 		for (int i = 0; i < Game.displayU.size(); i++) {
