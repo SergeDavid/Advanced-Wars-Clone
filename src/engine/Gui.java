@@ -1,4 +1,3 @@
-
 package engine;
 
 import java.awt.Color;
@@ -27,6 +26,7 @@ public class Gui extends JPanel {
 	//Main Menu
 	public JButton Join = new JButton("New Game");
 	public JButton Load = new JButton("Continue");
+	public JButton Editor = new JButton("Editor");
 	public JButton Options = new JButton("Options");
 	public JButton Exit = new JButton("Exit");
 
@@ -51,15 +51,19 @@ public class Gui extends JPanel {
 		
 		add(Join);
 		add(Load);
+		add(Editor);
 		add(Options);
 		add(Exit);
 		
 		Insets insets = getInsets();
 		Dimension size = Join.getPreferredSize();
-		Join.setBounds(220 + insets.left, 200 + insets.top, 
+		Join.setBounds(220 + insets.left, 170 + insets.top, 
 				size.width, size.height);
 		size = Load.getPreferredSize();
-		Load.setBounds(220 + insets.left, 230 + insets.top, 
+		Load.setBounds(220 + insets.left, 200 + insets.top, 
+				size.width, size.height);
+		size = Editor.getPreferredSize();
+		Editor.setBounds(220 + insets.left, 230 + insets.top, 
 				size.width, size.height);
 		size = Options.getPreferredSize();
 		Options.setBounds(220 + insets.left, 260 + insets.top, 
@@ -104,15 +108,23 @@ public class Gui extends JPanel {
 			gui.Ranges.Draw(gg, Game.ScreenBase);
 			gui.Cities.Draw(gg, Game.ScreenBase);
 			gui.Units.Draw(gg, Game.ScreenBase);
-			gui.Selector.Draw(frame, gg, Game.ScreenBase);
+			gui.Selector.Draw(frame, gg, Game.ScreenBase,
+					Game.player.get(Game.btl.currentplayer).selectx,
+					Game.player.get(Game.btl.currentplayer).selecty);
 					
 			if (Game.input.MenuHack) {new gui.InfoMenu(gg);}//This displays the menu only when it is paused.
 			else {gui.SmallMenu.Draw(gg,frame);}
 		break;
 		case EDITOR:
+			gg.setColor(new Color(0,0,60));
+			gg.fillRect(0, 0, width, height);
+			gg.setColor(new Color(255,255,255));
 			gui.Terrain.Draw(gg, Game.ScreenBase);
 			gui.Cities.Draw(gg, Game.ScreenBase);
 			gui.Units.Draw(gg, Game.ScreenBase);
+			gui.Selector.Draw(frame, gg, Game.ScreenBase,
+					Game.edit.selectx,
+					Game.edit.selecty);
 		break;
 		}
 		g.drawImage(buffimage, 0, 0, this);

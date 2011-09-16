@@ -33,9 +33,9 @@ public class Save {
 		    		"# Current testing setup for saving player data. To be improved when I finally get around to adding options\n" +
 		    		"# If you enable developer keys then they will override the number pad (return to default key)\n" +
 		    		"Player = Player\n" +
-		    		"ScreenSize = 32\n" +
-		    		"TexturePack = " +
-		    		"Dev = False\n" +
+		    		"ScreenSize = " + Game.ScreenBase + "\n" +
+		    		"TexturePack = " + "UnAddedFeature" + "\n" +
+		    		"Dev = " + Game.dev + "\n" +
 		    		"Volume = 0\n" +
 		    		"Music = 0");
 		    out.close();
@@ -46,12 +46,12 @@ public class Save {
 		try {
 			//Opens the property file and starts a battle with the map in the save folder. 
 			Properties configFile = new Properties();
-			configFile.load(new FileInputStream(System.getProperty("user.dir") + "/" + path + "savegame.properties"));
+			configFile.load(new FileInputStream(System.getProperty("user.dir") + "/" + path + "PlayerData.properties"));
 
 			Game.dev = ( Boolean.parseBoolean(configFile.getProperty("Dev", "false")));
 			Game.gui.ResizeScreen( Integer.parseInt(configFile.getProperty("ScreenSize", "32")));
 		} 
-		catch (Exception e) {Game.error.ShowError("Saved game failed to load."); e.printStackTrace();}
+		catch (Exception e) {Game.error.ShowError("Player data failed to load."); e.printStackTrace();}
 	}
 	
 	public void SaveGame() {

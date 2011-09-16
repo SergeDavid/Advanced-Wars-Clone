@@ -50,7 +50,6 @@ public class Battle {
 		}
 		for (units.Base unit : Game.units) {
 			if (unit.owner == currentplayer && unit.health<unit.maxhp && unit.bld!=-1) {
-				System.out.println("Hello!");
 				unit.Medic();
 			}
 		}

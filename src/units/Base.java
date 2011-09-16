@@ -263,6 +263,10 @@ public class Base {
 	}
 
 	public void Medic() {
+		if (Game.builds.get(bld).team != Game.player.get(owner).team) {
+			return;
+		}
+		
 		//Health Stuff
 		int hp = health+20;
 		if (hp>maxhp) {hp=maxhp;}

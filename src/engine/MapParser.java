@@ -2,8 +2,11 @@ package engine;
 
 import java.awt.Point;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Vector;
 
@@ -13,18 +16,72 @@ public class MapParser {
 	//Handles building construction after the decoding loop is finished.
 	String CityString;
 	Vector<Point> CityPoint;
+	String path = "maps";
 	
 	public void encode(String mapname) {
-		//TODO: Creates a file if it does not exist (opens a prompt if file exists)
-		//TODO: Add in all of the elements into the file from info,description,terrain,buildings, and units.
-		//TODO: Send any error messages to be handled by the error messaging system.
-	} 
+		//If the folder doesn't exist, create it so we can save our save files inside it.
+		File directory = new File(path);
+		if (!directory.exists()) {
+			if (directory.mkdir()) {Game.error.ShowError("The " + path + " directory has been created.");} 
+	    	else {Game.error.ShowError("Cannot create the maps directory. " + path + "");return;}
+		}
+		//Saves the game in a property file (since it is easy)
+		try {
+			FileWriter fstream = new FileWriter(path + "/" + mapname + ".txt");
+		    BufferedWriter out = new BufferedWriter(fstream);
+		    out.write(
+		    		encodeInfo() +
+		    		encodeDesc() +
+		    		encodeCities() +
+		    		encodeTerrain() +
+		    		encodeUnits());
+		    out.close();
+		} 
+		catch (Exception e) {Game.error.ShowError("The map failed to save:" + e.getMessage());}
+	}
+	private String encodeInfo() {
+		return "1 " + Integer.toHexString(Game.map.width) + Integer.toHexString(Game.map.height) + "2";
+	}
+	private String encodeDesc() {
+		//Replace name with player name
+		//Include description stuff.
+		return "\n2 " + Game.name + "-" + "BlaBlaBla";
+	}
+	private String encodeCities() {//TODO: DoTo
+		//return "1 " + "07" + "07" + "2";
+		return "";
+	}
+	private String encodeTerrain() {
+		String tiles = "";
+		for (int y = 0; y < Game.map.height; y++) {
+			tiles+="\n4 ";
+			for (int x = 0; x < Game.map.width; x++) {
+				tiles+="0";//TODO: Hex this.
+			}
+		}
+		return tiles;
+	}
+	private String encodeUnits() {
+		//TODO: Support proper sizes.
+		String units = "";
+		if (!Game.units.isEmpty()) {
+			units+="\n5 ";
+			for (units.Base unit : Game.units) {
+				units+=Integer.toHexString(unit.owner);
+				units+=Integer.toHexString(unit.x);
+				units+=Integer.toHexString(unit.y);
+				units+=0;//Type
+			}
+		}
+		return units;
+	}
+
 	public boolean decode(String mapname) {
 		terrain = 0;
 		CityString = "";
 		CityPoint = new Vector<Point>();
 		try {
-			BufferedReader in = new BufferedReader(new FileReader("maps/" + mapname + ".txt"));
+			BufferedReader in = new BufferedReader(new FileReader(path + "/" + mapname + ".txt"));
 			String line;
 			while ((line = in.readLine()) != null) {
 				if (line.startsWith("1")) {

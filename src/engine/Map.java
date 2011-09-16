@@ -44,12 +44,12 @@ public class Map {
 	
 	/**Loads all of the tiles that are used in the map into an array list.*/
 	private void LoadTiles() {
-		//TODO: Maybe change this into a setter where you send it an int, and it returns the object and remove the arraylist all together.
 		tiles.add(new terrain.Dirt());
 		tiles.add(new terrain.Forest());
 		tiles.add(new terrain.Mountain());
 		tiles.add(new terrain.Water());
 		tiles.add(new terrain.City());
 		tiles.add(new terrain.Forest());
+		//tiles.add(new terrain.Road());
 	}
 }

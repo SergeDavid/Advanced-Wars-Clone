@@ -51,6 +51,8 @@ public class InputHandler implements KeyListener,MouseListener,ActionListener {
 		Game.gui.Join.addActionListener(this);
 		Game.gui.Load.addActionListener(this);
 		Game.gui.Exit.addActionListener(this);
+		Game.gui.Editor.addActionListener(this);
+		Game.gui.Options.addActionListener(this);
 	}
 
 	int DevPathing = 1;
@@ -71,6 +73,17 @@ public class InputHandler implements KeyListener,MouseListener,ActionListener {
 				else {
 					new menus.Pause();
 				}
+			}
+		}
+		if (Game.GameState==Game.State.EDITOR) {
+			if (i==up) {Game.edit.selecty--;if (Game.edit.selecty<0) {Game.edit.selecty++;}}
+			if (i==down) {Game.edit.selecty++;if (Game.edit.selecty>=Game.map.height) {Game.edit.selecty--;}}
+			if (i==left) {Game.edit.selectx--;if (Game.edit.selectx<0) {Game.edit.selectx++;}}
+			if (i==right) {Game.edit.selectx++;if (Game.edit.selectx>=Game.map.width) {Game.edit.selectx--;}}
+			if (i==select) {Game.edit.AssButton();}
+			if (i==cancel) {Game.edit.ButtButton();}
+			if (i==start) {
+				new menus.EditorMenu();
 			}
 		}
 		
@@ -106,6 +119,12 @@ public class InputHandler implements KeyListener,MouseListener,ActionListener {
 		}
 		else if (s==Game.gui.Load) {
 			Game.save.LoadGame();
+		}
+		else if (s==Game.gui.Editor) {
+			new menus.StartEditor();
+		}
+		else if (s==Game.gui.Options) {
+			new menus.Options();
 		}
 		else if (s==Game.gui.Exit) {
 			System.exit(0);

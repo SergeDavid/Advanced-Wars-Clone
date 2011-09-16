@@ -7,7 +7,7 @@ import java.awt.Point;
  * Place MoveView(); in the game-loop (100ms) to automate it (Teleporting across the map between switching viewed units / turns is automatic)
  * Use Viewable(x,y); to check if something can be seen on screen and ViewX(); / ViewY(); to grab the offsets (in case it changes from a direct copy + paste).
  * @author SergeDavid
- * @version 0.1
+ * @version 0.2
  */
 public class ViewPoint {
 	Point Loc = new Point(0,0);//Location of the viewpoint
@@ -15,17 +15,27 @@ public class ViewPoint {
 	final int speed = 1;
 	
 	final int width = 18;//How wide / tall the viewpoint is (how far from the x/y should the )
-	final int height = 12;//3x4 D:
+	final int height = 12;
 	
 	/**
 	 * Place this in a the game loop (100ms) to update the view-port automatically.
 	 * Currently it does not support speeds other then 1.0 (You'll get a mostly never ending +1/-1 view-port shake)
 	 */
 	public void MoveView() {
-		MoveNorth();
-		MoveSouth();
-		MoveEast();
-		MoveWest();
+		int y = 0;
+		int x = 0;
+		if (Game.GameState == Game.State.PLAYING) {
+			y = Game.player.get(Game.btl.currentplayer).selecty;
+			x = Game.player.get(Game.btl.currentplayer).selectx;
+		}
+		else {
+			y = Game.edit.selecty;
+			x = Game.edit.selectx;
+		}
+		MoveNorth(y);
+		MoveSouth(y);
+		MoveEast(x);
+		MoveWest(x);
 	}
 	
 	/**
@@ -55,27 +65,23 @@ public class ViewPoint {
 	public int ViewY() {return Loc.y;}
 	
 	//These move the viewpoint in the correct direction at a set speed, used internally through MoveView();
-	private void MoveNorth() {
-		players.Base ply = Game.player.get(Game.btl.currentplayer);
-		if (ply.selecty<Loc.y+expanded) {
+	private void MoveNorth(int y) {
+		if (y<Loc.y+expanded) {
 			Loc.y-=speed;
 		}
 	}
-	private void MoveSouth() {
-		players.Base ply = Game.player.get(Game.btl.currentplayer);
-		if (ply.selecty>Loc.y+height-expanded) {
+	private void MoveSouth(int y) {
+		if (y>Loc.y+height-expanded) {
 			Loc.y+=speed;
 		}
 	}
-	private void MoveEast() {
-		players.Base ply = Game.player.get(Game.btl.currentplayer);
-		if (ply.selectx<Loc.x+width-expanded) {
+	private void MoveEast(int x) {
+		if (x<Loc.x+width-expanded) {
 			Loc.x-=speed;
 		}
 	}
-	private void MoveWest() {
-		players.Base ply = Game.player.get(Game.btl.currentplayer);
-		if (ply.selectx>Loc.x+expanded) {
+	private void MoveWest(int x) {
+		if (x>Loc.x+expanded) {
 			Loc.x+=speed;
 		}
 	}

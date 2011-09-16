@@ -42,7 +42,10 @@ public class Options implements ActionListener,ChangeListener {
 
 	@Override public void actionPerformed(ActionEvent e) {
 		Object s = e.getSource();
-		if (s == Close) {Game.gms.CloseMenu();}
+		if (s == Close) {
+			Game.save.SaveSettings();
+			Game.gms.CloseMenu();
+		}
 	}
 	@Override public void stateChanged(ChangeEvent e) {
 		Object s = e.getSource();

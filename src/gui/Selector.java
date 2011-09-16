@@ -8,16 +8,14 @@ import engine.Game;
  * @param g = The Graphics2D to drawn too.
  * @param resize = Size setup of the window to use.
  * @author SergeDavid
- * @version 0.4
+ * @version 0.5
  */
 public class Selector {
 	
 	private static boolean Dev = false;
 	
-	public static void Draw(int frame, Graphics2D g, int resize) {
+	public static void Draw(int frame, Graphics2D g, int resize, int x, int y) {
 		int size = (int) Math.pow(2, Game.load.Times_Extras);
-		int x = Game.player.get(Game.btl.currentplayer).selectx;
-		int y = Game.player.get(Game.btl.currentplayer).selecty;
 		if (Game.view.Viewable(x,y)) {
 			x -= Game.view.ViewX();
 			y -= Game.view.ViewY();

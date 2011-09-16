@@ -25,6 +25,7 @@ public class Game extends JFrame {
 	public static GameMenus gms;
 	public static LoadImages load;
 	public static InputHandler input;
+	public static Editor edit = new Editor();
 	public static Battle btl = new Battle();
 	public static ErrorHandler error = new ErrorHandler();
 	public static Pathfinding pathing = new Pathfinding();
@@ -77,6 +78,8 @@ public class Game extends JFrame {
 		list = new ListData();
 		
 		setVisible(true);//This has been moved down here so that when everything is done, it is shown.
+		save.LoadSettings();
+		
 		GameLoop();
 	}
 
@@ -113,7 +116,9 @@ public class Game extends JFrame {
 			if (System.currentTimeMillis() - lastCPSTime2 > 100) {
 				lastCPSTime2 = System.currentTimeMillis();
 				logics = 0;
-				if (GameState==State.PLAYING) {view.MoveView();}//This controls the view-point on the map
+				if (GameState==State.PLAYING || GameState==State.EDITOR) {
+					view.MoveView();
+				}//This controls the view-point on the map
 				Game.gui.frame++;//This is controlling the current frame of animation.
 				if (Game.gui.frame>=12) {Game.gui.frame=0;}
 				gui.repaint();
