@@ -34,7 +34,10 @@ public class Options implements ActionListener,ChangeListener {
 		Game.gms.add(Music);
 		Close.setBounds(150, 180, 32*4, 32);
 		Game.gms.add(Close);
+		Load.setBounds(150, 150, 32*4, 32);
+		Game.gms.add(Load);
 		
+		Load.addActionListener(this);
 		Close.addActionListener(this);
 		Sound.addChangeListener(this);
 	}
@@ -45,6 +48,9 @@ public class Options implements ActionListener,ChangeListener {
 		if (s == Close) {
 			Game.save.SaveSettings();
 			Game.gms.CloseMenu();
+		}
+		else if (s == Load) {
+			new TexturePack();
 		}
 	}
 	@Override public void stateChanged(ChangeEvent e) {

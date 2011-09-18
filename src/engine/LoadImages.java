@@ -39,8 +39,8 @@ public class LoadImages {
 		Game.img_plys = tool.getImage(getClass().getResource("/img/"+"Players"+".png"));
 		Game.img_menu[0] = tool.getImage(getClass().getResource("/img/"+"GameInfo"+".png"));
 	}
-	public void LoadTexturePack() {
-		ZipHandler zip = new ZipHandler("Test");
+	public void LoadTexturePack(String name) {
+		ZipHandler zip = new ZipHandler(name);
 		
 	    Game.img_char = TryNewImage("Units", zip, size_Unit);
 	    Times_Unit = ResizeImage(size_Unit[0], Game.img_char.getWidth(null));

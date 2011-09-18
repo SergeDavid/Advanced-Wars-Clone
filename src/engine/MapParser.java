@@ -29,53 +29,86 @@ public class MapParser {
 		try {
 			FileWriter fstream = new FileWriter(path + "/" + mapname + ".txt");
 		    BufferedWriter out = new BufferedWriter(fstream);
-		    out.write(
-		    		encodeInfo() +
-		    		encodeDesc() +
-		    		encodeCities() +
-		    		encodeTerrain() +
-		    		encodeUnits());
+		    out.write(encodeInfo() + encodeDesc() + encodeCities() + encodeTerrain() + encodeUnits());
 		    out.close();
 		} 
 		catch (Exception e) {Game.error.ShowError("The map failed to save:" + e.getMessage());}
 	}
-	private String encodeInfo() {
-		return "1 " + Integer.toHexString(Game.map.width) + Integer.toHexString(Game.map.height) + "2";
+	private String encodeInfo() {//TODO: Total players.
+		String w = Integer.toHexString(Game.map.width-1);if (w.length()<=1) {w = "0" + w;}
+		String h = Integer.toHexString(Game.map.height-1);if (h.length()<=1) {h = "0" + h;}
+		return "1 " + w + h + "2";
 	}
 	private String encodeDesc() {
-		//Replace name with player name
-		//Include description stuff.
-		return "\n2 " + Game.name + "-" + "BlaBlaBla";
+		//TODO: Replace name with current players name, and leave description for manliness?
+		return "\n2 " + "PlayerName" + "-" + "Description of Map";
 	}
-	private String encodeCities() {//TODO: DoTo
-		//return "1 " + "07" + "07" + "2";
-		return "";
+	/**Turns the building list into a string.*/
+	private String encodeCities() {
+		String cities = "";
+		if (!Game.builds.isEmpty()) {
+			cities+="\n4 ";
+			for (buildings.Base bld : Game.builds) {
+				cities+=bld.owner;
+				cities+=CityID(bld);
+			}
+		}
+		return cities;
 	}
+	/**Turns the map into a series of strings.*/
 	private String encodeTerrain() {
 		String tiles = "";
 		for (int y = 0; y < Game.map.height; y++) {
 			tiles+="\n4 ";
 			for (int x = 0; x < Game.map.width; x++) {
-				tiles+="0";//TODO: Hex this.
+				tiles+=TerrainID(x,y);
 			}
 		}
 		return tiles;
 	}
+	/**Turns the unit list into a string.*/
 	private String encodeUnits() {
-		//TODO: Support proper sizes.
 		String units = "";
 		if (!Game.units.isEmpty()) {
 			units+="\n5 ";
 			for (units.Base unit : Game.units) {
+				units+=UnitID(unit);
 				units+=Integer.toHexString(unit.owner);
-				units+=Integer.toHexString(unit.x);
-				units+=Integer.toHexString(unit.y);
-				units+=0;//Type
+				String x = Integer.toHexString(unit.x);if (x.length()<=1) {x = "0" + x;}
+				String y = Integer.toHexString(unit.y);if (y.length()<=1) {y = "0" + y;}
+				units+=x;
+				units+=y;
 			}
 		}
 		return units;
 	}
-
+	
+	private String CityID(buildings.Base bld) {
+		String a = "00";
+		for (int i = 0; i < Game.displayB.size(); i++) {
+			if (bld == Game.displayB.get(i)) {a = Integer.toHexString(i);break;}
+		}
+		if (a.length()<=1) {a = "0"+a;}
+		return a;
+	}
+	private String UnitID(units.Base unit) {
+		String a = "00";
+		for (int i = 0; i < Game.displayU.size(); i++) {
+			if (unit == Game.displayU.get(i)) {a = Integer.toHexString(i);break;}
+		}
+		if (a.length()<=1) {a = "0"+a;}
+		return a;
+	}
+	private String TerrainID(int x, int y) {
+		for (int i = 0; i < Game.map.tiles.size(); i++) {
+			if (Game.map.map[y][x] == Game.map.tiles.get(i)) {
+				return Integer.toHexString(i);
+			}
+		}
+		return "0";
+	}
+	
+	
 	public boolean decode(String mapname) {
 		terrain = 0;
 		CityString = "";
@@ -167,8 +200,7 @@ public class MapParser {
 				x, y,
 				Integer.parseInt(info.substring(1,3),16)));
 	}
-	/**
-	 * (xx) type
+	/**(xx) type
 	 * (x) owner
 	 * (xx) x
 	 * (xx) y

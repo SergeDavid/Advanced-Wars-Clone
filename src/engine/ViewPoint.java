@@ -14,7 +14,7 @@ public class ViewPoint {
 	final int expanded = 3;//This is the max distance from the edge of the map that the viewpoint can go.
 	final int speed = 1;
 	
-	final int width = 18;//How wide / tall the viewpoint is (how far from the x/y should the )
+	final int width = 20;//How wide / tall the viewpoint is (how far from the x/y should the )
 	final int height = 12;
 	
 	/**
@@ -45,8 +45,8 @@ public class ViewPoint {
 	 * @return = True when in view range, false when outside of it. (saves time so you don't have to render images)
 	 */
 	public boolean Viewable(int x, int y) {
-		if (y>=Loc.y && y<=Loc.y+height) {
-			if (x>=Loc.x && x<=Loc.x+width) {
+		if (y>=Loc.y && y<Loc.y+height) {
+			if (x>=Loc.x && x<Loc.x+width) {
 				return true;
 			}
 		}

@@ -43,7 +43,7 @@ public class EditorMenu implements ActionListener {
 			Game.map.parse.encode(Game.edit.mapname);
 		}
 		else if (s==Load) {
-			//TODO: Load Menu
+			new LoadMap();
 		}
 		else if (s==Return) {
 			Game.gms.CloseMenu();

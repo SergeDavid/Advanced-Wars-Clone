@@ -19,8 +19,8 @@ public class Terrain {
 		for (int y=0; y < Game.map.height; y++) {
 			for (int x=0; x < Game.map.width; x++) {
 				if (Game.view.Viewable(x,y)) {
-					int xx = Game.map.map[y][x].x();
-					int yy = Game.map.map[y][x].y();
+					int xx = Game.map.map[y][x].x;
+					int yy = Game.map.map[y][x].y;
 					g.drawImage(Game.img_tile, (x-xoff)*resize, (y-yoff)*resize, 
 												(x-xoff)*resize+resize, (y-yoff)*resize+resize, 
 												 xx*size, yy*size, xx*size+size, yy*size+size, null);

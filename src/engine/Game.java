@@ -60,7 +60,7 @@ public class Game extends JFrame {
 		setBounds(0,0,20*ScreenBase+6,12*ScreenBase+12);
 		setSize(20*ScreenBase+6,12*ScreenBase+12);
 	    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	    setUndecorated(false);
+	    setUndecorated(true);
 		setResizable(false);
 	    setLocationRelativeTo(null);
 				

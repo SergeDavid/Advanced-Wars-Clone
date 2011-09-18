@@ -17,7 +17,7 @@ public class Gui extends JPanel {
 	
 	/**The width and height of the content box.*/
 	public int width = Game.ScreenBase*20;
-	public int height = (int) (Game.ScreenBase*12);
+	public int height = Game.ScreenBase*12;
 	private Game ThisMadeMeWantToRageQuit; // Use for resizing the window.
 	
 	/**The base frame to keep animations in sync (1 frame = 100ms) Remember to reset this to zero when it hits 12.*/
@@ -155,8 +155,8 @@ public class Gui extends JPanel {
 			default: size=32; break;
 		}
 		//Window
-		ThisMadeMeWantToRageQuit.setSize(new Dimension(20*size+12,12*size+6));
-		ThisMadeMeWantToRageQuit.setBounds(0,0,20*size+12,12*size+6);
+		ThisMadeMeWantToRageQuit.setSize(new Dimension(20*size+6,12*size+12));
+		ThisMadeMeWantToRageQuit.setBounds(0,0,20*size+6,12*size+12);
 		ThisMadeMeWantToRageQuit.setLocationRelativeTo(null);
 		Game.ScreenBase = size;
 		//GUI

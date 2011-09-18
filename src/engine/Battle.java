@@ -18,7 +18,6 @@ public class Battle {
 	int day = 1;
 	
 	//Winning condition settings
-	/**This keeps score of how many players are left, TODO: refine in a function to account for teams. Should never be under 1.*/
 	public int playersleft = 1;
 	
 	public void NewGame(String mapname) {

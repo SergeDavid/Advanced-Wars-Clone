@@ -88,7 +88,7 @@ public class InputHandler implements KeyListener,MouseListener,ActionListener {
 		}
 		
 		if (i==dev1) {Game.gui.LoginScreen();}
-		if (i==dev2) {Game.load.LoadTexturePack();}
+		if (i==dev2) {Game.load.LoadTexturePack("Test");}
 		if (i==dev3) {
 			DevPathing++;
 			switch (DevPathing) {

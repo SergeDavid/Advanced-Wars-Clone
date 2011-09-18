@@ -45,8 +45,8 @@ public class InfoMenu {
 	private void DrawTerrainInfo(Graphics2D gg) {
 		int x = Game.player.get(Game.btl.currentplayer).selectx;
 		int y = Game.player.get(Game.btl.currentplayer).selecty;
-		int xx = Game.map.map[y][x].x();
-		int yy = Game.map.map[y][x].y();
+		int xx = Game.map.map[y][x].x;
+		int yy = Game.map.map[y][x].y;
 		gg.drawImage(Game.img_tile, 520+32, 200, 520+32+32, 232, xx*32, yy*32, xx*32+32, yy*32+32, null);
 		gg.drawString(x + " and " + y, 520+32, 190);
 		

@@ -59,7 +59,7 @@ public class ListData {
 	 */
 	public buildings.Base CreateCity(int owner, int xx, int yy, int type) {//15 = Neutral, 12, 13, 14 are unused. (12 max players)
 		int team = 0;
-		if (owner == -1) {}//Special setup for blaaaaa
+		if (owner == -1) {}//Special setup for bla
 		else if (owner>Game.btl.totalplayers) {
 			owner=15;
 			if (type == 0) {type = 1;}
