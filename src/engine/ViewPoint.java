@@ -14,7 +14,7 @@ public class ViewPoint {
 	final int expanded = 3;//This is the max distance from the edge of the map that the viewpoint can go.
 	final int speed = 1;
 	
-	final int width = 20;//How wide / tall the viewpoint is (how far from the x/y should the )
+	public final int width = 20;//How wide / tall the viewpoint is (how far from the x/y should the )
 	final int height = 12;
 	
 	/**

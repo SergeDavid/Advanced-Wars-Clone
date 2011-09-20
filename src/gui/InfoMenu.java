@@ -48,7 +48,6 @@ public class InfoMenu {
 		int xx = Game.map.map[y][x].x;
 		int yy = Game.map.map[y][x].y;
 		gg.drawImage(Game.img_tile, 520+32, 200, 520+32+32, 232, xx*32, yy*32, xx*32+32, yy*32+32, null);
-		gg.drawString(x + " and " + y, 520+32, 190);
-		
+		gg.drawString(x + " and " + y, 520+32, 190);	
 	}
 }

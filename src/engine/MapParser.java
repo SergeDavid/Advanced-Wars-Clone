@@ -142,6 +142,7 @@ public class MapParser {
 					CityString = CityString.substring(3);
 				}
 			}
+			Game.map.SwitchTiles();//Tile test for switching water tiles.
 			return true;
 		} catch (FileNotFoundException e) {
 			Game.error.ShowError("Map not found.");
@@ -184,7 +185,7 @@ public class MapParser {
 		int total = info.length();
 		for (int i=0;i<total&&i<Game.map.width;i++) {
 			String using = info.substring(i,i+1);
-			Game.map.map[terrain][i]=Game.map.tiles.get(Integer.parseInt(using,16));
+			Game.map.map[terrain][i]=Game.map.getTile(Integer.parseInt(using,16));
 			if (Game.map.map[terrain][i].building()) {CityPoint.add(new Point(i, terrain));}
 		}
 		terrain++;

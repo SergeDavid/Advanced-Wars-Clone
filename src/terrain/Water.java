@@ -3,8 +3,8 @@ package terrain;
 public class Water extends Base {
 	public Water() {
 		name = "Water";
-		x = 3;
-		y = 0;
+		x = 1;
+		y = 2;
 	}
 	public boolean walk() {return false;}
 	public boolean drive() {return false;}
