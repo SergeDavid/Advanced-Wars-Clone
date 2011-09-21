@@ -90,7 +90,8 @@ public class Save {
 	    			  "Player" + i + "_Kills = " + ply.kills + "\n" +//How many units they've killed
 	    			  "Player" + i + "_Loses = " + ply.loses + "\n" +//How many units they've lost
 	    			  "Player" + i + "_Power = " + ply.power + "\n" +//Current power level
-	    			  "Player" + i + "_Using = " + 0 + "\n";//0 = none, 1 = using first power, 2 = using 2nd power
+	    			  "Player" + i + "_Using = " + 0 + "\n" +//0 = none, 1 = using first power, 2 = using 2nd power
+	    			  "Player" + i + "_Npc = " + ply.npc + "\n";
 		}
 		return plyrdata;
 	}
@@ -129,7 +130,6 @@ public class Save {
 			Game.btl.currentplayer = Integer.parseInt(configFile.getProperty("CurrentPlayer"));
 			Game.btl.day = Integer.parseInt(configFile.getProperty("Days"));
 
-			Game.player = new ArrayList<players.Base>();
 			Game.units = new ArrayList<units.Base>();
 			
 			//Player Setup 
@@ -153,7 +153,7 @@ public class Save {
 					Integer.parseInt(configFile.getProperty("Player" + i + "_Loses")),
 					Integer.parseInt(configFile.getProperty("Player" + i + "_Power")),
 					Integer.parseInt(configFile.getProperty("Player" + i + "_Using")),//Currently unused
-					false);//Currently not included
+					Boolean.parseBoolean(configFile.getProperty("Player" + i + "_Npc")));//Currently not included
 		}
 	}
 	private void LoadCities(Properties configFile) {
@@ -163,6 +163,11 @@ public class Save {
 					Integer.parseInt(configFile.getProperty("City" + i + "_Owner")),
 					Integer.parseInt(configFile.getProperty("City" + i + "_Health")),
 					i);
+		}
+		for (buildings.Base bld : Game.builds) {
+			if (bld.owner!=15) {
+				bld.team = Game.player.get(bld.owner).team;
+			}
 		}
 	}
 	private void LoadUnits(Properties configFile) {

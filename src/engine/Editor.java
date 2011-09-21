@@ -36,7 +36,7 @@ public class Editor {
 		break;
 		case CITY:
 			//Put city in the proper location by going through the list and looking for correct Y and X locations.
-			Game.builds.add(new buildings.Town(0, 0, selectx, selecty));
+			Game.builds.add(new buildings.Town(0, selectx, selecty));
 			Game.map.map[selecty][selectx] = new terrain.City();
 		break;
 		case UNIT:

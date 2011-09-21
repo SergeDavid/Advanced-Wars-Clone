@@ -46,6 +46,8 @@ public class ListData {
 		switch (which) {
 			case 0:return new players.Andy(npc,team,money);
 			case 1:return new players.Colin(npc,team,money);
+			case 2:return new players.Max(npc,team,money);
+			case 3:return new players.Sammi(npc,team,money);
 		}
 		return null;
 	}
@@ -58,19 +60,16 @@ public class ListData {
 	 * @returnIt should never return null except for the reference list [ListData();]
 	 */
 	public buildings.Base CreateCity(int owner, int xx, int yy, int type) {//15 = Neutral, 12, 13, 14 are unused. (12 max players)
-		int team = 0;
-		if (owner == -1) {}//Special setup for bla
-		else if (owner>Game.btl.totalplayers) {
+		if (owner>Game.btl.totalplayers) {
 			owner=15;
 			if (type == 0) {type = 1;}
 		}
-		else {team = Game.player.get(owner).team;}
 		switch (type) {
-			case 0:return new buildings.Capital(owner, team, xx, yy);
-			case 1:return new buildings.Town(owner, team, xx, yy);
-			case 2:return new buildings.Barracks(owner, team, xx, yy);
-			case 3:return new buildings.Airport(owner, team, xx, yy);
-			case 4:return new buildings.Shipyard(owner, team, xx, yy);
+			case 0:return new buildings.Capital(owner, xx, yy);
+			case 1:return new buildings.Town(owner, xx, yy);
+			case 2:return new buildings.Barracks(owner, xx, yy);
+			case 3:return new buildings.Airport(owner, xx, yy);
+			case 4:return new buildings.Shipyard(owner, xx, yy);
 		}
 		return null;
 	}

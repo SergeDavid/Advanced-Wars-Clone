@@ -30,7 +30,7 @@ public class Gui extends JPanel {
 	public JButton Options = new JButton("Options");
 	public JButton Exit = new JButton("Exit");
 
-	JList maps_list = new JList();
+	public JList maps_list = new JList();
 	DefaultListModel maps_model = new DefaultListModel();
 	JList packs_list = new JList();
 	DefaultListModel packs_model = new DefaultListModel();

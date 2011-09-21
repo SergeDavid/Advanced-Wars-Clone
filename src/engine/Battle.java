@@ -105,10 +105,17 @@ public class Battle {
 		if (max>4) {totalplayers = 4;
 			Game.error.ShowError("The game currently supports only 4 players, not " + max + ".");
 		}
-		for (int i = 0;i<totalplayers;i++) {
-			//TODO: Load commander info from the different gui settings somewhere.
-			//TODO: Load commanders from the savegame file also.
-			Game.player.add(Game.list.CreateCommander(0,i+1,startingmoney,false));
+	}
+	public void AddCommanders(int[] coms, boolean[] npc, int start, int city) {
+		startingmoney = start;
+		buildingmoney = city;
+		for (int i = 0;i<totalplayers;i++) {//TODO: Team setup needs to be added.
+			Game.player.add(Game.list.CreateCommander(coms[i],i+1,start,npc[i]));
+		}
+		for (buildings.Base bld : Game.builds) {
+			if (bld.owner!=15) {
+				bld.team = Game.player.get(bld.owner).team;
+			}
 		}
 	}
 

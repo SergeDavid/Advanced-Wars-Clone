@@ -13,7 +13,7 @@ public class Base {
 	Units unittype = Units.GROUND;
 	
 	//Health (How long until it is captured / destroyed, and how far along it is)
-	int maxhealth = 20;
+	public int maxhealth = 20;
 	public int health = maxhealth;
 	
 	//owner's ID and team #
@@ -24,10 +24,9 @@ public class Base {
 	public int x;
 	public int y;
 	
-	public Base(int owner,int team,int xx, int yy) {
+	public Base(int owner,int xx, int yy) {
 		//15 = Neutral, 12~14 are unused. (12 max players)
 		this.owner=owner;
-		this.team=team;
 		x=xx;
 		y=yy;
 		img=0;

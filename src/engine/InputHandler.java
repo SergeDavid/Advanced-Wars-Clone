@@ -63,12 +63,12 @@ public class InputHandler implements KeyListener,MouseListener,ActionListener {
 			players.Base ply = Game.player.get(Game.btl.currentplayer);
 			
 			if (i==up) {ply.selecty--;if (ply.selecty<0) {ply.selecty++;}}
-			if (i==down) {ply.selecty++;if (ply.selecty>=Game.map.height) {ply.selecty--;}}
-			if (i==left) {ply.selectx--;if (ply.selectx<0) {ply.selectx++;}}
-			if (i==right) {ply.selectx++;if (ply.selectx>=Game.map.width) {ply.selectx--;}}
-			if (i==select) {Game.btl.Action();}
-			if (i==cancel) {Game.player.get(Game.btl.currentplayer).Cancle();}
-			if (i==start) {
+			else if (i==down) {ply.selecty++;if (ply.selecty>=Game.map.height) {ply.selecty--;}}
+			else if (i==left) {ply.selectx--;if (ply.selectx<0) {ply.selectx++;}}
+			else if (i==right) {ply.selectx++;if (ply.selectx>=Game.map.width) {ply.selectx--;}}
+			else if (i==select) {Game.btl.Action();}
+			else if (i==cancel) {Game.player.get(Game.btl.currentplayer).Cancle();}
+			else if (i==start) {
 				if (MenuHack) {Game.gms.CloseMenu();}
 				else {
 					new menus.Pause();
@@ -77,19 +77,19 @@ public class InputHandler implements KeyListener,MouseListener,ActionListener {
 		}
 		if (Game.GameState==Game.State.EDITOR) {
 			if (i==up) {Game.edit.selecty--;if (Game.edit.selecty<0) {Game.edit.selecty++;}}
-			if (i==down) {Game.edit.selecty++;if (Game.edit.selecty>=Game.map.height) {Game.edit.selecty--;}}
-			if (i==left) {Game.edit.selectx--;if (Game.edit.selectx<0) {Game.edit.selectx++;}}
-			if (i==right) {Game.edit.selectx++;if (Game.edit.selectx>=Game.map.width) {Game.edit.selectx--;}}
-			if (i==select) {Game.edit.AssButton();}
-			if (i==cancel) {Game.edit.ButtButton();}
-			if (i==start) {
+			else if (i==down) {Game.edit.selecty++;if (Game.edit.selecty>=Game.map.height) {Game.edit.selecty--;}}
+			else if (i==left) {Game.edit.selectx--;if (Game.edit.selectx<0) {Game.edit.selectx++;}}
+			else if (i==right) {Game.edit.selectx++;if (Game.edit.selectx>=Game.map.width) {Game.edit.selectx--;}}
+			else if (i==select) {Game.edit.AssButton();}
+			else if (i==cancel) {Game.edit.ButtButton();}
+			else if (i==start) {
 				new menus.EditorMenu();
 			}
 		}
 		
 		if (i==dev1) {Game.gui.LoginScreen();}
-		if (i==dev2) {Game.load.LoadTexturePack("Test");}
-		if (i==dev3) {
+		else if (i==dev2) {Game.load.LoadTexturePack("Test");}
+		else if (i==dev3) {
 			DevPathing++;
 			switch (DevPathing) {
 				case 1:Game.pathing.ShowCost=false;break;
@@ -97,8 +97,9 @@ public class InputHandler implements KeyListener,MouseListener,ActionListener {
 				case 3:Game.pathing.ShowHits=false;Game.pathing.ShowCost=true;DevPathing=0;break;
 			}
 		}
-		if (i==dev4) {Game.btl.EndTurn();}
-		if (i==dev5) {Game.player.get(Game.btl.currentplayer).npc = !Game.player.get(Game.btl.currentplayer).npc; Game.btl.EndTurn();}
+		else if (i==dev4) {Game.btl.EndTurn();}
+		else if (i==dev5) {Game.player.get(Game.btl.currentplayer).npc = !Game.player.get(Game.btl.currentplayer).npc; Game.btl.EndTurn();}
+		else if (i==dev6) {new menus.PlayerSelection();}
 	}
 	public void keyReleased(KeyEvent arg0) {}
 	public void keyTyped(KeyEvent arg0) {}
@@ -114,8 +115,7 @@ public class InputHandler implements KeyListener,MouseListener,ActionListener {
 		Game.gui.requestFocusInWindow();
 		Object s = e.getSource();
 		if (s==Game.gui.Join) {
-			Game.btl.NewGame(Game.gui.maps_list.getSelectedValue() + "");
-			Game.gui.InGameScreen();
+			new menus.PlayerSelection();
 		}
 		else if (s==Game.gui.Load) {
 			Game.save.LoadGame();

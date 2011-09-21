@@ -80,7 +80,9 @@ public class Base {
 		if (destx<0||desty<0) {return false;}
 		if (destx>=Game.map.width||desty>=Game.map.height) {return false;}
 		for (units.Base unit : Game.units) {//Allows units in the same team to walk past each other.
-			if (unit.x==destx&&unit.y==desty&&Game.player.get(unit.owner).team!=Game.player.get(owner).team) {return false;}
+			if (unit.x==destx&&unit.y==desty&&Game.player.get(unit.owner).team!=Game.player.get(owner).team) {
+				return false;
+			}
 		}
 		switch (legs) {//This is used to find out if the unit can move to said tile or not.
 			case INF: if (Game.map.map[desty][destx].walk) {return true;} break;
@@ -144,7 +146,7 @@ public class Base {
 			if (bld!=-1) {
 				buildings.Base city = Game.builds.get(bld);
 				if (city.team!=Game.player.get(owner).team) {
-					city.Capture(health/10,owner);
+					city.Capture((int) (health/10*Game.player.get(owner).CaptureBonus),owner);
 					if (city.name.equals("Capital") && city.owner==owner) {
 						Game.btl.ChangeBuilding(x,y);Game.list.CreateCity(owner, x, y, 1);
 					}
@@ -201,9 +203,14 @@ public class Base {
 		if (acted) {loc[1]++;}
 		return loc;
 	}
-	/**Returns the ID# of the building the unit is currently standing on to "bld". This is updated on creation and move.*/
+	/**Returns the ID# of the building the unit is currently standing on to "bld". 
+	 * This is updated on creation and move.
+	 * This also resets the city health if a unit moves off of it.*/
 	private void CityPointer() {
-		if (bld!=-1) {Game.builds.get(bld).Locked = false;}
+		if (bld!=-1) {
+			if (oldx != x && oldy !=y) {Game.builds.get(bld).health = Game.builds.get(bld).maxhealth;} 
+			Game.builds.get(bld).Locked = false;
+		}
 		bld = -1;
 		for (int i = 0; i < Game.builds.size(); i++) {
 			if (Game.builds.get(i).x==x && Game.builds.get(i).y==y) {

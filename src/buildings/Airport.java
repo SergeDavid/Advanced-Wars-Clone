@@ -2,8 +2,8 @@ package buildings;
 
 public class Airport extends Base {
 
-	public Airport(int owner, int team, int xx, int yy) {
-		super(owner, team, xx, yy);
+	public Airport(int owner, int xx, int yy) {
+		super(owner, xx, yy);
 		name="Airport";
 		desc="Creates Air units.";
 		img = 3;

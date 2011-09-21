@@ -5,11 +5,11 @@ public class Water extends Base {
 		name = "Water";
 		oldx = x = 1;
 		oldy = y = 2;
+		MultiTiled = true;
+		walk = false;
+		drive = false;
+		swim = true;
 	}
-	public boolean walk() {return false;}
-	public boolean drive() {return false;}
-	public boolean swim() {return true;}
-	public boolean fly() {return true;}
 	public double speed() {return 1;}
 	public double defense() {return 1;}
 }

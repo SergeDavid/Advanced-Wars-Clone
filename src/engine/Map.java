@@ -40,9 +40,8 @@ public class Map {
 	public void SwitchTiles() {
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
-				//TODO: Change this to refer to map[y][x].multiples
 				//TODO: Change the ChangeTiles to support boolean OpenCorners, ClosedCorners, and actual x/y locations of said stuff.
-				if (map[y][x].name.equals("Water")) {
+				if (map[y][x].MultiTiled) {
 					ChangeTiles(map[y][x],x,y);
 				}
 			}

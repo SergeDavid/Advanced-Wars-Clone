@@ -16,6 +16,7 @@ public class Base {
 	public double CostBonus = 1.0;
 	public double ArmorBonus = 1.0;//Currently just an overall bonus, TODO: Add in specific bonuses (foot, vehicle, tank, artillery, etc.)
 	public double WeaponBonus = 1.0;
+	public double CaptureBonus = 1.0;
 
 	//Special Power
 	/**The current power level, max is level2.*/
