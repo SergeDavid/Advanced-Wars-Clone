@@ -15,7 +15,7 @@ public class Base {
 	//Extras
 	public int Fog = 5;//Fog of war setting.
 	public int cost = 100;
-	public int building = 0;//Which building it can be bought from.
+	public String building = "barracks";//Which building it can be bought from.
 	public boolean raider = false;
 	public int bld = -1;//The building this unit is currently standing on, null or -1 if none.
 	
@@ -83,12 +83,12 @@ public class Base {
 			if (unit.x==destx&&unit.y==desty&&Game.player.get(unit.owner).team!=Game.player.get(owner).team) {return false;}
 		}
 		switch (legs) {//This is used to find out if the unit can move to said tile or not.
-			case INF: if (Game.map.map[desty][destx].walk()) {return true;} break;
-			case TIRE: if (Game.map.map[desty][destx].drive()) {return true;} break;
-			case TANK: if (Game.map.map[desty][destx].drive()) {return true;} break;
-			case SHIP: if (Game.map.map[desty][destx].swim()) {return true;} break;
-			case FLY: if (Game.map.map[desty][destx].fly()) {return true;} break;
-			default: if (Game.map.map[desty][destx].fly()) {return true;} break;
+			case INF: if (Game.map.map[desty][destx].walk) {return true;} break;
+			case TIRE: if (Game.map.map[desty][destx].drive) {return true;} break;
+			case TANK: if (Game.map.map[desty][destx].drive) {return true;} break;
+			case SHIP: if (Game.map.map[desty][destx].swim) {return true;} break;
+			case FLY: if (Game.map.map[desty][destx].fly) {return true;} break;
+			default: if (Game.map.map[desty][destx].fly) {return true;} break;
 		}
 		return false;
 	}

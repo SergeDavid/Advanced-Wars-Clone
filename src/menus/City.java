@@ -12,7 +12,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-
 import engine.Game;
 
 public class City implements ActionListener,ListSelectionListener {
@@ -30,12 +29,18 @@ public class City implements ActionListener,ListSelectionListener {
 	int current;
 	int x;
 	int y;
-	//Vector<int> UnitIDs = new Vector<int>;
+	int[] ids = new int[Game.displayU.size()];
 	
 	public City(String Type, int xx, int yy) {
 		UnitModel.removeAllElements();
+		System.out.println(Type);
+		int a = 0;
 		for (int i = 0; i < Game.displayU.size(); i++) {
-			UnitModel.addElement(Game.displayU.get(i).name + " = $" + (Game.displayU.get(i).cost * Game.player.get(Game.btl.currentplayer).CostBonus));
+			if (Game.displayU.get(i).building.equals(Type)) {
+				UnitModel.addElement(Game.displayU.get(i).name + " = $" + (Game.displayU.get(i).cost * Game.player.get(Game.btl.currentplayer).CostBonus));
+				ids[a] = i;
+				a++;
+			}
 		}
 		Main.add(Buy);
 		Main.add(Return);
@@ -80,7 +85,7 @@ public class City implements ActionListener,ListSelectionListener {
 		Object s = e.getSource();
 		if (s==Return) {Game.gms.CloseMenu();}
 		else if (s==Buy) {
-			Game.btl.Buyunit(Units.getSelectedIndex(), x, y);
+			Game.btl.Buyunit(ids[Units.getSelectedIndex()], x, y);
 			Game.gms.CloseMenu();
 		}
 	}

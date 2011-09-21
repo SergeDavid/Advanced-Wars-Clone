@@ -1,5 +1,6 @@
 package engine;
 
+import java.awt.Dimension;
 import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +59,8 @@ public class Game extends JFrame {
 	public Game() {super (name);
 		//Default Settings of the JFrame
 	    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	    setSize(new Dimension(20*ScreenBase+6,12*ScreenBase+12));
+		setBounds(0,0,20*ScreenBase+6,12*ScreenBase+12);
 	    setUndecorated(false);
 		setResizable(false);
 	    setLocationRelativeTo(null);

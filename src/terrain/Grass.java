@@ -3,8 +3,8 @@ package terrain;
 public class Grass extends Base {
 	public Grass() {
 		name = "Grass";
-		x = 1;
-		y = 0;
+		oldx = x = 1;
+		oldy = y = 0;
 	}
 	public boolean walk() {return true;}
 	public boolean drive() {return true;}

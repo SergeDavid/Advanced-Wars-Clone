@@ -37,11 +37,6 @@ public class Map {
 		}
 	}
 	
-	public boolean Walkable(int i) {if (tiles.get(i).walk()) {return true;}return false;}
-	public boolean Driveable(int i) {if (tiles.get(i).drive()) {return true;}return false;}
-	public boolean Swimable(int i) {if (tiles.get(i).swim()) {return true;}return false;}
-	public boolean Flyable(int i) {if (tiles.get(i).fly()) {return true;}return false;}
-	
 	public void SwitchTiles() {
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
@@ -62,9 +57,11 @@ public class Map {
 		boolean B1 = FindCommon(type.name,x-1,y+1);
 		boolean B2 = FindCommon(type.name,x,y+1);
 		boolean B3 = FindCommon(type.name,x+1,y+1);
+		type.x = type.oldx;
+		type.y = type.oldy;
 		if (!T2&&!M1&&!M2&&!B2) {//None
-			type.x+=4;//+4
-			type.y-=1;//-1
+			type.x+=4;
+			type.y-=1;
 		}
 		//Lines
 		else if (T2&&!M1&&!M2&&B2) {type.x+=3;type.y-=1;}// |

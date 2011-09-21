@@ -6,7 +6,7 @@ public class Airport extends Base {
 		super(owner, team, xx, yy);
 		name="Airport";
 		desc="Creates Air units.";
-		img = 4;
-		Menu = "airbase";
+		img = 3;
+		Menu = "airport";
 	}
 }

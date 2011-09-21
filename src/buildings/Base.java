@@ -9,6 +9,8 @@ public class Base {
 	String desc = "Giggles";
 	public boolean Locked;//Easy determination if a unit is standing on it or not. TODO: Install this or do something.
 	public String Menu = "";//The menu this opens.
+	enum Units {GROUND, AIR, WATER};
+	Units unittype = Units.GROUND;
 	
 	//Health (How long until it is captured / destroyed, and how far along it is)
 	int maxhealth = 20;

@@ -32,7 +32,7 @@ public class Editor {
 		switch (pick) {
 		case TILE://Done
 			if (Game.map.map[selecty][selectx].building() == true) {RemoveBuilding();}
-			Game.map.map[selecty][selectx] = Game.map.tiles.get(id);
+			Game.map.map[selecty][selectx] = Game.map.getTile(id);
 		break;
 		case CITY:
 			//Put city in the proper location by going through the list and looking for correct Y and X locations.

@@ -1,7 +1,6 @@
 package units;
 
 public class Infantry extends Base {
-
 	public Infantry(int owner, int xx, int yy, boolean active) {
 		super(owner, xx, yy, active);
 		name = "Infantry";

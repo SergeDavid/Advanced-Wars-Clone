@@ -7,6 +7,6 @@ public class Barracks extends Base {
 		name="Barracks";
 		desc="Creates ground units.";
 		img = 2;
-		Menu = "groundbase";
+		Menu = "barracks";
 	}
 }
