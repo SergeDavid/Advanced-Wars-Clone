@@ -38,11 +38,15 @@ public class Base {
 		}
 	}
 	
-	public void Capture(int hp, int winner) {
+	public void Capture(int hp, int winner) {//TODO: Fix this up to work properly
 		//TODO: Animation trigger for capturing.
 		health-=hp;
 		if (health<=0) {
 			System.out.println("Building Captured!");
+			if (name.equals("Capital")) {
+				Game.btl.CaptureCapital(x,y);
+			}
+			System.out.println("Herp Derp");
 			owner=winner;
 			team=Game.player.get(winner).team;
 			health=maxhealth;

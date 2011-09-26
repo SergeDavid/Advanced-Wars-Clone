@@ -79,8 +79,8 @@ public class Game extends JFrame {
 		list = new ListData();
 		
 		setVisible(true);//This has been moved down here so that when everything is done, it is shown.
+		gui.LoginScreen();
 		save.LoadSettings();
-		
 		GameLoop();
 	}
 

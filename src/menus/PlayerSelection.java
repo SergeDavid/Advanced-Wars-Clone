@@ -26,7 +26,10 @@ public class PlayerSelection implements ActionListener {
 	JButton CityMoney = new JButton ("$ 50");int city = 50;
 	JButton ThunderbirdsAreGo = new JButton ("Start");
 	
-	public PlayerSelection() {
+	String mapname;
+	
+	public PlayerSelection(String map) {
+		mapname = map;
 		Game.gui.removeAll();
 		Game.gms.OpenMenu(400,200);
 		for (int i = 0; i < 4; i++) {
@@ -54,11 +57,11 @@ public class PlayerSelection implements ActionListener {
 	@Override public void actionPerformed(ActionEvent e) {
 		Object s = e.getSource();
 		if (s == Return) {
-			Game.gui.LoginScreen();
 			Game.gms.CloseMenu();
+			Game.gui.LoginScreen();
 		}
 		else if(s == ThunderbirdsAreGo) {
-			Game.btl.NewGame(Game.gui.maps_list.getSelectedValue() + "");
+			Game.btl.NewGame(mapname);
 			Game.btl.AddCommanders(plyer, npc, 100, 50);
 			Game.gui.InGameScreen();
 		}

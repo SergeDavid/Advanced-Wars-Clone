@@ -11,7 +11,5 @@ public class Mechanic extends Base {
 		speed = 3;
 		cost = 200;
 		raider = true;
-		
-		attack = 45;
 	}
 }

@@ -6,7 +6,7 @@ public class Helecopter extends Base {
 		name = "Helecopter";
 		nick = "Hele";
 		desc = "A fast reaction unit that kills things.";
-		img = 0;
+		img = 4;
 		speed = 8;
 		legs = Move.FLY;
 		ArmorType = Armor.AIR;

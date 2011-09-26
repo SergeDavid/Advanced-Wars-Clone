@@ -26,6 +26,7 @@ public class Editor {
 		mapname = name;
 		
 		Game.map.MapSetup(width, height);
+		Game.btl.totalplayers = 4;//HACK
 	}
 	
 	public void AssButton() {
@@ -35,13 +36,12 @@ public class Editor {
 			Game.map.map[selecty][selectx] = Game.map.getTile(id);
 		break;
 		case CITY:
-			//Put city in the proper location by going through the list and looking for correct Y and X locations.
-			Game.builds.add(new buildings.Town(0, selectx, selecty));
+			Game.builds.add(Game.list.CreateCity(1, selectx, selecty, id));//Change 0 to player
 			Game.map.map[selecty][selectx] = new terrain.City();
 		break;
 		case UNIT:
-			//Add setup for unit removal.
-			Game.map.map[selecty][selectx] = new terrain.Forest();
+			System.out.println("UNIT! " + id);
+			Game.units.add(Game.list.CreateUnit(id, 0, selectx, selecty, false));//Change 0 to player
 		break;
 		}
 	}

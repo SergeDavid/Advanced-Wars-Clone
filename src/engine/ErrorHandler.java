@@ -55,7 +55,9 @@ public class ErrorHandler extends JPanel {
 		else {
 			text.setText(hiddenlist.get(0));
 			hiddenlist.remove(0);
+			Game.gui.remove(this);
 			ResetSize();
+			Game.gui.add(this);
 			showtime = 2;
 		}
 	}

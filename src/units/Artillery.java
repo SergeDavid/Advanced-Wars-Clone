@@ -13,5 +13,6 @@ public class Artillery extends Base {
 		speed = 4;
 		MinAtkRange = 2;
 		MaxAtkRange = 4;
+		MainAttack = new int[] {0,100,100,100,100,100,100,100};
 	}
 }

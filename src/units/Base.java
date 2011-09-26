@@ -2,7 +2,6 @@ package units;
 
 import java.awt.Point;
 import java.util.Vector;
-
 import engine.Game;
 
 public class Base {
@@ -18,6 +17,9 @@ public class Base {
 	public String building = "barracks";//Which building it can be bought from.
 	public boolean raider = false;
 	public int bld = -1;//The building this unit is currently standing on, null or -1 if none.
+	public int MaxFuel = 1000;
+	public int Fuel = 1000;//Total fuel left
+	public int Ammo = 10;//Ammo used for the main weapon, secondary weapon doesn't run out.
 	
 	//life settings
 	boolean dead;
@@ -40,22 +42,21 @@ public class Base {
 	public enum Move {INF,TIRE,TANK,SHIP,FLY};
 	public Move legs = Move.INF;
 	
-	//Battle Settings
+	//Battle Settings 
+	//TODO: Add alternate weapon setup
 	public boolean MoveAndShoot = true;//Allows units to move then shoot, or make them stay in the same location in order to attack.
-	public double attack = 50;//Base damage done to others
-	public double defense = 20;//Base armor for taking damage
-	
 	public int MaxAtkRange = 1;//How many squares away from the unit can it attack. (1 being default, 0 being none)
 	public int MinAtkRange = 1;//This is used for ranged units such as artillery.
+	public int[] MainAttack = {//Base damage to each unit.
+			55,50,10,20,//Ground
+			20,//Air
+			//0,0,0,0,//Water
+			50,50,50,50};//Extra (For mods)
 	
-	public int MaxFuel = 1000;
-	public int Fuel = 1000;//Total fuel left
-	public int Ammo = 10;//Ammo used for the main weapon, secondary weapon doesn't run out.
-	
+	//What can and can't be shot at.
 	public enum Armor {FOOT,VEHICLE,TANK,AIR,SHIP,ALL,NONE};//TODO: Hook this up to attacking.
 	public Armor ArmorType = Armor.FOOT;
-	public Armor[] MainATK = {Armor.NONE};//The main attack to be used.
-	public Armor[] AltATK = {Armor.ALL};//The secondary weapon to be used.
+	public Armor[] MainATK = {Armor.ALL};//The main attack to be used.
 	
 	/** I need to add what kind of unit is being constructed or split it into extended classes.
 	 * 
@@ -116,10 +117,11 @@ public class Base {
 
 		units.Base target = FindTarget(destx, desty, true, false);
 		if (target!=null) {
-			if (inrange(target.x, target.y)) {				
-				double damage = DamageFormula(target);
+			if (inrange(target.x, target.y)) {		
 				
+				double damage = DamageFormula(target);
 				target.health-=damage;
+				
 				if (target.health<=0) {
 					damage+=target.health;
 					if (target.bld!=-1) {
@@ -147,9 +149,6 @@ public class Base {
 				buildings.Base city = Game.builds.get(bld);
 				if (city.team!=Game.player.get(owner).team) {
 					city.Capture((int) (health/10*Game.player.get(owner).CaptureBonus),owner);
-					if (city.name.equals("Capital") && city.owner==owner) {
-						Game.btl.ChangeBuilding(x,y);Game.list.CreateCity(owner, x, y, 1);
-					}
 				}
 			}
 		}
@@ -208,7 +207,9 @@ public class Base {
 	 * This also resets the city health if a unit moves off of it.*/
 	private void CityPointer() {
 		if (bld!=-1) {
-			if (oldx != x && oldy !=y) {Game.builds.get(bld).health = Game.builds.get(bld).maxhealth;} 
+			if (oldx != x || oldy !=y) {
+				Game.builds.get(bld).health = Game.builds.get(bld).maxhealth;
+			} 
 			Game.builds.get(bld).Locked = false;
 		}
 		bld = -1;
@@ -237,23 +238,25 @@ public class Base {
 		return used;
 	}
 	private double DamageFormula(Base target) {
-		double dmg = attack; //Base Attack
-		dmg *= health*0.01;
+		double dmg = MainAttack[FindUnitID(target)]; //Base Attack
+		dmg *= health*0.01; //Health Effectiveness
 		dmg *= Game.player.get(owner).WeaponBonus; //Commander Bonus
-		//dmg *= ArmorTypeBonus; //TODO: Specific effectiveness bonus
-		
-		double def = defense; //Base Defense
-		def *= target.health*0.01;
-		def *= Game.player.get(target.owner).ArmorBonus; //Commander Bonus
-		def *= Game.map.map[target.y][target.x].defense(); //Terrain Defense Bonus
-		
+		dmg -= (target.health*0.01)*Game.player.get(target.owner).ArmorBonus; //Commander Defense Bonus
+		dmg -= (target.health*0.01)*Game.map.map[target.y][target.x].defense(); //Terrain Defense Bonus
+
 		//Returns the outcome, with a minimum damage of 0%
-		double outcome = dmg-def;
-		if (outcome < 0) {outcome = 0;}
-		System.out.println("Health: " + (health*0.01));
-		System.out.println("Outcome: " + outcome + " dmg: " + dmg + " def: " + def);
-		return outcome;
+		if (dmg < 0) {dmg = 0;}
+		return dmg;
 	}
+	private int FindUnitID(Base target) {
+		for (int i = 0; i < Game.displayU.size(); i++) {
+			if (Game.displayU.get(i).name.equals(target.name)) {
+				return i;
+			}
+		}
+		return 0;
+	}
+
 	/**This checks to see if the destination is in the map, and then calls the path-finder and returns true if the location is movable.*/
 	private boolean moveable(int destx, int desty) {
 		if (destx<0||desty<0) {return false;}
@@ -270,10 +273,7 @@ public class Base {
 	}
 
 	public void Medic() {
-		if (Game.builds.get(bld).team != Game.player.get(owner).team) {
-			return;
-		}
-		
+		if (Game.builds.get(bld).team != Game.player.get(owner).team) {return;}
 		//Health Stuff
 		int hp = health+20;
 		if (hp>maxhp) {hp=maxhp;}
@@ -282,7 +282,7 @@ public class Base {
 		if (money<=Game.player.get(Game.btl.currentplayer).money) {
 			Game.player.get(Game.btl.currentplayer).money-=money;
 			health = hp;
-			//Fuel
+			//Fuel is free just because
 			Fuel = MaxFuel;
 		}
 	}

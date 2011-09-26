@@ -7,7 +7,7 @@
 # 5 = Unit info : owner(x) x(xx) y(xx) type(xx)
 1 0f0b2
 2 Serge-David This is a description of the map.
-3 102001004
+3 102001003
 4 4121131101110012
 4 0000000000000120
 4 2222222222221020

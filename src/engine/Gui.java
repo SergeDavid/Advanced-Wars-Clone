@@ -5,12 +5,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.Insets;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 	
 public class Gui extends JPanel {
 	private static final long serialVersionUID = 3457450162330022096L;
@@ -22,63 +17,19 @@ public class Gui extends JPanel {
 	
 	/**The base frame to keep animations in sync (1 frame = 100ms) Remember to reset this to zero when it hits 12.*/
 	public int frame = 0; //counts up to 12 (resets to zero)
-
-	//Main Menu
-	public JButton Join = new JButton("New Game");
-	public JButton Load = new JButton("Continue");
-	public JButton Editor = new JButton("Editor");
-	public JButton Options = new JButton("Options");
-	public JButton Exit = new JButton("Exit");
-
-	public JList maps_list = new JList();
-	DefaultListModel maps_model = new DefaultListModel();
-	JList packs_list = new JList();
-	DefaultListModel packs_model = new DefaultListModel();
 		
 	public Gui(Game game) {
 		setPreferredSize(new Dimension(width,height));
 		setBounds(0, 0, width, height);
 		setLayout(null);
 		ThisMadeMeWantToRageQuit = game;
-		
-		LoginScreen();
 	}
 
 	/**Creates the Login screen layout*/
 	public void LoginScreen() {
 		Game.GameState=Game.State.MENU;
 		removeAll();
-		
-		add(Join);
-		add(Load);
-		add(Editor);
-		add(Options);
-		add(Exit);
-		
-		Insets insets = getInsets();
-		Dimension size = Join.getPreferredSize();
-		Join.setBounds(220 + insets.left, 170 + insets.top, 
-				size.width, size.height);
-		size = Load.getPreferredSize();
-		Load.setBounds(220 + insets.left, 200 + insets.top, 
-				size.width, size.height);
-		size = Editor.getPreferredSize();
-		Editor.setBounds(220 + insets.left, 230 + insets.top, 
-				size.width, size.height);
-		size = Options.getPreferredSize();
-		Options.setBounds(220 + insets.left, 260 + insets.top, 
-				size.width, size.height);
-		size = Exit.getPreferredSize();
-		Exit.setBounds(220 + insets.left, 290 + insets.top, 
-				size.width, size.height);
-		
-		maps_model = Game.finder.GrabMaps();
-		JScrollPane maps_pane = new JScrollPane(maps_list = new JList(maps_model));
-		maps_pane.setBounds(400 + insets.left, 40 + insets.top, 140, 300);
-		add(maps_pane);
-		size = maps_list.getPreferredSize();
-		maps_list.setBounds(insets.left, insets.top, size.width, size.height);
-		maps_list.setSelectedIndex(0);
+		new menus.StartMenu();
 		if (Game.error.showing) {add(Game.error);}
 	}
 	/**Creates the InGame screen layout*/

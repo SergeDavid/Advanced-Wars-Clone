@@ -1,0 +1,48 @@
+Cities
+	- See about supporting buildings taller then 1 tile (smoke, capital, etc)
+ 		- Either order units and buildings by visible level (+1 down to get the tops of them) and then draw them in order
+ 		- Or add building tops to another level (DrawCity, DrawUnits, DrawCityTops)
+
+Terrain
+	- Turn Dirt into Mud when it is raining (slower and slightly higher defense)
+	- Make grass the default terrain
+	- Add rivers, beaches, reefs (hide ships)
+	
+Units
+	- Add in some more units
+	- Redesign path finding to include nodex, nodey, parentx, parenty
+	- Fuel cost is determined by how many nodes is between point A and B.
+	- Redesign Attack to be an array with effectiveness vs each unit. (Plus 4 or so for user mods)
+	- Remove defense, and just leave commander defensive bonus on types.
+	
+Painting
+	- Draw more units and to use as dev art
+	- Draw more commanders
+	- Redesign the terrain to suit Mud, Rivers, and Road
+	- Draw a snow version of the terrain and buildings
+	- Draw some menu buttons (Main menu to start) [Forever Alone][Online][Editor][Options][Exit]
+
+GUI
+	- Resize button to fit the screen size (Make it dynamic on loading of the menu)
+	- Move the Main Menu to a default menu and open it later.
+	- Fix up the options menu (Size, Music, Sound, Unit Movement[on][off])
+
+Ai
+	- Require Infantry units in relation to buildings left to capture.
+	- Units don't attack if they can't win
+	- Units retreate to heal at cities (Not bases that produce units)
+	- Redesign units to run at enemy units or cities instead of random
+	- Add a pathing method for getting AI units to move in the correct direction when their target is outside of their move range.
+
+Defeat
+	- If lost by capture, all cities go to the current player
+	- If lost by lack of units, all cities become neutral
+	- On capital capture, make it turn into the winner's city instead of neutral.
+	- Include a way to lose by lose of units.
+	
+Sounds
+	- Create the Music and Sound classes
+	- Find a bunch of PublicDomain sounds and or create own (.OGG)
+	- Have the music and sound sliders influence volume (if 0 don't bother playing them)
+	- Music [Battle][Power][End Game][Menu][Credits?]
+	- Sounds [Moving foot/vehicle/plane/chopper/boat][Buttons][Explosion big/small]

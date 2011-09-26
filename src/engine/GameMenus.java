@@ -28,6 +28,7 @@ public class GameMenus extends JPanel {
 		Dimension size = Game.gui.getPreferredSize();
 		//0 -> 600/300 -> 100->50 = Middle of the screen.
 		setBounds(insets.left + size.width/2 - width/2,insets.top + size.height/2 - height/2, width, height);
+		setSize(width, height);
 		Game.gui.add(this);
 		Game.input.MenuHack=true;
 		requestFocusInWindow();

@@ -48,11 +48,6 @@ public class InputHandler implements KeyListener,MouseListener,ActionListener {
 	public InputHandler() {
 		Game.gui.addKeyListener(this);
 		Game.gui.addMouseListener(this);
-		Game.gui.Join.addActionListener(this);
-		Game.gui.Load.addActionListener(this);
-		Game.gui.Exit.addActionListener(this);
-		Game.gui.Editor.addActionListener(this);
-		Game.gui.Options.addActionListener(this);
 	}
 
 	int DevPathing = 1;
@@ -99,7 +94,7 @@ public class InputHandler implements KeyListener,MouseListener,ActionListener {
 		}
 		else if (i==dev4) {Game.btl.EndTurn();}
 		else if (i==dev5) {Game.player.get(Game.btl.currentplayer).npc = !Game.player.get(Game.btl.currentplayer).npc; Game.btl.EndTurn();}
-		else if (i==dev6) {new menus.PlayerSelection();}
+		else if (i==dev6) {new menus.StartMenu();}
 	}
 	public void keyReleased(KeyEvent arg0) {}
 	public void keyTyped(KeyEvent arg0) {}
@@ -114,20 +109,5 @@ public class InputHandler implements KeyListener,MouseListener,ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		Game.gui.requestFocusInWindow();
 		Object s = e.getSource();
-		if (s==Game.gui.Join) {
-			new menus.PlayerSelection();
-		}
-		else if (s==Game.gui.Load) {
-			Game.save.LoadGame();
-		}
-		else if (s==Game.gui.Editor) {
-			new menus.StartEditor();
-		}
-		else if (s==Game.gui.Options) {
-			new menus.Options();
-		}
-		else if (s==Game.gui.Exit) {
-			System.exit(0);
-		}
 	}
 }

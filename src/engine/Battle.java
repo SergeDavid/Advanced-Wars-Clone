@@ -119,10 +119,13 @@ public class Battle {
 		}
 	}
 
-	public void ChangeBuilding(int x, int y) {
+	public void CaptureCapital(int x, int y) {
+		int loser = 0;
 		for (int i = 0; i < Game.builds.size(); i++) {
 			if (Game.builds.get(i).x == x && Game.builds.get(i).y == y) {
 				Game.player.get(Game.builds.get(i).owner).defeated=true;//Makes a player lose.
+				loser = Game.builds.get(i).owner;
+				System.out.println("Grrr " + loser);
 				Game.builds.remove(i);
 				Game.builds.add(i,Game.list.CreateCity(currentplayer, x, y, 1));
 				playersleft--;
@@ -133,5 +136,13 @@ public class Battle {
 				break;
 			}
 		}
+		for (int i = 0; i < Game.units.size(); i++) {
+			if (Game.units.get(i).owner == loser) {
+				System.out.println("Remove " + Game.units.get(i).owner);
+				Game.units.remove(i);
+			}
+		}
+		//TODO: Change all buildings to be owned by the player. 
 	}
+	
 }

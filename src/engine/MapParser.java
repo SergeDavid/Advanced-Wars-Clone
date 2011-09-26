@@ -34,22 +34,23 @@ public class MapParser {
 		} 
 		catch (Exception e) {Game.error.ShowError("The map failed to save:" + e.getMessage());}
 	}
-	private String encodeInfo() {//TODO: Total players.
+	private String encodeInfo() {//TODO: Total players. (start with 2, and add more depending on unit and building owners.)
 		String w = Integer.toHexString(Game.map.width-1);if (w.length()<=1) {w = "0" + w;}
 		String h = Integer.toHexString(Game.map.height-1);if (h.length()<=1) {h = "0" + h;}
 		return "1 " + w + h + "2";
 	}
+	/**Adds the current player's name with a description of the map to the map file separated by the first space*/
 	private String encodeDesc() {
 		//TODO: Replace name with current players name, and leave description for manliness?
-		return "\n2 " + "PlayerName" + "-" + "Description of Map";
+		return "\n2 " + "PlayerName" + " " + "Description of Map";
 	}
-	/**Turns the building list into a string.*/
+	/**Turns the building list into a string. (and sorts them into proper order)*/
 	private String encodeCities() {
 		String cities = "";
-		if (!Game.builds.isEmpty()) {
-			cities+="\n4 ";
+		if (!Game.builds.isEmpty()) {//TODO: Reorder buildings by x/y location either here or during construction.
+			cities+="\n3 ";
 			for (buildings.Base bld : Game.builds) {
-				cities+=bld.owner;
+				cities+=Integer.toHexString(bld.owner);
 				cities+=CityID(bld);
 			}
 		}
@@ -86,7 +87,7 @@ public class MapParser {
 	private String CityID(buildings.Base bld) {
 		String a = "00";
 		for (int i = 0; i < Game.displayB.size(); i++) {
-			if (bld == Game.displayB.get(i)) {a = Integer.toHexString(i);break;}
+			if (bld.name.equals( Game.displayB.get(i).name)) {a = Integer.toHexString(i);break;}
 		}
 		if (a.length()<=1) {a = "0"+a;}
 		return a;
@@ -94,14 +95,14 @@ public class MapParser {
 	private String UnitID(units.Base unit) {
 		String a = "00";
 		for (int i = 0; i < Game.displayU.size(); i++) {
-			if (unit == Game.displayU.get(i)) {a = Integer.toHexString(i);break;}
+			if (unit.name.equals(Game.displayU.get(i).name)) {a = Integer.toHexString(i);break;}
 		}
 		if (a.length()<=1) {a = "0"+a;}
 		return a;
 	}
 	private String TerrainID(int x, int y) {
 		for (int i = 0; i < Game.map.tiles.size(); i++) {
-			if (Game.map.map[y][x] == Game.map.tiles.get(i)) {
+			if (Game.map.map[y][x].name.equals(Game.map.tiles.get(i).name)) {
 				return Integer.toHexString(i);
 			}
 		}
