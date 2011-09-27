@@ -24,19 +24,19 @@ public class EditorStuff implements ActionListener {
 	}
 	private void Show() {
 		Game.gui.removeAll();
-		Game.gms.OpenMenu(240,140);
+		MenuHandler.PrepMenu(240,140);
 		
 		for (int i = 0; i < Game.displayU.size(); i++) {
 			Units[i] = new JButton(ButtonImage(i,0,Type.UNIT));
 			Units[i].addActionListener(this);
 			Units[i].setBounds(10+32*i, 10, 32, 32);
-			Game.gms.add(Units[i]);
+			Game.gui.add(Units[i]);
 		}
 		for (int i = 0; i < Game.displayB.size(); i++) {
 			Cities[i] = new JButton(ButtonImage(i,0,Type.CITY));
 			Cities[i].addActionListener(this);
 			Cities[i].setBounds(10+32*i, 40, 32, 32);
-			Game.gms.add(Cities[i]);
+			Game.gui.add(Cities[i]);
 		}
 		int use = 0;//Hack so people can't place cities.
 		for (int i = 0; i < Game.map.tiles.size(); i++) {
@@ -44,12 +44,12 @@ public class EditorStuff implements ActionListener {
 				Tiles[i] = new JButton(ButtonImage(Game.map.tiles.get(i).x,Game.map.tiles.get(i).y,Type.TILE));
 				Tiles[i].addActionListener(this);
 				Tiles[i].setBounds(10+32*use, 70, 32, 32);
-				Game.gms.add(Tiles[i]);
+				Game.gui.add(Tiles[i]);
 				use++;
 			}
 		}
 
-		Game.gms.add(Return);
+		Game.gui.add(Return);
 	}
 	
 	enum Type {UNIT,CITY,TILE};
@@ -58,7 +58,7 @@ public class EditorStuff implements ActionListener {
 		BufferedImage buffimage = 
 				new BufferedImage(32, 32, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D gg = (Graphics2D) buffimage.getGraphics();
-		switch (type) {//TODO: Find out how to fix the city images not working until a game is played.
+		switch (type) {//TODO: Find out how to fix the city/unit images from not displaying on the first load in some cases.
 			case UNIT:
 				gg.drawImage(Game.img_char, 0, 0, 32, 32, x*32, y*32, x*32+32, y*32+32, null);
 			break;
@@ -76,27 +76,27 @@ public class EditorStuff implements ActionListener {
 	@Override public void actionPerformed(ActionEvent e) {
 		Object s = e.getSource();
 		if (s==Return) {
-			Game.gms.CloseMenu();
+			MenuHandler.CloseMenu();
 		}
 		for (int i = 0; i < Game.displayU.size(); i++) {
 			if (s==Units[i]) {
 				Game.edit.pick = engine.Editor.Type.UNIT;
 				Game.edit.id = i;
-				Game.gms.CloseMenu();
+				MenuHandler.CloseMenu();
 			}
 		}
 		for (int i = 0; i < Game.displayB.size(); i++) {
 			if (s==Cities[i]) {
 				Game.edit.pick = engine.Editor.Type.CITY;
 				Game.edit.id = i;
-				Game.gms.CloseMenu();
+				MenuHandler.CloseMenu();
 			}
 		}
 		for (int i = 0; i < Game.map.tiles.size(); i++) {
 			if (s==Tiles[i]) {
 				Game.edit.pick = engine.Editor.Type.TILE;
 				Game.edit.id = i;
-				Game.gms.CloseMenu();
+				MenuHandler.CloseMenu();
 			}
 		}
 		

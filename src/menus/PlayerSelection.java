@@ -1,5 +1,6 @@
 package menus;
 
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -8,6 +9,11 @@ import javax.swing.JLabel;
 
 import engine.Game;
 
+/**
+ * This deals with player and battle options setup (might split it) such as npc, team, commander, starting money, turn money, fog, etc.
+ * @author SergeDavid
+ * @version 0.2
+ */
 public class PlayerSelection implements ActionListener {
 	//TODO: Scale with map size.
 	//Commander Selection
@@ -30,37 +36,46 @@ public class PlayerSelection implements ActionListener {
 	
 	public PlayerSelection(String map) {
 		mapname = map;
-		Game.gui.removeAll();
-		Game.gms.OpenMenu(400,200);
+		Point size = MenuHandler.PrepMenu(400,200);
 		for (int i = 0; i < 4; i++) {
 			Prev[i].addActionListener(this);
-			Prev[i].setBounds(10+84*i, 10, 64, 32);
-			Game.gms.add(Prev[i]);
+			Prev[i].setBounds(size.x+10+84*i, size.y+10, 64, 32);
+			Game.gui.add(Prev[i]);
 			Next[i].addActionListener(this);
-			Next[i].setBounds(10+84*i, 100, 64, 32);
-			Game.gms.add(Next[i]);
+			Next[i].setBounds(size.x+10+84*i, size.y+100, 64, 32);
+			Game.gui.add(Next[i]);
 			ManOrMachine[i].addActionListener(this);
-			ManOrMachine[i].setBounds(12+84*i, 68, 58, 24);
-			Game.gms.add(ManOrMachine[i]);
-			
-			Name[i].setBounds(10+84*i, 40, 64, 32);
-			Game.gms.add(Name[i]);
+			ManOrMachine[i].setBounds(size.x+12+84*i, size.y+68, 58, 24);
+			Game.gui.add(ManOrMachine[i]);
+			Name[i].setBounds(size.x+10+84*i, size.y+40, 64, 32);
+			Game.gui.add(Name[i]);
 		}
-		ThunderbirdsAreGo.addActionListener(this);
-		ThunderbirdsAreGo.setBounds(200, 170, 100, 24);
-		Game.gms.add(ThunderbirdsAreGo);
+		SetBounds(size);
+		AddGui();
+		AddListeners();
+	}
+	private void SetBounds(Point size) {
+		ThunderbirdsAreGo.setBounds(size.x+200, size.y+170, 100, 24);
+		Return.setBounds(size.x+20, size.y+170, 100, 24);
+	}
+	private void AddGui() {
 		Return.addActionListener(this);
-		Return.setBounds(20, 170, 100, 24);
-		Game.gms.add(Return);
+		Game.gui.add(ThunderbirdsAreGo);
+		Game.gui.add(Return);
+	}
+	private void AddListeners() {
+		ThunderbirdsAreGo.addActionListener(this);
+		Return.addActionListener(this);
 	}
 	
 	@Override public void actionPerformed(ActionEvent e) {
 		Object s = e.getSource();
 		if (s == Return) {
-			Game.gms.CloseMenu();
+			MenuHandler.CloseMenu();
 			Game.gui.LoginScreen();
 		}
 		else if(s == ThunderbirdsAreGo) {
+			MenuHandler.CloseMenu();
 			Game.btl.NewGame(mapname);
 			Game.btl.AddCommanders(plyer, npc, 100, 50);
 			Game.gui.InGameScreen();
@@ -69,23 +84,17 @@ public class PlayerSelection implements ActionListener {
 			if (s == Prev[i]) {
 				plyer[i]--;
 				if (plyer[i]<0) {plyer[i]=Game.displayC.size()-1;}
-				Game.gms.remove(Name[i]);
 				Name[i].setText(Game.displayC.get(plyer[i]).name);
-				Game.gms.add(Name[i]);
 			}
 			else if (s == Next[i]) {
 				plyer[i]++;
 				if (plyer[i]>Game.displayC.size()-1) {plyer[i]=0;}
-				Game.gms.remove(Name[i]);
 				Name[i].setText(Game.displayC.get(plyer[i]).name);
-				Game.gms.add(Name[i]);
 			}
 			else if (s == ManOrMachine[i]) {
 				npc[i]=!npc[i];
-				Game.gms.remove(ManOrMachine[i]);
 				if (npc[i]) {ManOrMachine[i].setText("NPC");}
 				else {ManOrMachine[i].setText("PLY");}
-				Game.gms.add(ManOrMachine[i]);
 			}
 		}
 	}

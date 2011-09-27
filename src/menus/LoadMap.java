@@ -1,6 +1,7 @@
 package menus;
 
 import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.DefaultListModel;
@@ -9,31 +10,42 @@ import javax.swing.JList;
 import javax.swing.JScrollPane;
 import engine.Game;
 
-public class LoadMap implements ActionListener {
+/**
+ * This menu is for loading already existing maps into the editor.
+ * @author SergeDavid
+ * @version 0.2
+ */
+public class LoadMap implements ActionListener {//TODO: implement this
 	JList maps_list = new JList();
 	DefaultListModel maps_model = new DefaultListModel();
 	JButton Return = new JButton("Return");
 	JButton Load = new JButton("Load");
 	
 	public LoadMap() {
-		Game.gms.OpenMenu(300,320);
-		
-		Load.setBounds(15, 20, 100, 32);
-		Game.gms.add(Load);
-		Return.setBounds(15, 60, 100, 32);
-		Game.gms.add(Return);
-		
+		Point size = MenuHandler.PrepMenu(300,320);
+		SetBounds(size);
+		AddGui();
+		AddListeners();
+		MapListStuff(size);
+	}
+	private void SetBounds(Point size) {
+		Load.setBounds(size.x+15, size.y+20, 100, 32);
+		Return.setBounds(size.x+15, size.y+60, 100, 32);
+	}
+	private void AddGui() {
+		Game.gui.add(Load);
+		Game.gui.add(Return);
+	}
+	private void AddListeners() {
 		Return.addActionListener(this);
 		Load.addActionListener(this);
-		
-		MapListStuff();
 	}
 	
-	private void MapListStuff() {
+	private void MapListStuff(Point me) {
 		maps_model = Game.finder.GrabMaps();
 		JScrollPane maps_pane = new JScrollPane(maps_list = new JList(maps_model));
-		maps_pane.setBounds(140, 10, 140, 300);
-		Game.gms.add(maps_pane);
+		maps_pane.setBounds(me.x+140, me.y+10, 140, 300);
+		Game.gui.add(maps_pane);
 		Dimension size = maps_list.getPreferredSize();
 		maps_list.setBounds(4, 2, size.width, size.height);
 		maps_list.setSelectedIndex(0);
@@ -45,7 +57,7 @@ public class LoadMap implements ActionListener {
 			 Game.error.ShowError("Currently Not Supported");
 		}
 		else if (s==Return) {
-			Game.gms.CloseMenu();
+			MenuHandler.CloseMenu();
 		}
 	}
 }

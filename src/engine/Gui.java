@@ -10,13 +10,17 @@ import javax.swing.JPanel;
 public class Gui extends JPanel {
 	private static final long serialVersionUID = 3457450162330022096L;
 	
-	/**The width and height of the content box.*/
+	//The width and height of the content box.
 	public int width = Game.ScreenBase*20;
 	public int height = Game.ScreenBase*12;
 	private Game ThisMadeMeWantToRageQuit; // Use for resizing the window.
 	
 	/**The base frame to keep animations in sync (1 frame = 100ms) Remember to reset this to zero when it hits 12.*/
 	public int frame = 0; //counts up to 12 (resets to zero)
+	
+	//For menu's
+	public boolean MenuBackground;
+	public int[] MenuSize = {0,0,0,0};//X, Y, Width, Height
 		
 	public Gui(Game game) {
 		setPreferredSize(new Dimension(width,height));
@@ -62,9 +66,7 @@ public class Gui extends JPanel {
 			gui.Selector.Draw(frame, gg, Game.ScreenBase,
 					Game.player.get(Game.btl.currentplayer).selectx,
 					Game.player.get(Game.btl.currentplayer).selecty);
-					
-			if (Game.input.MenuHack) {new gui.InfoMenu(gg);}//This displays the menu only when it is paused.
-			else {gui.SmallMenu.Draw(gg,frame);}
+			gui.SmallMenu.Draw(gg,frame);
 		break;
 		case EDITOR:
 			gg.setColor(new Color(0,0,60));
@@ -78,6 +80,12 @@ public class Gui extends JPanel {
 					Game.edit.selecty);
 		break;
 		}
+		
+		if (MenuBackground) {
+			gg.setColor(new Color(150,150,150));
+			gg.fillRect(MenuSize[0], MenuSize[1], MenuSize[2], MenuSize[3]);
+		}
+		
 		g.drawImage(buffimage, 0, 0, this);
 		buffimage.flush();
 		gg.dispose();

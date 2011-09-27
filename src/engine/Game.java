@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JFrame;
 
-
 public class Game extends JFrame {
 	private static final long serialVersionUID = 1L;
 	
@@ -23,7 +22,6 @@ public class Game extends JFrame {
 	//Setup the quick access to all of the other class files.
 	public static Map map;
 	public static Gui gui;
-	public static GameMenus gms;
 	public static LoadImages load;
 	public static InputHandler input;
 	public static Editor edit = new Editor();
@@ -72,7 +70,6 @@ public class Game extends JFrame {
 		gui.requestFocusInWindow();
 		
 		//load images, initialize the map, and adds the input settings.
-		gms = new GameMenus();
 		load = new LoadImages();
 		map = new Map();
 		input = new InputHandler();

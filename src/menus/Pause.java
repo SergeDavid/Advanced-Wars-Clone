@@ -1,12 +1,16 @@
 package menus;
 
-import java.awt.Insets;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.JButton;
 import engine.Game;
 
+/**
+ * This is the pause menu that is pulled up when you press the Enter button in game.
+ * @author SergeDavid
+ * @version 0.3
+ */
 public class Pause implements ActionListener {
 	
 	JButton Help = new JButton("Help");
@@ -17,41 +21,44 @@ public class Pause implements ActionListener {
 	JButton Quit = new JButton("Quit");
 	
 	public Pause() {
-		Insets insets = Game.gms.getInsets();
-		Resume.setBounds(10+insets.left, 10+insets.top, 100, 24);
-		Save.setBounds(10+insets.left, 30*1+10+insets.top, 100, 24);
-		Options.setBounds(10+insets.left, 30*2+10+insets.top, 100, 24);
-		EndTurn.setBounds(10+insets.left, 30*3+10+insets.top, 100, 24);
-		Quit.setBounds(10+insets.left, 30*4+10+insets.top, 100, 24);
-		
-		//Main Pause Menu
+		Point size = MenuHandler.PrepMenu(120,180);
+		SetBounds(size);
+		AddGui();
+		AddListeners();
+	}
+	private void SetBounds(Point size) {
+		Resume.setBounds(size.x+10, size.y+10, 100, 24);
+		Save.setBounds(size.x+10, size.y+30*1+10, 100, 24);
+		Options.setBounds(size.x+10, size.y+30*2+10, 100, 24);
+		EndTurn.setBounds(size.x+10, size.y+30*3+10, 100, 24);
+		Quit.setBounds(size.x+10, size.y+30*4+10, 100, 24);
+	}
+	private void AddGui() {
+		Game.gui.add(Resume);
+		Game.gui.add(Save);
+		Game.gui.add(Options);
+		Game.gui.add(EndTurn);
+		Game.gui.add(Quit);
+	}
+	private void AddListeners() {
 		Resume.addActionListener(this);
 		Save.addActionListener(this);
 		Options.addActionListener(this);
 		EndTurn.addActionListener(this);
 		Quit.addActionListener(this);
-		
-		Show();
 	}
-	public void Show() {
-		Game.gms.OpenMenu(120,180);
-		Game.gms.add(Resume);
-		Game.gms.add(Save);
-		Game.gms.add(Options);
-		Game.gms.add(EndTurn);
-		Game.gms.add(Quit);
-	}
+	
 	@Override public void actionPerformed(ActionEvent e) {
 		Object s = e.getSource();
 		if (s==Quit) {
-			Game.gms.CloseMenu();
+			MenuHandler.CloseMenu();
 			Game.gui.LoginScreen();
 		}
 		else if (s==EndTurn) {
-			Game.gms.CloseMenu();
+			MenuHandler.CloseMenu();
 			Game.btl.EndTurn();
 		}
-		else if (s==Resume) {Game.gms.CloseMenu();}
+		else if (s==Resume) {MenuHandler.CloseMenu();}
 		else if (s==Save) {Game.save.SaveGame();}
 		else if (s==Options) {new Options();}
 	}

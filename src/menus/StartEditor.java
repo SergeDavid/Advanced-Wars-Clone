@@ -1,5 +1,6 @@
 package menus;
 
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
@@ -8,6 +9,11 @@ import javax.swing.JTextField;
 
 import engine.Game;
 
+/**
+ * This handles the basic settings for the map editor (name, width, and height) I shouldn't need this when I add dynamic map size updating.
+ * @author SergeDavid
+ * @version 0.2
+ */
 public class StartEditor implements ActionListener {
 
 	JButton Start = new JButton("Start");
@@ -22,39 +28,39 @@ public class StartEditor implements ActionListener {
 	
 	
 	public StartEditor() {
-		Return.addActionListener(this);
-		Start.addActionListener(this);
-
 		Name.setText("MapName");
 		Width.setText("32");
 		Height.setText("32");
-		//TODO: Split up what is shown via a String.
-		ChangeSizes();
-		Show();
+		Point size = MenuHandler.PrepMenu(280,180);
+		SetBounds(size);
+		AddGui();
+		AddListeners();
 	}
-	private void ChangeSizes() {
-		LabelN.setBounds(20, 20, 100, 24);
-		LabelW.setBounds(20, 50, 100, 24);
-		LabelH.setBounds(20, 80, 100, 24);
+	private void SetBounds(Point size) {
+		LabelN.setBounds(size.x+20, size.y+20, 100, 24);
+		LabelW.setBounds(size.x+20, size.y+50, 100, 24);
+		LabelH.setBounds(size.x+20, size.y+80, 100, 24);
 		
-		Name.setBounds(140, 20, 100, 24);
-		Width.setBounds(140, 50, 100, 24);
-		Height.setBounds(140, 80, 100, 24);
+		Name.setBounds(size.x+140, size.y+20, 100, 24);
+		Width.setBounds(size.x+140, size.y+50, 100, 24);
+		Height.setBounds(size.x+140, size.y+80, 100, 24);
 		
-		Start.setBounds(60, 150, 100, 24);
-		Return.setBounds(160, 150, 100, 24);
+		Start.setBounds(size.x+60, size.y+150, 100, 24);
+		Return.setBounds(size.x+160, size.y+150, 100, 24);
 	}
-	private void Show() {
-		Game.gui.removeAll();
-		Game.gms.OpenMenu(280,180);
-		Game.gms.add(LabelN);
-		Game.gms.add(LabelW);
-		Game.gms.add(LabelH);
-		Game.gms.add(Name);
-		Game.gms.add(Width);
-		Game.gms.add(Height);
-		Game.gms.add(Start);
-		Game.gms.add(Return);
+	private void AddGui() {
+		Game.gui.add(LabelN);
+		Game.gui.add(LabelW);
+		Game.gui.add(LabelH);
+		Game.gui.add(Name);
+		Game.gui.add(Width);
+		Game.gui.add(Height);
+		Game.gui.add(Start);
+		Game.gui.add(Return);
+	}
+	private void AddListeners() {
+		Return.addActionListener(this);
+		Start.addActionListener(this);
 	}
 	
 	@Override public void actionPerformed(ActionEvent e) {
@@ -67,7 +73,7 @@ public class StartEditor implements ActionListener {
 		}
 		if (s==Return) {
 			Game.gui.LoginScreen();
-			Game.gms.CloseMenu();
+			MenuHandler.CloseMenu();
 		}
 	}
 }

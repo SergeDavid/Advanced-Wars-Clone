@@ -43,8 +43,6 @@ public class InputHandler implements KeyListener,MouseListener,ActionListener {
 	private final int main = MouseEvent.BUTTON1;
 	private final int alt = MouseEvent.BUTTON1;
 	
-	public boolean MenuHack;
-	
 	public InputHandler() {
 		Game.gui.addKeyListener(this);
 		Game.gui.addMouseListener(this);
@@ -63,12 +61,7 @@ public class InputHandler implements KeyListener,MouseListener,ActionListener {
 			else if (i==right) {ply.selectx++;if (ply.selectx>=Game.map.width) {ply.selectx--;}}
 			else if (i==select) {Game.btl.Action();}
 			else if (i==cancel) {Game.player.get(Game.btl.currentplayer).Cancle();}
-			else if (i==start) {
-				if (MenuHack) {Game.gms.CloseMenu();}
-				else {
-					new menus.Pause();
-				}
-			}
+			else if (i==start) {new menus.Pause();}
 		}
 		if (Game.GameState==Game.State.EDITOR) {
 			if (i==up) {Game.edit.selecty--;if (Game.edit.selecty<0) {Game.edit.selecty++;}}

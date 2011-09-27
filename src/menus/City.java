@@ -1,7 +1,7 @@
 package menus;
 
 import java.awt.Color;
-import java.awt.Insets;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.DefaultListModel;
@@ -14,6 +14,11 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import engine.Game;
 
+/**
+ * Displays a list of available units, and some information about them to buy.
+ * @author SergeDavid
+ * @version 0.2
+ */
 public class City implements ActionListener,ListSelectionListener {
 	
 	DefaultListModel UnitModel = new DefaultListModel();
@@ -32,8 +37,7 @@ public class City implements ActionListener,ListSelectionListener {
 	int[] ids = new int[Game.displayU.size()];
 	
 	public City(String Type, int xx, int yy) {
-		UnitModel.removeAllElements();
-		System.out.println(Type);
+		//UnitModel.removeAllElements();
 		int a = 0;
 		for (int i = 0; i < Game.displayU.size(); i++) {
 			if (Game.displayU.get(i).building.equals(Type)) {
@@ -42,14 +46,6 @@ public class City implements ActionListener,ListSelectionListener {
 				a++;
 			}
 		}
-		Main.add(Buy);
-		Main.add(Return);
-		Main.add(Units);
-		UnitName.setFocusable(false);
-		UnitDesc.setFocusable(false);
-		Return.addActionListener(this);
-		Buy.addActionListener(this);
-		Units.addListSelectionListener(this);
 		x=xx;
 		y=yy;
 		
@@ -57,36 +53,48 @@ public class City implements ActionListener,ListSelectionListener {
 		Alt.setBackground(new Color(120,120,120));
 		UnitDesc.setBackground(new Color(138,138,146));
 		UnitDesc.setEditable(false);
-		//TODO: Split up what is shown via a String.
-		ChangeSizes();
-		Show();
+		
+		current = 0;
+		ChangeAlt();
+		Units.setSelectedIndex(0);
+		Point size = MenuHandler.PrepMenu(480,260);
+		MenuHandler.HideBackground();
+		SetBounds(size);
+		AddGui();
+		AddListeners();
 	}
-	private void ChangeSizes() {
-		Insets insets = Game.gms.getInsets();
-		Main.setBounds(insets.left, insets.top, 150, 260);
-		Alt.setBounds(140 + 20 + insets.left, insets.top, 320, 200);
-		Buy.setBounds(25, 30*6+16+insets.top, 100, 24);
-		Return.setBounds(25, 30*7+16+insets.top, 100, 24);
-		Units.setBounds(10, 10+insets.top, 135, 176);
+	private void SetBounds(Point size) {
+		Main.setBounds(size.x, size.y, 150, 260);
+		Alt.setBounds(size.x+140 + 20, size.y, 320, 200);
+		Buy.setBounds(25, 30*6+16, 100, 24);
+		Return.setBounds(25, 30*7+16, 100, 24);
+		Units.setBounds(10, 10, 135, 176);
 		UnitName.setBounds(42, 10, 200, 24);
 		UnitDesc.setBounds(10, 42, 300, 152);
 	}
-	private void Show() {
-		current = 0;
-		ChangeAlt();
-		Game.gms.OpenMenu(480,260);
-		Game.gms.setOpaque(false);
-		Units.setSelectedIndex(0);
-		Game.gms.add(Main);
-		Game.gms.add(Alt);
+	private void AddGui() {
+		Main.add(Buy);
+		Main.add(Return);
+		Main.add(Units);
+		
+		Game.gui.add(Main);
+		Game.gui.add(Alt);
 	}
+	private void AddListeners() {
+		UnitName.setFocusable(false);
+		UnitDesc.setFocusable(false);
+		Return.addActionListener(this);
+		Buy.addActionListener(this);
+		Units.addListSelectionListener(this);
+	}
+	
 	
 	@Override public void actionPerformed(ActionEvent e) {
 		Object s = e.getSource();
-		if (s==Return) {Game.gms.CloseMenu();}
+		if (s==Return) {MenuHandler.CloseMenu();}
 		else if (s==Buy) {
 			Game.btl.Buyunit(ids[Units.getSelectedIndex()], x, y);
-			Game.gms.CloseMenu();
+			MenuHandler.CloseMenu();
 		}
 	}
 	@Override public void valueChanged(ListSelectionEvent e) {

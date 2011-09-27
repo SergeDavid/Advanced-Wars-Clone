@@ -1,5 +1,6 @@
 package menus;
 
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
@@ -7,6 +8,11 @@ import javax.swing.JTextArea;
 
 import engine.Game;
 
+/**
+ * The end game menu that pops up, it pretty much only contains player data such as kills, captures, money, and win / lose
+ * @author SergeDavid
+ * @version 0.2
+ */
 public class EndBattle implements ActionListener {
 	JButton Return = new JButton("Main Menu");
 	JTextArea Names = new JTextArea();
@@ -15,25 +21,30 @@ public class EndBattle implements ActionListener {
 	JTextArea Loses = new JTextArea();
 	
 	public EndBattle() {
-		Return.setBounds(16, 16, 100, 24);
-		Names.setBounds(16,56,64,180);
-		Money.setBounds((32+64)*1,56,64,180);
-		Kills.setBounds((32+64)*2,56,64,180);
-		Loses.setBounds((32+64)*3,56,64,180);
-
-		Return.addActionListener(this);
-		
-		Show();
-	}
-	public void Show() {
-		Game.gms.OpenMenu(360,260);
 		PopulateStats();
-		Game.gms.add(Return);
-		Game.gms.add(Names);
-		Game.gms.add(Money);
-		Game.gms.add(Kills);
-		Game.gms.add(Loses);
+		Point size = MenuHandler.PrepMenu(360,260);
+		SetBounds(size);
+		AddGui();
+		AddListeners();
 	}
+	private void SetBounds(Point size) {
+		Return.setBounds(size.x+16, size.y+16, 100, 24);
+		Names.setBounds(size.x+16, size.y+56, 64, 180);
+		Money.setBounds(size.x+(32+64)*1, size.y+56, 64, 180);
+		Kills.setBounds(size.x+(32+64)*2, size.y+56, 64, 180);
+		Loses.setBounds(size.x+(32+64)*3, size.y+56, 64, 180);
+	}
+	private void AddGui() {
+		Game.gui.add(Return);
+		Game.gui.add(Names);
+		Game.gui.add(Money);
+		Game.gui.add(Kills);
+		Game.gui.add(Loses);
+	}
+	private void AddListeners() {
+		Return.addActionListener(this);
+	}
+
 	private void PopulateStats() {
 		String[] text = {"Players\n","Money\n","Kills\n","Loses\n"};
 		for (players.Base ply : Game.player) {
@@ -50,7 +61,7 @@ public class EndBattle implements ActionListener {
 	@Override public void actionPerformed(ActionEvent e) {
 		Object s = e.getSource();
 		if (s==Return) {
-			Game.gms.CloseMenu();
+			MenuHandler.CloseMenu();
 			Game.gui.LoginScreen();
 		}
 	}

@@ -1,40 +1,45 @@
 package menus;
 
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import engine.Game;
 
+/**
+ * This is the in editor menu that pops up when you hit the enter button.
+ * @author SergeDavid
+ * @version 0.2
+ */
 public class EditorMenu implements ActionListener {
-	
 	JButton Quit = new JButton("Quit");
 	JButton Save = new JButton("Save");
 	JButton Load = new JButton("Load");
 	JButton Return = new JButton("Return");
 	
 	public EditorMenu() {
+		Point size = MenuHandler.PrepMenu(140,140);
+		SetBounds(size);
+		AddGui();
+		AddListeners();
+	}
+	private void SetBounds(Point size) {
+		Load.setBounds(size.x+20, size.y+20, 100, 24);
+		Save.setBounds(size.x+20, size.y+50, 100, 24);
+		Return.setBounds(size.x+20, size.y+80, 100, 24);
+		Quit.setBounds(size.x+20, size.y+110, 100, 24);
+	}
+	private void AddGui() {
+		Game.gui.add(Quit);
+		Game.gui.add(Save);
+		Game.gui.add(Load);
+		Game.gui.add(Return);
+	}
+	private void AddListeners() {
 		Quit.addActionListener(this);
 		Save.addActionListener(this);
 		Load.addActionListener(this);
 		Return.addActionListener(this);
-		
-		ChangeSizes();
-		Show();
-	}
-	private void ChangeSizes() {
-		Load.setBounds(20, 20, 100, 24);
-		Save.setBounds(20, 50, 100, 24);
-		Return.setBounds(20, 80, 100, 24);
-		Quit.setBounds(20, 110, 100, 24);
-	}
-	private void Show() {
-		Game.gui.removeAll();
-		Game.gms.OpenMenu(140,140);
-		
-		Game.gms.add(Quit);
-		Game.gms.add(Save);
-		Game.gms.add(Load);
-		Game.gms.add(Return);
 	}
 	
 	@Override public void actionPerformed(ActionEvent e) {
@@ -46,11 +51,11 @@ public class EditorMenu implements ActionListener {
 			new LoadMap();
 		}
 		else if (s==Return) {
-			Game.gms.CloseMenu();
+			MenuHandler.CloseMenu();
 		}
 		else if (s==Quit) {
 			Game.gui.LoginScreen();
-			Game.gms.CloseMenu();
+			MenuHandler.CloseMenu();
 		}
 	}
 }
