@@ -54,7 +54,7 @@ public class StartMenu implements ActionListener {
 	private void AddGui() {
 		Game.gui.add(New);
 		Game.gui.add(Load);
-		Game.gui.add(Join);
+		//Game.gui.add(Join);
 		Game.gui.add(Editor);
 		Game.gui.add(Credits);
 		Game.gui.add(Options);
@@ -83,8 +83,8 @@ public class StartMenu implements ActionListener {
 		if (s==New) {new PlayerSelection(maps_list.getSelectedValue()+"");}
 		else if (s==Load) {Game.save.LoadGame();MenuHandler.CloseMenu();}
 		else if (s==Join) {Game.error.ShowError("Online features are not added yet.");}
-		else if (s==Editor) {new menus.StartEditor();}
-		else if (s==Credits) {Game.error.ShowError("Credits menu has not been added yet.");}
+		else if (s==Editor) {new StartEditor();}
+		else if (s==Credits) {new Credits();}
 		else if (s==Options) {new Options();}
 		else if (s==Exit) {System.exit(0);}
 	}

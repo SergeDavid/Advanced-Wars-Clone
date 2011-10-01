@@ -70,6 +70,7 @@ public class StartEditor implements ActionListener {
 					Name.getText(),
 					Integer.parseInt(Width.getText()),
 					Integer.parseInt(Height.getText()));
+			MenuHandler.CloseMenu();
 		}
 		if (s==Return) {
 			Game.gui.LoginScreen();

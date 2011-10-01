@@ -1,6 +1,7 @@
 package menus;
 
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -19,23 +20,23 @@ public class EditorStuff implements ActionListener {
 	
 	public EditorStuff() {
 		Return.addActionListener(this);
-		Return.setBounds(20, 100, 100, 24);
 		Show();
 	}
 	private void Show() {
 		Game.gui.removeAll();
-		MenuHandler.PrepMenu(240,140);
+		Point size = MenuHandler.PrepMenu(240,140);
+		Return.setBounds(size.x+20, size.y+100, 100, 24);
 		
 		for (int i = 0; i < Game.displayU.size(); i++) {
 			Units[i] = new JButton(ButtonImage(i,0,Type.UNIT));
 			Units[i].addActionListener(this);
-			Units[i].setBounds(10+32*i, 10, 32, 32);
+			Units[i].setBounds(size.x+10+32*i, size.y+10, 32, 32);
 			Game.gui.add(Units[i]);
 		}
 		for (int i = 0; i < Game.displayB.size(); i++) {
 			Cities[i] = new JButton(ButtonImage(i,0,Type.CITY));
 			Cities[i].addActionListener(this);
-			Cities[i].setBounds(10+32*i, 40, 32, 32);
+			Cities[i].setBounds(size.x+10+32*i, size.y+40, 32, 32);
 			Game.gui.add(Cities[i]);
 		}
 		int use = 0;//Hack so people can't place cities.
@@ -43,7 +44,7 @@ public class EditorStuff implements ActionListener {
 			if (!Game.map.tiles.get(i).building()) {
 				Tiles[i] = new JButton(ButtonImage(Game.map.tiles.get(i).x,Game.map.tiles.get(i).y,Type.TILE));
 				Tiles[i].addActionListener(this);
-				Tiles[i].setBounds(10+32*use, 70, 32, 32);
+				Tiles[i].setBounds(size.x+10+32*use, size.y+70, 32, 32);
 				Game.gui.add(Tiles[i]);
 				use++;
 			}

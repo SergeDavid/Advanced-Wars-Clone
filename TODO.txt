@@ -14,6 +14,7 @@ Units
 	- Fuel cost is determined by how many nodes is between point A and B.
 	- Redesign Attack to be an array with effectiveness vs each unit. (Plus 4 or so for user mods)
 	- Remove defense, and just leave commander defensive bonus on types.
+	- Include unit transportation.
 	
 Painting
 	- Draw more units and to use as dev art
@@ -24,8 +25,6 @@ Painting
 
 GUI
 	- Resize button to fit the screen size (Make it dynamic on loading of the menu)
-	- Move the Main Menu to a default menu and open it later.
-	- Fix up the options menu (Size, Music, Sound, Unit Movement[on][off])
 
 Ai
 	- Require Infantry units in relation to buildings left to capture.
