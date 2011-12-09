@@ -4,6 +4,8 @@ import engine.Game;
 
 public class Base {
 	//Image and other info
+	/**(y*width+x) = id so when saving it can place it in the correct location.*/
+	public int editorid = 0;
 	int img = 0;
 	public String name = "Bacon";
 	String desc = "Giggles";
@@ -26,9 +28,11 @@ public class Base {
 	
 	public Base(int owner,int xx, int yy) {
 		//15 = Neutral, 12~14 are unused. (12 max players)
+		System.out.println("Base level owner: " + owner);
 		this.owner=owner;
 		x=xx;
 		y=yy;
+		editorid = y * Game.map.width + x;
 		img=0;
 	}
 

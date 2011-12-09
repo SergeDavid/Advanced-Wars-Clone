@@ -64,11 +64,11 @@ public class InputHandler implements KeyListener,MouseListener,ActionListener {
 			else if (i==start) {new menus.Pause();}
 		}
 		if (Game.GameState==Game.State.EDITOR) {
-			if (i==up) {Game.edit.selecty--;if (Game.edit.selecty<0) {Game.edit.selecty++;}}
-			else if (i==down) {Game.edit.selecty++;if (Game.edit.selecty>=Game.map.height) {Game.edit.selecty--;}}
-			else if (i==left) {Game.edit.selectx--;if (Game.edit.selectx<0) {Game.edit.selectx++;}}
-			else if (i==right) {Game.edit.selectx++;if (Game.edit.selectx>=Game.map.width) {Game.edit.selectx--;}}
-			else if (i==select) {Game.edit.AssButton();}
+			if (i==up) {Game.edit.selecty--;if (Game.edit.selecty<0) {Game.edit.selecty++;} Game.edit.moved = true;}
+			else if (i==down) {Game.edit.selecty++;if (Game.edit.selecty>=Game.map.height) {Game.edit.selecty--;} Game.edit.moved = true;}
+			else if (i==left) {Game.edit.selectx--;if (Game.edit.selectx<0) {Game.edit.selectx++;} Game.edit.moved = true;}
+			else if (i==right) {Game.edit.selectx++;if (Game.edit.selectx>=Game.map.width) {Game.edit.selectx--;} Game.edit.moved = true;}
+			else if (i==select) {Game.edit.holding = true;}
 			else if (i==cancel) {Game.edit.ButtButton();}
 			else if (i==start) {
 				new menus.EditorMenu();
@@ -89,7 +89,12 @@ public class InputHandler implements KeyListener,MouseListener,ActionListener {
 		else if (i==dev5) {Game.player.get(Game.btl.currentplayer).npc = !Game.player.get(Game.btl.currentplayer).npc; Game.btl.EndTurn();}
 		else if (i==dev6) {new menus.StartMenu();}
 	}
-	public void keyReleased(KeyEvent arg0) {}
+	public void keyReleased(KeyEvent e) {
+		int i=e.getKeyCode();
+		if (Game.GameState==Game.State.EDITOR) {
+			if (i==select) {Game.edit.holding = false;}
+		}
+	}
 	public void keyTyped(KeyEvent arg0) {}
 	public void mousePressed() {}
 	public void mouseClicked(MouseEvent arg0) {}

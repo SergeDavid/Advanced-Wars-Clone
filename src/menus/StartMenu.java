@@ -83,7 +83,13 @@ public class StartMenu implements ActionListener {
 		if (s==New) {new PlayerSelection(maps_list.getSelectedValue()+"");}
 		else if (s==Load) {Game.save.LoadGame();MenuHandler.CloseMenu();}
 		else if (s==Join) {Game.error.ShowError("Online features are not added yet.");}
-		else if (s==Editor) {new StartEditor();}
+		else if (s==Editor) {
+			Game.edit.StartEditor(
+					"MapName",
+					16,
+					20);
+			MenuHandler.CloseMenu();
+		}
 		else if (s==Credits) {new Credits();}
 		else if (s==Options) {new Options();}
 		else if (s==Exit) {System.exit(0);}

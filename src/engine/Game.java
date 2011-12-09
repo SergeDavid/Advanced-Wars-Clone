@@ -117,6 +117,9 @@ public class Game extends JFrame {
 				if (GameState==State.PLAYING || GameState==State.EDITOR) {
 					view.MoveView();
 				}//This controls the view-point on the map
+				if (GameState == State.EDITOR) {
+					if (edit.holding && edit.moved) {edit.AssButton();}
+				}
 				Game.gui.frame++;//This is controlling the current frame of animation.
 				if (Game.gui.frame>=12) {Game.gui.frame=0;}
 				gui.repaint();

@@ -14,7 +14,7 @@ import engine.Game;
  * @author SergeDavid
  * @version 0.2
  */
-public class StartEditor implements ActionListener {
+public class EditorStart implements ActionListener {
 
 	JButton Start = new JButton("Start");
 	JButton Return = new JButton("Return");
@@ -27,7 +27,7 @@ public class StartEditor implements ActionListener {
 	JLabel LabelH = new JLabel("Height: ");
 	
 	
-	public StartEditor() {
+	public EditorStart() {
 		Name.setText("MapName");
 		Width.setText("32");
 		Height.setText("32");
@@ -74,7 +74,6 @@ public class StartEditor implements ActionListener {
 		}
 		if (s==Return) {
 			Game.gui.LoginScreen();
-			MenuHandler.CloseMenu();
 		}
 	}
 }

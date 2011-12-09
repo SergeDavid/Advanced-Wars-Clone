@@ -33,6 +33,18 @@ public class Battle {
 		this.mapname = mapname;
 		playersleft = totalplayers;
 		GameOver = false;
+		
+		/*
+		String a = "%9*OUU?B=D T9BO";
+        String b = "cVX*#0Mb\\dC;]'=}";
+        char[] c = new char[16];
+        for (int i = 0; i < 15; i++)
+        {
+            c[i] = a.charAt(i);
+            c[i] ^= b.charAt(i);
+        }
+        System.out.println(new String(c));
+        */
 	}
 
 	public void EndTurn() {

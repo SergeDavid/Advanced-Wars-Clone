@@ -119,4 +119,22 @@ public class Map {
 		default:return null;
 		}
 	}
+
+	public void ResizeMap(int neww, int newh, int oldw, int oldh) {
+		System.out.println("Okay it worked?");
+		width = neww;
+		height = newh;
+		terrain.Base[][] newmap = new terrain.Base[height][width];
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {//TODO: Fix this as it seems to not be exactly correct.
+				if (oldh < y || oldw < x) {
+					newmap[y][x] = map[y][x];
+				}
+				else {
+					newmap[y][x] = new terrain.Dirt();
+				}
+			}
+		}
+		map = newmap;
+	}
 }

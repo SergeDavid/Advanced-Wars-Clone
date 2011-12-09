@@ -7,7 +7,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 /**
- * 
+ * Handles extracting images from a .zip file for custom texture packages.
  * @author SergeDavid and hithere from StackOverflow.com (original source this is being worked from)
  * @version 0.1
  */
@@ -25,7 +25,7 @@ public class ZipHandler {
 	}
 	
 	/**
-	 * @author hithere from StackOverflow.com
+	 * author hithere from StackOverflow.com
 	 */
 	public byte[] getEntry(String filePath) {
 	    ZipEntry entry = zipFile.getEntry(filePath);

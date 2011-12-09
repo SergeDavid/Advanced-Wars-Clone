@@ -96,7 +96,7 @@ public class Save {
 		return plyrdata;
 	}
 	private String SaveCityData() {
-		String citydata = "\n# Unit Data\n";
+		String citydata = "\n# City Data\n";
 		for (int i = 0; i < Game.builds.size(); i++) {
 	    	buildings.Base bld = Game.builds.get(i);
 	    	citydata+="City" + i + "_Type = " + bld.name + "\n" +

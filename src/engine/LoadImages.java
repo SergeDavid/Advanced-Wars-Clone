@@ -10,6 +10,7 @@ import javax.imageio.ImageIO;
 
 /**
  * A very simple class that takes a nice big list of images and loads them into the game. It is separated from the main class to decrease size.
+ * This also contains the functions for using custom texture packages.
  * @author SergeDavid
  * @version 0.2
  */
@@ -29,7 +30,7 @@ public class LoadImages {
 	//public int Times_Menus = 5;
 	public int Times_Extras = 5;
 	
-	/**This will initialize the loading images area by only loading up the logo, the rest are called as the game loads different parts.*/
+	/**This will initialize the different sprite sheets/atlas*/
 	public LoadImages() {
 		Toolkit tool = Toolkit.getDefaultToolkit();
 		Game.img_char = tool.getImage(getClass().getResource("/img/"+"Units"+".png"));
@@ -39,6 +40,7 @@ public class LoadImages {
 		Game.img_plys = tool.getImage(getClass().getResource("/img/"+"Players"+".png"));
 		Game.img_menu[0] = tool.getImage(getClass().getResource("/img/"+"GameInfo"+".png"));
 	}
+	/**Opens a custom texture pack then goes through it comparing sprite sheets to see if they are usable.*/
 	public void LoadTexturePack(String name) {
 		ZipHandler zip = new ZipHandler(name);
 		
@@ -67,8 +69,9 @@ public class LoadImages {
 				return size;
 			}
 		}
-		return 5;
+		return 5;//Defaults at 32
 	}
+	/**Finds out if the custom image matches the same base dimensions of a given default texture, if not it returns the default image.*/
 	private Image TryNewImage(String path, ZipHandler zip, int[] size) {
 	    try {
 	    	InputStream in = new ByteArrayInputStream(zip.getEntry(path + ".png"));

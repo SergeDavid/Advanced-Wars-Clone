@@ -58,12 +58,12 @@ public class ListData {
 	 * @param yy
 	 * @param type = The building to be created in question.
 	 * @returnIt should never return null except for the reference list [ListData();]
+	 * 
+	 * @exception WARNING: removed the filter for proper owner buildings.
 	 */
 	public buildings.Base CreateCity(int owner, int xx, int yy, int type) {//15 = Neutral, 12, 13, 14 are unused. (12 max players)
-		if (owner>Game.btl.totalplayers) {
-			owner=15;
-			if (type == 0) {type = 1;}
-		}
+		//TODO: Warning: I removed the check to make sure each building is legal.
+		System.out.println("List level owner: " + owner);
 		switch (type) {
 			case 0:return new buildings.Capital(owner, xx, yy);
 			case 1:return new buildings.Town(owner, xx, yy);

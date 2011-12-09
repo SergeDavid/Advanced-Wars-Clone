@@ -45,6 +45,7 @@ public class MenuHandler {
 	public static void CloseMenu() {
 		Game.gui.MenuBackground = false;
 		Game.gui.removeAll();
+		Game.gui.requestFocusInWindow();
 		if (Game.error.showing) {Game.gui.add(Game.error);}
 	}
 	

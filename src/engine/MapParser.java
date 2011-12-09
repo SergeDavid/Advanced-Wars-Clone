@@ -8,8 +8,16 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
+/**encodes and decodes mapfiles. 
+ * The encoder is used solely by the map editor, (save is used to save battles)
+ * while the decode is used to load a map for the editor and battles via battle.newgame()
+ * @author SergeDavid
+ * @version 0.2
+ */
 public class MapParser {
 	int terrain = 0;//Keeps track of current row
 	
@@ -47,7 +55,8 @@ public class MapParser {
 	/**Turns the building list into a string. (and sorts them into proper order)*/
 	private String encodeCities() {
 		String cities = "";
-		if (!Game.builds.isEmpty()) {//TODO: Reorder buildings by x/y location either here or during construction.
+		Game.builds = FormatCities(Game.builds);
+		if (!Game.builds.isEmpty()) {
 			cities+="\n3 ";
 			for (buildings.Base bld : Game.builds) {
 				cities+=Integer.toHexString(bld.owner);
@@ -108,7 +117,26 @@ public class MapParser {
 		}
 		return "0";
 	}
-	
+	private List<buildings.Base> FormatCities(List<buildings.Base> oldblds) {
+		List<buildings.Base> newblds = new ArrayList<buildings.Base>();
+		while (!oldblds.isEmpty()) {
+			int lowest = 0;
+			int lowid = oldblds.get(0).editorid;
+			for (int i = 0; i < oldblds.size(); i++) {
+				if (oldblds.get(i).editorid < lowid) {
+					lowest = i;
+					lowid = oldblds.get(i).editorid;
+				}
+			}
+			newblds.add(oldblds.get(lowest));
+			oldblds.remove(lowest);
+		}
+		System.out.println("Begin Debugging!!!");
+		for (int i = 0; i < newblds.size() ; i++) {
+			System.out.println("id : " + i + " with an editorid : " + newblds.get(i).editorid);
+		}
+		return newblds;
+	}
 	
 	public boolean decode(String mapname) {
 		terrain = 0;
